@@ -1,21 +1,11 @@
 
 <krpano >
 
-<!-- 
-	
-	FONT COLOR = FFFFFE
 
-	HIGHLIGHT COLOR = 01911a
-	Applies to: Main menu over, Submenu over, Pano desc color, HSDET button
-	
-	BG COLOR= 252525
-	Aplies to: Desktop Main menu BG, Desktop Submenu BG, Pano desc background 
 
--->
 
-<font_code name="font_1" url="MuseoSans_300-webfont.woff" />
 
-<!-- <include url="%FIRSTXML%/graphics/360-gui/xml/krk.xml?%$random%"  /> -->
+
 
   <general
 	ga_code="UA-"
@@ -25,11 +15,11 @@
 	max_zoom="75"
 
 		options_button_bg_inactive="eeeeee"
-		options_button_bg_active="a5e5ff"
-		options_button_color="5ea344"
-		main_menu_font="Arial"
-		logo_text_font="Arial"
-		lang_codes="en/hr"
+		options_button_bg_active="c78283"
+		options_button_color="C60001"
+		main_menu_font="opensans"
+		logo_text_font="opensans"
+		lang_codes="en"
 
 
 	loader_size="70"
@@ -40,31 +30,33 @@
 	loader_speed="6"
 
 	hostpot_scale_over="1.15"
-	hotspot_tooltip_bg_color="0a200d"
-	hotspot_tooltip_bg_alpha="0.8"
-	hotspot_tooltip_font="Arial"
+	hotspot_tooltip_bg_color="C60001"
+	hotspot_tooltip_bg_alpha="0.75"
+	hotspot_tooltip_font="opensans"
 	hotspot_tooltip_font_size="16"
 	hotspot_tooltip_font_color="ffffff"
 	hotspot_tooltip_font_color_shadow="no"
 	hotspot_tooltip_round_edge="0"
 
+
+	only_1st_level_menu="false"
+	hide_floating_menu="false"
+
   	/>  
-
-
 
   <desktop
 		menu_height="100"
 	menu_x_offset="200"
 	menu_y_offset="0"
 	menu_align="right"
-		menu_color="37804B"
+	menu_color="ffffff"
 	menu_alpha="1"
 
 	bg_image_height="7"
 	bg_image_width="1680"
 	bg_image_y_offset="93"
 	
-	logo_height="85"
+	logo_height="75"
 	logo_x_offset="50"
 	logo_y_offset="0"
 
@@ -72,13 +64,16 @@
 	logo_text_font_color="ffffff"
 	logo_text_width="150"
 	logo_text_height="auto"
-	logo_text_x_offset="100"
+	logo_text_x_offset="110"
 	logo_text_y_offset="12"
 
-	main_menu_font_size="16"
+	main_menu_font_size="14"
+	main_menu_font_size_smaller="13"
+	main_menu_font_size_smaller_resolution="1920"
+
 	main_menu_font_style="regular"
-		main_menu_font_color="fffffe"
-		main_menu_font_color_over="000000"
+		main_menu_font_color="3A3A3A"
+		main_menu_font_color_over="C60001"
 	main_menu_text_spacing="15"
 	main_menu_text_y_offset="15"
 	main_menu_bg_color_over="000000"
@@ -95,24 +90,26 @@
 	lang_menu_flag_x_offset="20"
 
 
-	sub_menu_width="250"
+	sub_menu_width="300"
 	sub_menu_y_offset="40"
 		sub_menu_x_offset="-30"
 	sub_menu_bottom_offset="20"
-		sub_menu_bg_color="ffffff"
+		sub_menu_bg_color="C60001"
 	sub_menu_bg_alpha="1"
 	sub_menu_bg_round_edge="1"
 
 	sub_menu_item_height="50"
-	sub_menu_item_color_over="37804B"
+	sub_menu_item_height_smaller="40"
+	sub_menu_item_color_over="ffffff"
 	sub_menu_item_alpha_over="0.3"
-		sub_menu_item_font="Arial"
-	sub_menu_item_font_size="15"
-		sub_menu_item_font_color="535353"
-		sub_menu_item_font_color_over="535353"
+		sub_menu_item_font="opensans"
+	sub_menu_item_font_size="14"
+	sub_menu_item_font_size_smaller="13"
+	sub_menu_item_font_color="ffffff"
+	sub_menu_item_font_color_over="ffffff"
 	sub_menu_item_x_offset="40"
 
-	sub_menu_bullet=""
+	sub_menu_bullet="arrow_right"
 	sub_menu_bullet_size="16"
 	sub_menu_bullet_color="ffffff"
 		sub_menu_bullet_color_over="ffffff"
@@ -123,8 +120,8 @@
 	sub_menu_line_width_over="0"
 	sub_menu_line_color="8dc91b"
 	sub_menu_line_color_over="8dc91b"
-	sub_menu_line_alpha="1"
-	sub_menu_line_alpha_over="1"
+	sub_menu_line_alpha="0"
+	sub_menu_line_alpha_over="0"
 	sub_menu_line_x_offset="40"
 	sub_menu_line_y_offset="-15"
 
@@ -148,7 +145,7 @@
 	top_bar_height="50"
 		top_bar_color="ffffff"
 
-		top_bar_logo_height="50"
+		top_bar_logo_height="40"
 	top_bar_logo_y_offset="3"
 	top_bar_logo_x_offset="10"
 
@@ -163,19 +160,19 @@
 	top_bar_settings_icon="settings"
 	top_bar_menu_icon_size="18"
 		top_bar_menu_icons_color="333333"
-		top_bar_menu_icons_color_over="5ea344"
+		top_bar_menu_icons_color_over="C60001"
 	top_bar_menu_icons_bg_color="ffffff"
 	top_bar_menu_icons_bg_alpha="0"
 	top_bar_menu_icons_bg_color_over="F9A61A"
 	top_bar_menu_icons_bg_alpha_over="0"
 	top_bar_icons_font_size="14"
 
-		menu_header_logo_width_percent="80"
-		menu_header_logo_x_offset="20"
-		menu_header_logo_y_offset="20"
+		menu_header_logo_width_percent="60"
+		menu_header_logo_x_offset="55"
+		menu_header_logo_y_offset="30"
 	menu_header_logo_centered="false"
 
-	menu_header_logo_text_font="Arial"
+	menu_header_logo_text_font="opensans"
 	menu_header_logo_text_font_size="18"
 	menu_header_logo_text_font_color="333333"
 	menu_header_logo_text_width="200"
@@ -216,10 +213,10 @@
 	menu_item_line_alpha="0.0"
 	menu_item_line_width="90"
 
-	menu_item_font="Arial"
+	menu_item_font="opensans"
 	menu_item_font_size="14"
 	menu_item_font_color="333333"
-	menu_item_font_color_active="5ea344"
+	menu_item_font_color_active="C60001"
 	menu_item_font_style_active="bold"
 
 
@@ -247,35 +244,37 @@
   	/>  
 
   <fm_settings
-
-  	desktop_start_opened="false"
+	fm_enabled="true"
+	fm_hide_map="true"
+	
+  	desktop_start_opened="true"
 		
   	sub_menu_box_size="45"
 
 	fm_closed_width="340"
 	fm_full_width="400"
 	fm_closed_height="50"
-	fm_closed_alpha="0.8"
-	fm_closed_bgcolor="0x252525"
-	fm_opened_bgcolor="0x252525"
-	fm_image_overlay_color="0x252525"
+	fm_closed_alpha="1"
+	fm_closed_bgcolor="0xC60001"
+	fm_opened_bgcolor="0xC60001"
+	fm_image_overlay_color="0xffffff"
 
 
 	fm_image_alpha="0.2"
 
 	fm_header_icon="menu" 
 	fm_header_icon_size="18"
-	fm_buttons_font="Arial"
+	fm_buttons_font="opensans"
 	fm_buttons_font_size="14"
-	fm_buttons_font_color="ffffff"
-	fm_buttons_font_color_over="01911a"
+	fm_buttons_font_color="ffe4e4"
+	fm_buttons_font_color_over="ffffff"
 
 	fm_buttons_font_color_mobile="ffffff"
-	fm_buttons_font_color_mobile_over="4ca42f"
+	fm_buttons_font_color_mobile_over="C60001"
 
-	pano_description_font="Arial"
+	pano_description_font="opensans"
 	pano_description_font_size="16"
-	pano_description_font_color="fffffe"
+	pano_description_font_color="666666"
 	pano_description_font_color_mobile="000000"
 
 	scroll_color="000000"
@@ -289,7 +288,7 @@
 	map_heading="30"
 
 
-	bm_bgcolor="0a200d"
+	bm_bgcolor="C60001"
 	bm_bgalpha="0.8"
 	bm_bgalpha_opened="1"
   />  
@@ -312,7 +311,7 @@
 		mobile_x_offset="0"
 		mobile_y_offset="30"
 
-			bgcolor="252525"
+			bgcolor="0a200d"
 		bgalpha="0.8"
 		border="0"
 		border_color="ffffff"
@@ -328,9 +327,9 @@
 		line_color="ffffff"
 		line_alpha="0.8"
 
-			bttn_bg_color="01911a	"
+			bttn_bg_color="ffec0e"
 		bttn_bg_alpha="1"
-			bttn_bg_color_over="000000"
+			bttn_bg_color_over="f7dc24"
 		bttn_bg_alpha_over="1"
 		bttn_border="0"
 		bttn_border_color="ffffff"
@@ -340,21 +339,21 @@
 		bttn_edge_radius="0"
 			bttn_font="Arial"
 		bttn_font_size="13"
-		bttn_font_color="fffffe"
-		bttn_font_color_over="fffffe"
+		bttn_font_color="333333"
+		bttn_font_color_over="333333"
 		bttn_font_y_offset="3"
 		bttn_link_opens_in="_self"
 
-			heading_font="Arial"
+			heading_font="opensans"
 		heading_font_size="18"
-		heading_font_color="01911a"
+		heading_font_color="ffec0e"
 		heading_font_align="left"
 		heading_font_weight="regular"
 
 		close_bttn_color="ffffff"
 			close_bttn_color_over="ffec0e"
 
-			paragraph_font="Arial"
+			paragraph_font="opensans"
 		paragraph_font_size_desktop="14"
 		paragraph_font_size_mobile="13"
 		paragraph_font_color="ffffff"
@@ -365,13 +364,6 @@
 		icon_read_more="open_in_new"
 		icon_pano="center_focus_strong"
 	/>
-
-	<action name="setting_init" protect="true" autorun="onstart">
-
-		set(desktop.menu_color, ffffff);
-
-	</action>
-
 
 
 </krpano>
