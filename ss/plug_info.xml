@@ -1,0 +1,28 @@
+<plugin id="SCREENSHOT" category="tr:00 - 360" name="Capture HI RES Screenshopt" description="Capture HI RES Screenshopt" version="1.0" isGraphical="true" multipleInstance="false">
+  <parameters>
+		<group id="size" name="WIDTH/HEIGHT" >
+
+
+		  	<string id="ss_width" name="SS width" default="6000" />
+		  	<string id="ss_height" name="SS height" default="4000" />
+
+
+		</group>
+	
+  </parameters>
+
+	<resources>
+		<file url="xml/ss.xml" />
+		<file url="xml/filesaver.js" />
+
+	</resources>
+
+
+  <templates>
+    <template url="screenshot.tmpl" />
+  </templates>
+  
+
+
+</plugin>
+

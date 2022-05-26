@@ -1,0 +1,14 @@
+{% with p.id as plugname %}
+ 
+	
+<include url=" %FIRSTXML%/{{pluginDirectory}}/xml/ss.xml" />
+<action name="ss_init" autorun="preinit" protect="true" >
+
+    getmessage(ss_width,{{ p.ss_width.messageid }}); 
+
+    getmessage(ss_height,{{ p.ss_height.messageid }}); 
+</action>
+
+
+
+{%endwith%}

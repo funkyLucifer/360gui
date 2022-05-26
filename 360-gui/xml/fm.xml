@@ -1,0 +1,1321 @@
+
+<krpano >
+
+
+
+
+
+<events name="fm_events" keep="true"  if="fm_settings.fm_enabled == true" 
+	onstart=""
+	onnewscene="
+        trace(get(sidebar));
+		fm_resize_action();
+		fm_new_scene_action();
+		bm_set_title_html(); 
+		gmaps_new_scene();
+		if( (fm_settings.desktop_start_opened EQ true) AND (shown_scene LT 2), 
+			delayedcall(0.5,fm_container_click(););
+			);
+
+		if( (scene[get(xml.scene)].latitude) AND ( hide_all_index EQ -1) AND (  hide_gui_index EQ -1 ),
+			set(plugin[gmap].radar.visible,true);
+			,
+				set(plugin[gmap].radar.visible,false);
+		);
+
+		"   
+	onresize="
+		delayedcall(0.2,fm_resize_action();); 
+		bm_resize_action();
+	"
+	onmousedown="if(device.mobile, bm_close_all(););"
+
+	language_changed="
+		fm_new_scene_action();
+
+		bm_set_title_html();
+		bm_set_title_html();
+	"
+
+	/> 
+
+
+
+
+	<action name="fm_setup"  autorun="preinit"  protect="true"  if="fm_settings.fm_enabled == true" >
+		set(bm_txt_bgalpha,1);
+
+		set(desktop_menu_height,calc(desktop.menu_height+desktop.menu_y_offset));
+		set(fm_x_offset, get:desktop.logo_x_offset);
+
+		if(device.desktop, 
+			set(pano_desc_color,get(fm_settings.pano_description_font_color));
+		,
+			set(pano_desc_color,get(fm_settings.pano_description_font_color_mobile));
+			set(layer[fm_container].visible, false);
+			bm_setup_desc();
+			bm_setup_map();
+		);
+
+		set(fm_buttons_css,null);
+		txtadd(fm_buttons_css,'font-family:',get(fm_settings.fm_buttons_font),',Arial; font-size:',get(fm_settings.fm_buttons_font_size),'px; color:#',get(fm_settings.fm_buttons_font_color),';text-align:left;padding-left:10px;padding-top:0px; padding-right:0px;font-weight: bold');
+
+		set(fm_buttons_css_over,null);
+		txtadd(fm_buttons_css_over,'font-family:',get(fm_settings.fm_buttons_font),',Arial; font-size:',get(fm_settings.fm_buttons_font_size),'px; color:#',get(fm_settings.fm_buttons_font_color_over),';text-align:left;padding-left:10px;padding-top:0px; font-weight: bold');
+
+<!-- 		set(bm_FontColor,get(fm_settings.fm_buttons_font_color_mobile));
+	    set(bm_FontColorOver,get(fm_settings.fm_buttons_font_color_mobile_over)); -->
+
+
+		set(fm_buttons_hide_css,null);
+		txtadd(fm_buttons_hide_css,'font-family:',get(fm_settings.fm_buttons_font),',Arial; font-size:',get(fm_settings.fm_buttons_font_size),'px; color:#',get(fm_settings.fm_buttons_font_color),';text-align:left;padding-left:10px;padding-top:0px; padding-right:0px;font-weight: bold; margin-top:-15px');
+
+		set(bm_title_css,null);
+		txtadd(bm_title_css,'font-family:',get(fm_settings.fm_buttons_font),',Arial; font-size:14px; font-weight: normal;color:#',get(fm_settings.fm_buttons_font_color_mobile),';text-align:left;vertical-align: middle;');
+		set(bm_title_css_over,null);
+		txtadd(bm_title_css_over,'font-family:',get(fm_settings.fm_buttons_font),',Arial; font-size:14px; font-weight: normal;color:#',get(fm_settings.fm_buttons_font_color_mobile_over),';text-align:left;vertical-align: middle;');
+
+		set(bm_icons_css,null);
+		txtadd(bm_icons_css,'font-family:',get(fm_settings.fm_buttons_font),',Arial; font-size:10px; font-weight: normal;color:#',get(fm_settings.fm_buttons_font_color_mobile),';text-align:center;vertical-align: middle;');
+		set(bm_icons_css_over,null);
+		txtadd(bm_icons_css_over,'font-family:',get(fm_settings.fm_buttons_font),',Arial; font-size:10px; font-weight: normal;color:#',get(fm_settings.fm_buttons_font_color_mobile_over),';text-align:center;vertical-align: middle;');
+
+
+		set(pano_desc_css,null);
+		txtadd(pano_desc_css, 'font-family:',get(fm_settings.pano_description_font),',Arial; font-size:14px; color:#',get(pano_desc_color),'; line-height: 140%;text-align: justify;text-justify: inter-word;');
+
+		setup_front_image();
+
+	</action>
+
+
+	<action name="fm_new_scene_action"  protect="true"  if="fm_settings.fm_enabled == true"  >
+		<!-- fm_resize_action(); -->
+		delayedcall(0.1,layer[fm_top_text_scrollarea].setcenter(0,0););
+
+		<![CDATA[
+			set(layer[fm_current_pano].html,null);
+			getmessage(gui_maps_current_scene, get(scene[get(xml.scene)].titleid));
+			
+			set(fm_header_html,null);
+			txtadd(fm_header_html,'[i class="material-icons" style=" font-size: ',get(fm_settings.fm_header_icon_size),'px;vertical-align: middle;  padding-bottom:2px;padding-right:10px;"]',get(fm_settings.fm_header_icon),'[/i]',get(gui_maps_current_scene));
+			set(layer[fm_current_pano].html,calc( fm_header_html));
+
+
+			set(fm_header_close_html,null);
+			txtadd(fm_header_close_html,'[i class="material-icons" style=" font-size: 18px;vertical-align: middle;  padding-bottom:2px;padding-right:10px;"]close[/i]',get(gui_maps_current_scene));
+			
+
+			set(fm_share2_html,'');
+			set(fm_share_html,null);
+			txtadd(fm_share_html,'[i class="material-icons" style=" font-size: 22px;vertical-align: middle;  padding-bottom:2px;padding-left:0px;"padding-right:0px;"]share[/i] Share');
+
+
+			set(fm_hide_html,null);
+			txtadd(fm_hide_html,'[i class="material-icons" style=" font-size: 22px;vertical-align: middle;  padding-bottom:2px;padding-right:10px;"]keyboard_capslock[/i] HIDE');
+			set(layer[fm_hide].html,calc(fm_hide_html));
+
+			setup_pano_desc_text();
+			setup_front_image();
+		]]>
+
+	</action>
+
+
+<plugin name="gmap" devices="html5" if="fm_settings.fm_enabled == true" 
+		url="%FIRSTXML%/graphics/360-gui/js/googlemaps.js"
+		align="bottom" x="0" y="0"
+		keep="true"
+		key="AIzaSyDUZPXPC9Y_E4a707YZOplHRYb8sNq-H-w"
+		maptype="normal"
+		language=""
+		zoom="10"
+		tilt="0"
+		heading="0"
+		oy="-50"
+		width="100%"
+		controls="maptype"
+		poi="false"
+		activespotenabled="false"
+		bgcolor="0x000000" bgalpha="0.0"
+		onmapready="
+
+			if (fm_settings.fm_hide_map == true, set(visible, false));
+			delayedcall(0.5,
+				setup_gmaps();
+				set(plugin[gmap].ready,true);
+				);
+		"
+		onmaptypechanged=""
+		onmapmoved=""
+		onmapzoomed=""
+		capture="true"
+		isopen="false"
+		parent="layer[fm_container]"
+		alpha="0"
+		zorder="93"
+		
+>
+<spotstyle name="DEFAULT"
+	activeurl="%FIRSTXML%/graphics/360-gui/map/map_pin_over.png"
+	width="30" height="30"
+	edge="bottom"
+	x="0"
+	y="0"
+	scale="1.0"
+	url="%FIRSTXML%/graphics/360-gui/map/map_pin.png"
+
+/>
+
+<spotstyle name="custom"
+	url=""
+	activeurl=""
+	width="30" height="30"
+	edge="bottom"
+	x="0"
+	y="0"
+	scale="1.0"
+	
+
+/>
+
+  <radar visible="true"
+		 fillcolor="0x000000"
+		 fillalpha="0.25"
+  />
+
+
+
+</plugin>
+	
+	<layer name="map_tooltip" keep="true"  if="fm_settings.fm_enabled == true" 
+		width="auto" height="auto"
+	       type="text"
+			bgcolor="0x00000" bgalpha="0.5"
+	       visible="false" alpha="1" enabled="false" zorder="100"
+	       align="topleft" edge="left" oy="-2" 
+	       textshadow="2" textshadowrange="6.0" textshadowangle="90" textshadowcolor="0x000000" textshadowalpha="1.0"
+	       html="tooltip"
+	       onloaded="
+	       	set(map_tooltip_css, null);
+	       	txtadd(map_tooltip_css,'font-family:Arial; font-size:10px; font-weight: normal;color:#ffffff;text-align:center;vertical-align: middle;padding-left:2px;padding-right:2px;');
+			set(css,get(map_tooltip_css));
+	       "
+	       renderer="css3d"  
+	       />
+
+
+
+	       
+	<action name="map_over_tooltip"  protect="true" >
+		set(layer[map_tooltip].visible,true);
+		set(layer[map_tooltip].html, get(tooltip));
+		
+		asyncloop(hovering, 
+		  	set(layer[map_tooltip].x,calc(mouse.stagex+15)); 
+		  	set(layer[map_tooltip].y,calc(mouse.stagey+25));
+		 );
+	</action>
+
+	<action name="map_out_tooltip"  protect="true" >
+		set(layer[map_tooltip].visible,false);
+		set(layer[map_tooltip].html,'');
+	</action>
+
+	<action name="setup_gmaps"  protect="true" >
+
+		for(set(i,0), i LT scene.count, inc(i),
+			if(scene[get(i)].latitude,
+				calc(spotname, 'spot' + i);
+				calc(spotclickevent, 'activatespot(' + spotname + '); loadscene(' + scene[get(i)].name + ');' );
+				copy(scene[get(i)].mapspotname, spotname);
+
+				if( custom_map_pin_inactive != '', 
+					set(plugin[gmap].spotstyle[custom].url, get(custom_map_pin_inactive));
+					set(plugin[gmap].spotstyle[custom].activeurl, get(custom_map_pin_inactive));
+					set(map_spot_style, 'custom');
+				,
+					set(map_spot_style, 'DEFAULT');
+				);
+
+				plugin[gmap].addimagespot(get(spotname), get(scene[get(i)].latitude), get(scene[get(i)].longitude), calc(scene[get(i)].heading+fm_settings.radar_offset),get(map_spot_style),, get(spotclickevent), null);	
+					set(map_tooltip, null);
+					getmessage(map_tooltip, get(scene[get(i)].titleid));
+					set(plugin[gmap].spot[get(spotname)].tooltip, get(map_tooltip ));
+					txtadd(plugin[gmap].spot[get(spotname)].onover, 'set(hovering,true);map_over_tooltip();');
+					txtadd(plugin[gmap].spot[get(spotname)].onout,  'set(hovering,false);map_out_tooltip();');
+					
+					
+			);
+
+
+		);
+
+		
+			plugin[gmap].activatespot( calc(xml.scene != null ? scene[get(xml.scene)].mapspotname : 'spot0') );
+			plugin[gmap].zoomToSpotsExtent(); 
+
+			plugin[gmap].pantospot(get(scene[get(xml.scene)].mapspotname));
+
+			set(plugin[gmap].zoom, get(fm_settings.map_zoom));
+			set(plugin[gmap].maptype, get(fm_settings.map_type));
+		<!-- 	set(plugin[gmap].heading, get(fm_settings.map_heading)); -->
+			set(plugin[gmap].radar.fillcolor, get(fm_settings.radar_fill_color));
+			set(plugin[gmap].radar.fillalpha, get(fm_settings.radar_fill_alpha));
+
+			set(layer[map_spot].parent, plugin[gmap].spot[spot1].name);
+		
+	</action>
+
+	<action name="gmaps_new_scene"  protect="true" >
+	if(plugin[gmap].ready,
+		plugin[gmap].pantospot(get(scene[get(xml.scene)].mapspotname));
+		plugin[gmap].activatespot(get(scene[get(xml.scene)].mapspotname));		
+		);	
+	</action>
+
+	 <action name="fm_resize_action" protect="true"  >
+
+		if( layer[fm_container].isopen,
+			set(layer[fm_container].height,calc(stageheight-desktop_menu_height));
+		);
+
+		if(device.desktop, set(plugin[gmap].height, calc((stageheight-desktop_menu_height-50-50)/2)););
+
+		if (fm_settings.fm_hide_map == true, 
+			set( fmDesktopHeightDiv, 1);
+		,
+			set( fmDesktopHeightDiv, 2);
+		);
+		
+		set(layer[fm_top].height, calc((stageheight-desktop_menu_height-50-50) / fmDesktopHeightDiv));
+
+		if( calc((stageheight-desktop_menu_height-50-50)/fmDesktopHeightDiv) GT layer[fm_top].pixelwidth,
+			 set(layer[fm_top_image].height, 100%);
+			 set(layer[fm_top_image].width, prop);
+		,
+			 set(layer[fm_top_image].height, prop);
+			 set(layer[fm_top_image].width, 100%);
+		);
+
+		if(device.desktop, 
+			move_front_scrollbar();
+			show_hide_scrollbar();
+		,
+			bm_move_front_scrollbar();
+			bm_show_hide_scrollbar();
+	);
+	 </action>
+	
+
+
+	 <action name="fm_container_click" protect="true"  >
+
+		copy(fl_menu, layer[fm_container]);
+		copy(fl_menu_pano, layer[fm_current_pano]);
+		copy(fl_menu_share, layer[fm_share_bttn]);
+
+		set(layer[fm_share_bttn].enabled, false);
+
+		if(plugin[gmap].isopen EQ false, 
+
+			ga_click('Floating menu','Open', 'click');
+
+		  tween(fl_menu.width, get(fm_settings.fm_full_width), 0.2,easeInQuad);
+		  tween(fl_menu.height, calc(stageheight-desktop_menu_height), 0.2,easeInQuad);
+		  tween(fl_menu.ox, 0, 0.2,easeInQuad);
+		  tween(fl_menu.oy, get(desktop_menu_height), 0.2,easeInQuad);
+		  tween(fl_menu.bgalpha, 1, 0.2,easeInQuad);
+		  tween(layer[fm_current_pano_bg].bgalpha,1, 0.2,easeInQuad);
+		  tween(fl_menu.bgcolor, get(fm_settings.fm_image_overlay_color), 0.2,easeInQuad,
+
+			 tween(layer[gmap].alpha,1,0.1,easeInQuad);
+			 tween(layer[fm_top].alpha,1,0.1,easeInQuad);
+			 set(layer[fm_hide].visible,true);
+			);
+
+		  set(fl_menu.isopen, true);
+
+		  tween(fl_menu_pano.ox, calc(fm_x_offset-40), 0.2,easeInQuad);
+		<!--   tween(fl_menu_pano.ox, 25, 0.2,easeInQuad); -->
+
+		  set(fl_menu_share.onover,null);
+		  set(fl_menu_share.onout,null);
+		  set(fl_menu_share.html,get(fm_share2_html));
+		  tween(fl_menu_share.ox,210, 0.2,easeInQuad);
+		  tween(fl_menu_share.bgalpha,0, 0.2,easeInQuad);
+		  tween(fl_menu_share.width,200,0.2,easeOutQuad);
+		  tween(layer[fm_share_1].ox, 60, 0.2,easeInQuad);
+		  tween(layer[fm_share_2].ox, 90, 0.2,easeInQuad);
+		  tween(layer[fm_share_3].ox, 120, 0.2,easeInQuad);
+		  tween(layer[fm_share_4].ox, 150, 0.2,easeInQuad,
+		  	set(layer[fm_share_bttn].enabled, true);
+		  	set(layer[fm_current_pano].html,calc( fm_header_close_html));
+		  	);
+
+		  set(plugin[gmap].isopen,true);
+		  
+		,
+
+			ga_click('Floating menu','Close', 'click');
+		
+		  tween(fl_menu.width, get(fm_settings.fm_closed_width), 0.2,easeInQuad);
+		  tween(fl_menu.ox, get(fm_x_offset), 0.2,easeInQuad);
+		  tween(fl_menu.height, get(fm_settings.fm_closed_height), 0.2,easeInQuad);
+		  tween(fl_menu.oy, calc(desktop_menu_height+10), 0.2,easeInQuad);
+		  tween(fl_menu.bgalpha, get(fm_settings.fm_closed_alpha), 0.2,easeInQuad);
+		  tween(fl_menu.bgcolor, get(fm_settings.fm_closed_bgcolor), 0.2,easeInQuad);
+		  set(fl_menu.isopen, false);
+
+		  set(fl_menu_pano.css,get(fm_buttons_css));
+		  tween(fl_menu_pano.ox, 0, 0.2,easeInQuad);
+
+		 tween(layer[fm_current_pano_bg].bgalpha,0, 0.2,easeInQuad);
+
+		  set(fl_menu_share.onover,get(layer[fm_share_bttn].over_akcija));
+		  set(fl_menu_share.onout,get(layer[fm_share_bttn].out_akcija));
+		  set(fl_menu_share.css,get(fm_buttons_css));
+		  tween(fl_menu_share.ox, calc(250), 0.2,easeInQuad);
+		  tween(fl_menu_share.bgalpha,0.2, 0.2,easeInQuad);
+
+		  tween(layer[fm_share_1].ox, 90, 0.2,easeInQuad);
+		  tween(layer[fm_share_2].ox, 120, 0.2,easeInQuad);
+		  tween(layer[fm_share_3].ox, 150, 0.2,easeInQuad);
+		  tween(layer[fm_share_4].ox, 180, 0.2,easeInQuad, );
+
+		  set(layer[gmap].alpha,0);
+		  set(layer[fm_top].alpha,0);
+
+		  set(layer[fm_hide].visible,false);
+		  set(plugin[gmap].isopen,false);
+
+
+		  tween(layer[fm_share_bttn].width,90,0.2,easeOutQuad,
+				set(layer[fm_share_bttn].html,get(fm_share_html));
+				set(layer[fm_share_bttn].enabled, true);	
+				set(layer[fm_current_pano].html,calc( fm_header_html));
+
+			 );
+		  
+
+		  );
+	 </action>
+
+
+	<layer name="fm_container" type="text" keep="true" zorder="99"  capture="true" if="fm_settings.fm_enabled == true" 
+		width="320"  height="50" ox="" oy=""
+		align="topleft" edge="topleft" vcenter="false"
+		bgcolor="0x000000" bgalpha="0.6" bgroundedge="2" bgshadow="2 2 2 0x000000 0.2"
+		maskchildren="true" handcursor="false" isopen="false"
+		onclick=""
+		onover="set(control.mousefovchange,0);"
+		onout="set(control.mousefovchange,1);"
+
+		onloaded="
+			
+			set(oy, calc(desktop_menu_height+10));
+			set(ox,get(fm_x_offset));
+			set(bgcolor,get(fm_settings.fm_closed_bgcolor));
+			set(bgalpha,get(fm_settings.fm_closed_alpha));
+			set(width,get(fm_settings.fm_closed_width));
+			"
+	/>  
+	<layer name="fm_current_pano" type="text" keep="true" zorder="50" if="fm_settings.fm_enabled == true" 
+		width="250" height="50" ox="0" oy="0"
+		align="topleft" edge="topleft" vcenter="true"
+		bgcolor="0xffffff" bgalpha="0.0" bgroundedge="2" bgshadow="2 2 2 0x000000 0.2"
+		parent="layer[fm_container]"
+		onclick="fm_container_click"
+		onover="set(css, get(fm_buttons_css_over));"
+		onout="set(css, get(fm_buttons_css));"
+		wordwrap="false"
+		padding="5 310 5 5 " 
+
+		onloaded="
+		set(css,get(fm_buttons_css));
+		set(bgcolor, get:fm_settings.fm_opened_bgcolor);
+		 "
+	 /> 
+
+	<layer name="fm_current_pano_bg" type="text" keep="true" zorder="48" enabled="false" if="fm_settings.fm_enabled == true" 
+		width="100%" height="50" ox="0" oy="0"
+		align="topleft" edge="topleft" vcenter="true"
+		bgalpha="0.0" 
+		parent="layer[fm_container]"
+		onloaded="
+		set(css,get(fm_buttons_css));
+		set(bgcolor, get:fm_settings.fm_opened_bgcolor);
+		 "
+	 /> 
+  <layer name="fm_hide" type="text" keep="true" zorder="51" visible="false" if="fm_settings.fm_enabled == true" 
+		width="100%" height="60" ox="" oy="10"
+		align="bottomleft" edge="bottomleft" vcenter="true"
+		bgcolor="get:fm_settings.fm_opened_bgcolor" bgalpha="1" bgroundedge="2" bgshadow="2 2 2 0x000000 0.2"
+		html="HIDE"
+		onclick="fm_container_click"
+		parent="layer[fm_container]"
+		onloaded="set(css,get(fm_buttons_hide_css));"
+	 /> 
+	<style name="fm_share_icons_style" keep="true"  zorder="93"  if="fm_settings.fm_enabled == true" 
+		width="25" height="25" ox="" oy=""
+		align="left" vcenter="true"
+		parent="layer[fm_share_bttn]"
+		onover="tween(oy,-3,0.1,linear);" onout="tween(oy,0,0.1,linear);"
+	/>  
+  <layer name="fm_share_1" style="fm_share_icons_style" url="%FIRSTXML%/graphics/360-gui/shareIcons/facebook.png" ox="90" onclick="facebookLink();" devices="desktop" if="fm_settings.fm_enabled == true" />  
+  <layer name="fm_share_2" style="fm_share_icons_style" url="%FIRSTXML%/graphics/360-gui/shareIcons/linkedin.png" ox="120" onclick="linkedinLink();" devices="desktop" if="fm_settings.fm_enabled == true" /> 
+  <layer name="fm_share_3" style="fm_share_icons_style" url="%FIRSTXML%/graphics/360-gui/shareIcons/mail.png" ox="150" onclick="emailLink();" devices="desktop" if="fm_settings.fm_enabled == true" /> 
+  <layer name="fm_share_4" style="fm_share_icons_style" url="%FIRSTXML%/graphics/360-gui/shareIcons/link-white.png" ox="180" onclick="copyLink();copyLinkAction();" devices="desktop" if="fm_settings.fm_enabled == true"  /> 
+
+
+
+
+
+	<layer name="fm_share_bttn" type="text" keep="true" zorder="93" devices="desktop" if="fm_settings.fm_enabled == true" 
+		width="90" height="50"
+		align="topleft" vcenter="true"
+		bgcolor="0xffffff" bgalpha="0.1" bgroundedge="2" bgshadow="2 2 2 0x000000 0.2"
+		html="[b]Share[/b]"
+		parent="layer[fm_container]"
+		onloaded="
+			set(css,get(fm_buttons_css));
+			set(ox,calc(layer[fm_container].width-width+20));
+			set(html, get(fm_share_html));
+		"
+		over_akcija="
+			tween(layer[fm_share_bttn].width,215,0.2,easeOutQuad);
+			tween(layer[fm_container].width,465,0.2,easeOutQuad);
+		"
+		out_akcija="
+			tween(layer[fm_share_bttn].width,90,0.1,easeOutQuad);
+			tween(layer[fm_container].width,340,0.1,easeOutQuad);
+		"
+		onover="
+			tween(layer[fm_share_bttn].width,215,0.1,easeOutQuad);
+			tween(layer[fm_container].width,465,0.1,easeOutQuad);
+		"  
+		onout="
+			tween(layer[fm_share_bttn].width,90,0.1,easeOutQuad);
+			tween(layer[fm_container].width,340,0.1,easeOutQuad);
+		"
+	/>  
+
+
+	<layer name="fm_top" type="container" keep="true" zorder="93" visible="true" alpha="1" devices="desktop" if="fm_settings.fm_enabled == true" 
+		width="400" height="400" oy="50"
+		align="topcenter" vcenter="false"
+		bgcolor="0x000000" bgalpha="0" bgroundedge="2" bgshadow="2 2 2 0x000000 0.0"
+		maskchildren="true"  handcursor="false" 
+		parent="layer[fm_container]"
+		onloaded=" "  
+	/>  
+
+  <action name="setup_front_image" protect="true"  >
+  		if(device.mobile, 
+  			set(layer[fm_top_image].visible,false);
+  			set(layer[fm_top_image_custom].visible,false); 
+  		,
+	  		if( desktop_fm_bg_image_custom_check !='' ,
+	  			set(layer[fm_top_image_custom].url, get:desktop_fm_bg_image_custom);
+	  			set(layer[fm_top_image_custom].visible,true);
+	  			set(layer[fm_top_image].visible,false);
+	  		,
+	  			set(layer[fm_top_image_custom].visible,false);
+	  			set(thumb_url, get(scene[get(xml.scene)].thumburl));
+				txtreplace(thumb_url,'thumbnail.jpg', '');
+				set(layer[fm_top_image].url,calc(thumb_url+'html5/0.jpg'));
+  			);
+  		);
+		
+
+  </action>
+
+	<layer name="fm_top_image" type="image" keep="true" zorder="93" visible="true" alpha="0.15" devices="desktop" enabled="false" if="fm_settings.fm_enabled == true" 
+		width="prop" height="100%" 
+		align="center"  
+		parent="layer[fm_top]"
+
+	/>  
+	<layer name="fm_top_image_custom" type="container" keep="true" zorder="93" visible="false" alpha="get:fm_settings.fm_image_alpha" devices="desktop" enabled="false" if="fm_settings.fm_enabled == true" 
+		width="prop" height="100%" 
+		align="center" 
+		parent="layer[fm_top]" 
+		onloaded="
+		
+		"
+
+
+
+	/>  
+
+
+	<layer name="fm_top_text_scrollarea" keep="true" zorder="93" alpha="1"  url="%FIRSTXML%/graphics/360-gui/js/scrollarea.js" enabled="true" if="fm_settings.fm_enabled == true" 
+		width="80%" height="600" ox="50" oy="30"  
+		align="topleft"
+		bgcolor="0xffffff" bgalpha="0.3"
+		parent="layer[fm_top]" maskchildren="true"
+		direction="v" overscroll="0" 
+		onscroll="
+			if(device.desktop, move_front_scrollbar();, bm_move_front_scrollbar(););
+		"
+		onloaded="
+		set(ox,calc(fm_x_offset));
+		set(width, calc(layer[fm_top].width-fm_x_offset*2));
+
+		"
+	/>  
+
+
+	<layer name="fm_top_text_scrollbar" type="text" keep="true" zorder="93" visible="true" alpha="0.2"  if="fm_settings.fm_enabled == true" 
+		width="10" height="50" ox="-5"
+		align="topright" edge="center"
+		bgcolor="calc:'0x'+fm_settings.scroll_color" bgalpha="1"
+		parent="layer[fm_top]"
+		enabled="true"
+		onloaded="if(device.mobile,set(width, 6);set(ox,-3););"
+	/>  
+		<layer name="fm_top_text_scrollbar_bg" type="text" keep="true"  zorder="92" visible="true" alpha="0.08" if="fm_settings.fm_enabled == true" 
+		width="10" height="100%" ox="-5"
+		align="right" edge="center"
+		bgcolor="calc:'0x'+fm_settings.scroll_color" bgalpha="1"
+		parent="layer[fm_top]"
+		onloaded="if(device.mobile,set(width, 6);set(ox,-3););"
+	/>  
+
+	<layer name="fm_top_text" type="text" keep="true"  zorder="93"  visible="true" alpha="1" if="fm_settings.fm_enabled == true" 
+		width="100%" 
+		align="topleft" vcenter="false"
+		bgcolor="0x000000" bgalpha="0" bgroundedge="2" bgshadow="2 2 2 0x000000 0.0"
+		parent="layer[fm_top_text_scrollarea]" maskchildren="true"
+		onloaded="setup_pano_desc_text();"
+		onautosized="
+			set(layer[fm_top_text_scrollarea].height,calc(layer[fm_top_text].pixelheight+50));
+			show_hide_scrollbar();
+			"
+		/>  
+
+  <action name="move_front_scrollbar" protect="true" >
+	 set(float_scrollBarHeight, calc((layer[fm_top].height/layer[fm_top_text_scrollarea].height)*layer[fm_top].height));
+	 set(layer[fm_top_text_scrollbar].height,get(float_scrollBarHeight));
+		set(scroll_pos, 
+			 calc(layer[fm_top_text_scrollarea].toverflow/(layer[fm_top_text_scrollarea].height-layer[fm_top].height)*(layer[fm_top].height-float_scrollBarHeight)+float_scrollBarHeight/2)
+		  );
+	 set(layer[fm_top_text_scrollbar].oy, get(scroll_pos));
+  </action>
+
+  <action name="drag_front_scrollbar" protect="true" >
+	 set(startMousePos, get(mouse.y));
+	 asyncloop(layer[fm_top_text_scrollbar].pressed,  
+		 set(layer[fm_top_text_scrollbar].oy, calc(mouse.y+startMousePos+layer[fm_top_text_scrollbar].height/2));
+		);
+  </action>
+
+  <action name="show_hide_scrollbar" protect="true" >
+		if( layer[fm_top_text_scrollarea].height GT layer[fm_top].height,
+			set(layer[fm_top_text_scrollbar].visible,true);
+			set(layer[fm_top_text_scrollbar_bg].visible,true);
+		,
+			set(layer[fm_top_text_scrollbar].visible,false);
+			set(layer[fm_top_text_scrollbar_bg].visible,false);
+		);
+  </action>
+
+  <action name="setup_pano_desc_text"  protect="true" >
+	 <![CDATA[
+		if(scene[get(xml.scene)].descriptionid != '',
+			getmessage(scene_desc, get(scene[get(xml.scene)].descriptionid )); 
+		,
+			set(g_id, get(scene[get(xml.scene)].group));
+			getmessage(scene_desc, get(panoramagroup[%g_id].descriptionid )); 
+		);
+
+		set(layer[fm_top_text].html, get(scene_desc));
+		set(layer[fm_top_text].css,get(pano_desc_css));
+
+	 ]]>
+  </action>
+
+
+<!-- M O B I L E -->
+
+	<action name="bm_setup_desc"  protect="true"  >
+
+ 		set(layer[fm_container].visible,false);
+		set(layer[fm_top_text_scrollarea].parent, layer[bm_desc_container]);
+		set(layer[fm_top_text_scrollarea].capture, true);
+		set(layer[fm_top_text_scrollarea].width, 85%);
+		set(layer[fm_top_text_scrollarea].ox, 40);
+		set(layer[fm_top_text_scrollarea].overscroll, '0.8');
+		set(layer[fm_top_text_scrollbar].parent, layer[bm_desc_container]);
+		set(layer[fm_top_text_scrollbar].bgcolor, '0x000000');
+
+		set(layer[fm_top_text_scrollbar_bg].parent, layer[bm_desc_container]);
+		set(layer[fm_top_text_scrollbar_bg].bgcolor, '0x000000');			
+
+	</action>
+	
+	<action name="bm_setup_map"  protect="true" >
+		set(plugin[gmap].width, 100%);
+		set(plugin[gmap].height, 200);
+		set(plugin[gmap].oy,200);
+		set(plugin[gmap].parent,null);
+		set(plugin[gmap].alpha,1);
+		set(plugin[gmap].controls,);
+	</action>
+
+
+  <action name="bm_move_front_scrollbar" protect="true" >
+	 set(float_scrollBarHeight, calc((200/layer[fm_top_text_scrollarea].height)*200));
+	 set(layer[fm_top_text_scrollbar].height,get(float_scrollBarHeight));
+		set(scroll_pos, 
+			 calc(layer[fm_top_text_scrollarea].toverflow/(layer[fm_top_text_scrollarea].height-200)*(200-float_scrollBarHeight)+float_scrollBarHeight/2)
+		  );
+	 set(layer[fm_top_text_scrollbar].oy, get(scroll_pos));
+  </action>
+  <action name="bm_show_hide_scrollbar" protect="true" >
+		if( layer[fm_top_text_scrollarea].height GT 200,
+			set(layer[fm_top_text_scrollbar].visible,true);
+			set(layer[fm_top_text_scrollbar_bg].visible,true);
+		,
+			set(layer[fm_top_text_scrollbar].visible,false);
+			set(layer[fm_top_text_scrollbar_bg].visible,false);
+		);
+  </action>
+
+	<layer name="bm_container" type="container" keep="true" zorder="30"  if="fm_settings.fm_enabled == true" 
+		width="100%" height="50" oy="0"
+		align="bottom"
+		bgcolor="0x000000" bgalpha="0" bgborder='1,0,0,0 0xffffff 0.5'
+		maskchildren="false" handcursor="false" capture="true"
+		ondown="bottomSwipe();"
+		onloaded="
+
+		if( (device.desktop) OR (hide_all_index != -1 ) OR (hide_gui_index != -1 ),
+
+			set(visible,false); );	
+
+		"
+	/>
+	<layer name="bm_containerBlack" type="text" keep="true" zorder="81" alpha="get:fm_settings.bm_bgalpha" if="fm_settings.fm_enabled == true" 
+		width="150%" height="50"
+		align="center"
+		bgcolor="calc:'0x'+fm_settings.bm_bgcolor" 
+		parent="layer[bm_container]" 
+		ondown="bottomSwipe();"
+	/>
+
+	<layer name="bm_bar_shadow" type="container" keep="true" zorder="100" alpha="0.5" enabled="false" if="fm_settings.fm_enabled == true" 
+		width="150%" height="300" oy="50"
+		align="top"
+		bgshadow="7 7 7 7 0x000000 0.9"
+		bgcolor="0xffffff" bgalpha="0.0" 
+		parent="layer[bm_container]"
+		
+
+	/>
+	<layer name="bm_containerWhite" type="container" keep="true" zorder="1"  if="fm_settings.fm_enabled == true" 
+		width="100%"
+		align="bottom"
+		bgcolor="0xffffff" bgalpha="1"
+		parent="layer[bm_container]" capture="false"
+		alpha="1"
+		onloaded="
+		set(height,200);
+		set(oy,200);
+		"	
+	/>
+	<layer name="bm_desc_container" type="container" keep="true" zorder="93" alpha="1" if="fm_settings.fm_enabled == true" 
+		width="100%" height="200" oy="200"
+		align="bottom"
+		bgcolor="0x000000" bgalpha="0.0"
+		capture="false"
+		isOpen="false"
+		
+	/>
+	<layer name="bm_containerShadow"	type="container"  keep="true" zorder="94" alpha="0" if="fm_settings.fm_enabled == true" 
+		width="120%" height="0" oy="2"
+		align="top"
+		bgcolor="0xffffff" bgalpha="1" bgborder='0,0,0,0 0x000000 0' bgshadow="30 30 30 30 0x000000 0.8"
+		parent="layer[bm_container]"
+		/>	
+	<layer name="bm_containerClick" type="text" keep="true"  zorder="70" alpha="0.0" if="fm_settings.fm_enabled == true" 
+		width="100%"  height="100%"
+		bgcolor="0x000000" bgalpha="1"
+		enabled="false"
+		onclick="bm_OutsideClick"
+		ondown="bottomSwipe();"
+		/>	
+	<layer name="bm_Title"  type="text" keep="true" zorder="95" if="fm_settings.fm_enabled == true" 
+		height="51" ox="0"
+		align="left" vcenter="true"
+		bgcolor="0xffffff" bgalpha="0" 
+		parent="layer[bm_container]" 
+		onclick="bm_title_click();"
+		ondown="bottomSwipe();"
+		wordwrap="false"
+		onloaded="
+			set(css,get(bm_title_css));
+		"
+	/>
+
+<layer name="bm_Map"  type="text" keep="true" zorder="95" if=" fm_settings.fm_enabled == true" 
+		width="50" height="51" ox="-50"
+		align="right" edge="right" vcenter="true"
+		bgcolor="0xffffff" bgalpha="0.0" bgborder="0 0x00000 0" 
+		parent="layer[bm_container]" capture="true"
+		html='[i class="material-icons" style=" font-size:25px;vertical-align: middle; text-align:left;padding-right:0px;"]pin_drop[/i] Map'
+		html_normal='[i class="material-icons" style=" font-size:25px;vertical-align: middle; text-align:left;padding-right:0px;"]pin_drop[/i] Map'
+		html_over='[i class="material-icons" style=" font-size:25px;vertical-align: middle; text-align:left;padding-right:0px;"]pin_drop[/i] Map'
+		onclick="bm_map_click();"
+		ondown="bottomSwipe();"
+		onloaded="
+
+		set(css,get(bm_icons_css));
+		if (fm_settings.fm_hide_map == true, set(visible, false));
+		"
+
+
+	/>
+
+
+   <action name="bm_set_title_html"  protect="true" >
+		set(bm_TitleVar,null);
+		getmessage(bm_TitleVar, get(scene[get(xml.scene)].titleid));
+
+		set(bm_TitleHtml,null);
+		txtadd(bm_TitleHtml,' [i class="material-icons" style=" font-size:25px;vertical-align: middle; text-align:left;padding-left:10px;padding-right:5px;padding-bottom:2px;"]info[/i]',get(bm_TitleVar));
+		set(bm_TitleHtml_over,null);
+		txtadd(bm_TitleHtml_over,' [i class="material-icons" style=" font-size:25px;vertical-align: middle; text-align:left;padding-left:10px;padding-right:5px;padding-bottom:2px;"]close[/i]',get(bm_TitleVar));
+
+
+		set(bm_TitleHtmlInactive,null);
+		txtadd(bm_TitleHtmlInactive,' [i class="material-icons" style=" font-size:25px;vertical-align: middle; text-align:left;padding-left:10px;padding-right:5px;padding-bottom:2px;"][/i]',get(bm_TitleVar));
+
+		getmessage(scenaDesc, get(scene[get(xml.scene)].descriptionid));
+		if( scenaDesc EQ null ,
+			
+			set(layer[bm_Title].enabled, false);
+			set(layer[bm_Title].html,get(bm_TitleHtmlInactive));
+			
+		,
+			
+			set(layer[bm_Title].enabled, true);
+			set(layer[bm_Title].html,get(bm_TitleHtml));
+			
+		);
+
+
+		if (fm_settings.fm_hide_map == true, 
+			set(bm_Title_sub, 50);
+		,
+			set(bm_Title_sub, 100);
+		);
+
+		set(layer[bm_Title].width, calc(stagewidth-bm_Title_sub));
+
+  	</action>
+
+	<layer name="bm_Share" type="text" keep="true" zorder="95" alpha="1"  if="fm_settings.fm_enabled == true" 
+			width="50"	height="51" ox="0"
+			align="right" edge="right"
+			bgcolor="0xffffff" bgalpha="0.0"
+			parent="layer[bm_container]" vcenter="true"
+			onclick="bm_share_click();"
+			ondown="bottomSwipe();"
+			html='[i class="material-icons" style=" font-size:25px;vertical-align: middle; text-align:left;padding-right:0px;"]share[/i] Share'
+			html_normal='[i class="material-icons" style=" font-size:25px;vertical-align: middle; text-align:left;padding-right:0px;"]share[/i] Share'
+			html_over='[i class="material-icons" style=" font-size:25px;vertical-align: middle; text-align:left;padding-right:0px;"]close[/i] Share'
+			onloaded="set(css,get(bm_icons_css));"
+			
+		/>
+	<layer name="ShareBox"  type="text" keep="true" zorder="100" alpha="1" if="fm_settings.fm_enabled == true" 
+			width="100%" height="200" oy="200"
+			align="bottom" vcenter="true"
+			bgalpha="1"		
+			renderer="webgl"	
+			isOpen="false"
+			ondown="bottomSwipe();"
+		/>
+
+   <action name="bm_OutsideClick" protect="true" >
+	    if(ptplugin[description].isOpen,ptpDescClose(););
+	    if(layer[bm_Share].isOpen EQ true,
+		     shareBoxClose();
+		     tween(layer[bm_container].oy,0,0.25,easeInOutQuad);
+	     );
+	    set(layer[bm_containerClick].enabled,false);
+	    tween(layer[bm_containerClick].alpha,0,0.25,linear);
+  </action>
+
+	<action name="bm_close" protect="true" >
+	set(layer[bm_containerBlack].alpha,get:fm_settings.bm_bgalpha);
+		tween(layer[bm_container].oy,0,0.25,easeInOutQuad);
+	<!-- 	tween(layer[bm_containerBlack].alpha,0.5,0.25,easeInOutQuad); -->
+	</action>
+	<action name="bm_open" protect="true" >
+	set(layer[bm_containerBlack].alpha,get:fm_settings.bm_bgalpha_opened);
+	tween(layer[bm_container].oy,-200,0.25,easeInOutQuad);
+	<!-- tween(layer[bm_containerBlack].alpha,1,0.25,easeInOutQuad); -->
+	
+	</action>
+	<action name="bm_close_all" protect="true" >
+		tween(layer[bm_container].oy,0,0.25,easeInOutQuad);
+ 		if(plugin[gmap].isOpen, bm_map_close());
+	  	if(layer[bm_desc_container].isOpen,	bm_desc_close());
+		if(layer[bm_Share].isOpen EQ true, shareBoxClose(););
+
+	</action>
+	<action name="bm_hide" protect="true" >
+		set(layer[bm_container].visible,false);
+		set(plugin[gmap].visible,false);
+		set(layer[ShareBox].visible,false);	
+		set(layer[bm_Title].visible,false);			
+		set(layer[bm_desc_container].visible,false);
+	</action>
+	<action name="bm_show" protect="true" >
+		set(layer[bm_container].visible,true);
+		set(plugin[gmap].visible,true);
+		set(layer[ShareBox].visible,true);	
+		set(layer[bm_Title].visible,true);
+		set(layer[bm_desc_container].visible,true);
+	</action>
+	<action name="bm_desc_close" protect="true" >
+	set(layer[bm_Title].bgalpha,0);
+	<!-- tween(layer[bm_Title].bgalpha,0,0.01,linear); -->
+	set(layer[bm_Title].css,get(bm_title_css));
+<!-- 	set(layer[bm_Title].html,get(bm_TitleHtml)); -->
+
+
+		tween(layer[bm_desc_container].oy,200,0.25,easeInOutQuad,
+			set(layer[bm_desc_container].isOpen, false);
+			);
+	</action>
+	<action name="bm_desc_open" protect="true" >
+	set(layer[bm_Title].bgalpha,get(bm_txt_bgalpha));
+	<!-- tween(layer[bm_Title].bgalpha,get(bm_txt_bgalpha),0.01,linear); -->
+	ga_click('Bottom menu','Description', 'click');
+	set(layer[bm_Title].css,get(bm_title_css_over));
+	<!-- set(layer[bm_Title].html,get(bm_TitleHtml_over)); -->
+
+		tween(layer[bm_desc_container].oy,0,0.25,easeInOutQuad,
+			set(layer[bm_desc_container].isOpen, true);
+			);
+	</action>
+   <action name="bm_title_click" protect="true" >
+   			if (hd_isopen EQ true, hotspotDetailsClose(););
+		
+		if(layer[bm_desc_container].isOpen,
+			bm_desc_close();
+			bm_close();
+		,
+			bm_open();
+			bm_desc_open();
+			if(layer[mobileSetting].aktivan EQ true,
+				optionsMenuMobileClose();
+				set(layer[mobileSetting].aktivan,false);
+				);		
+		);
+
+		if(plugin[gmap].isOpen, bm_map_close(););
+		if(layer[bm_Share].isOpen EQ true, shareBoxClose());
+	</action>
+
+	<action name="bm_map_close" protect="true" >
+		set(layer[bm_Map].bgalpha,0);
+		<!-- tween(layer[bm_Map].bgalpha,0,0.01,linear); -->
+		set(layer[bm_Map].css,get(bm_icons_css));
+		<!-- set(layer[bm_Map].html,get(layer[bm_Map].html_normal)); -->
+		tween(plugin[gmap].oy,200,0.25,easeInOutQuad,
+			set(plugin[gmap].isOpen, false);
+			);
+	</action>
+	<action name="bm_map_open" protect="true" >
+		set(layer[bm_Map].bgalpha,get(bm_txt_bgalpha));
+		<!-- tween(layer[bm_Map].bgalpha,get(bm_txt_bgalpha),0.01,linear); -->
+		ga_click('Bottom menu','Map', 'click');
+		set(layer[bm_Map].css,get(bm_icons_css_over));
+		<!-- set(layer[bm_Map].html,get(layer[bm_Map].html_over)); -->
+			tween(plugin[gmap].oy,0,0.25,easeInOutQuad,
+				set(plugin[gmap].isOpen, true);
+				
+				);
+	</action>
+	<action name="bm_map_click" protect="true" >
+
+	  	if(plugin[gmap].isOpen,
+	 		bm_map_close();
+	 		bm_close();	
+		,
+			bm_map_open();
+			bm_open();
+
+			if (hd_isopen EQ true, hotspotDetailsClose(););
+			if(layer[mobileSetting].aktivan EQ true,
+				optionsMenuMobileClose();
+				set(layer[mobileSetting].aktivan,false);
+			);		
+		);
+
+	  	if(layer[bm_Share].isOpen EQ true, shareBoxClose());
+		if(layer[bm_desc_container].isOpen,	bm_desc_close());
+
+	</action>
+
+   <action name="bm_share_click" protect="true" >
+
+
+	  	if(layer[bm_Share].isOpen EQ true, 
+	  		shareBoxClose();
+	  		bm_close();
+
+		,
+			shareBoxOpen();
+			bm_open();
+
+		);
+
+		if(plugin[gmap].isOpen, bm_map_close());
+	  	if(layer[bm_desc_container].isOpen,	bm_desc_close());
+	  	if (hd_isopen EQ true, hotspotDetailsClose(););
+ 	</action>
+
+   <action name="shareBoxClose" protect="true" >
+
+   		set(layer[bm_Share].bgalpha,0);
+  		<!-- tween(layer[bm_Share].bgalpha,0,0.01,linear); -->
+ 		set(layer[bm_Share].css,get(bm_icons_css));
+ 		<!-- set(layer[bm_Share].html,get(layer[bm_Share].html_normal)); -->
+		tween(layer[ShareBox].oy,200,0.25,easeInOutQuad,
+			set(layer[bm_Share].isOpen,false);
+			);
+		
+  </action>
+
+ 	<action name="shareBoxOpen" protect="true" >
+ 		
+ 		set(layer[bm_Share].bgalpha,get(bm_txt_bgalpha));
+ 		<!-- tween(layer[bm_Share].bgalpha,get(bm_txt_bgalpha),0.01,linear); -->
+ 		ga_click('Bottom menu','Share', 'click');
+	 	set(layer[bm_Share].isOpen,true); 
+	 	set(layer[bm_Share].css,get(bm_icons_css_over));
+	 	<!-- set(layer[bm_Share].html,get(layer[bm_Share].html_over)); -->	
+		set(layer[ShareBox].width,get(stagewidth));
+		tween(layer[ShareBox].oy,0,0.25,easeInOutQuad,
+			
+			);
+
+		if(layer[mobileSetting].aktivan EQ true,
+			optionsMenuMobileClose();
+			set(layer[mobileSetting].aktivan,false);
+		);	
+
+  	</action>
+
+
+
+
+   <action name="copyLinkAction" protect="true" >
+		if(layer[bm_Share].isOpen EQ true, shareBoxClose());
+	  	tween(layer[bm_container].oy,0,0.25,easeInOutQuad);
+	  	tween(layer[linkCopied].oy,0,0.25,easeInOutQuad,
+  	 	delayedcall(2,
+  	 		tween(layer[linkCopied].oy,50,0.25,easeInOutQuad);
+  	 		);
+  	 	);
+	</action>
+
+    <action name="bottomSwipe" protect="true" >		
+    	set(start_bottom_Mouse_y, get(mouse.y));
+
+    	set(onup,
+   
+    		if( mouse.y GT calc(start_bottom_Mouse_y+25), 
+				bm_close_all();
+			);
+    		if( mouse.y LT calc(start_bottom_Mouse_y-25), 
+				set(bm_open_action, get(onclick));
+				bm_open_action();
+			);
+
+
+		);
+
+
+ 	
+	</action>
+
+
+    <action name="bm_resize_action" protect="true" >		
+			if( stagewidth GT stageheight ,
+			set(layer[bottomBarBg].visible,false);
+			set(layer[bottomBarBg].oy,0);
+			,
+			set(layer[bottomBarBg].visible,true);
+
+			 set(layer[bottomBarBgClick].enabled,false);
+	 		 set(layer[bottomBarBgClick].alpha,0);
+
+			set(layer[ShareBox].width,100%);
+
+		);
+	</action>
+
+
+<layer name="facebookShare" url="%FIRSTXML%/graphics/360-gui/shareIcons/facebook.png" keep="true" type="image" width="40" height="40" edge="center" align="left" ox="20" oy="-50" parent="layer[ShareBox]"  if="fm_settings.fm_enabled == true" 
+onloaded="set(ox, get(layer[facebookText].ox)); " 
+onclick="facebookLink();shareBoxClose();tween(layer[bm_container].oy,0,0.25,easeInOutQuad);"
+ondown="bottomSwipe();"
+/>
+
+<layer name="linkedinShare" url="%FIRSTXML%/graphics/360-gui/shareIcons/linkedin.png" keep="true" type="image" width="40" height="40" edge="center" align="left" ox="20" oy="-50" parent="layer[ShareBox]"  if="fm_settings.fm_enabled == true" 
+onclick="linkedinLink();shareBoxClose();tween(layer[bm_container].oy,0,0.25,easeInOutQuad);ga_click('Share','Linkedin', 'click');" ondown="bottomSwipe();" onloaded="set(ox, get(layer[linkedinText].ox));" />
+
+<layer name="emailShare" url="%FIRSTXML%/graphics/360-gui/shareIcons/mail.png" keep="true" type="image" width="40" height="40" edge="center" align="left" oy="-50" parent="layer[ShareBox]"  if="fm_settings.fm_enabled == true" 
+onclick="emailLink();shareBoxClose();tween(layer[bm_container].oy,0,0.25,easeInOutQuad);ga_click('Share','E-mail', 'click');" ondown="bottomSwipe();" onloaded="set(ox, get(layer[emailText].ox));" />
+
+<layer name="linkShare" url="%FIRSTXML%/graphics/360-gui/shareIcons/link.png" keep="true" type="image" width="40" height="40" ox="20" edge="center" align="left" oy="-50" parent="layer[ShareBox]"  if="fm_settings.fm_enabled == true" 
+onclick="if (device.ios, copyLinkIos();,copyLink(); );copyLinkAction();shareBoxClose();tween(layer[bm_container].oy,0,0.25,easeInOutQuad);ga_click('Share','Copy link', 'click');" ondown="bottomSwipe();" onloaded="set(ox,get(layer[linkText].ox));" />
+
+<layer name="messengerShare" url="%FIRSTXML%/graphics/360-gui/shareIcons/messenger.png" keep="true" type="image" width="40" height="40" edge="center" align="left" ox="20" oy="40" parent="layer[ShareBox]"  if="fm_settings.fm_enabled == true" 
+onclick="messengerLink();shareBoxClose();tween(layer[bm_container].oy,0,0.25,easeInOutQuad);ga_click('Share','Messenger', 'click');" ondown="bottomSwipe();" onloaded="set(ox, get(layer[messengerText].ox));" />
+
+<layer name="whatsupShare" url="%FIRSTXML%/graphics/360-gui/shareIcons/whatsapp.png" keep="true" type="image" width="40" height="40" edge="center" align="left" ox="20" oy="40" parent="layer[ShareBox]"  if="fm_settings.fm_enabled == true" 
+onclick="whatsappLink();shareBoxClose();tween(layer[bm_container].oy,0,0.25,easeInOutQuad);ga_click('Share','WhatsApp', 'click');" ondown="bottomSwipe();" onloaded="set(ox, get(layer[linkedinText].ox));" />
+
+<layer name="viberShare" url="%FIRSTXML%/graphics/360-gui/shareIcons/viber.png" keep="true" type="image" width="40" height="40" edge="center" align="left" oy="40" parent="layer[ShareBox]"  if="fm_settings.fm_enabled == true" 
+onclick="viberLink();shareBoxClose();tween(layer[bm_container].oy,0,0.25,easeInOutQuad);ga_click('Share','Viber', 'click');" ondown="bottomSwipe();" onloaded="set(ox, get(layer[viberText].ox));" />
+
+<layer name="smsShare" url="%FIRSTXML%/graphics/360-gui/shareIcons/sms.png" keep="true" type="image" width="40" height="40" ox="20" edge="center" align="left" oy="40" parent="layer[ShareBox]"  if="fm_settings.fm_enabled == true" 
+onclick="smsLink();shareBoxClose();tween(layer[bm_container].oy,0,0.25,easeInOutQuad);ga_click('Share','SMS', 'click');" ondown="bottomSwipe();" onloaded="set(ox,get(layer[smsText].ox));" />
+
+
+<layer name="facebookText"  keep="true" type="text" width="80" height="20" edge="center" align="left" ox="20" oy="-10" parent="layer[ShareBox]"  if="fm_settings.fm_enabled == true" 
+html="Facebook" onloaded="
+
+	if(device.desktop, set(ox, calc(layer[ShareBox].width*0.2));,set(ox, calc(stagewidth*0.2)););
+	set(facebookTextCss,null);
+	txtadd(facebookTextCss,'font-family:Roboto,Arial; font-size:12px; font-weight: normal;color:#000000;text-align:center;vertical-align: middle;');
+	set(css,get(facebookTextCss));
+" 
+onclick=""
+/>
+<layer name="linkedinText"  keep="true" type="text" width="70" height="20" edge="center" align="left" ox="20" oy="-10" parent="layer[ShareBox]"  if="fm_settings.fm_enabled == true" 
+onclick="" html="LinkedIn" onloaded="
+	if(device.desktop, set(ox, calc(layer[ShareBox].width*0.4));,set(ox, calc(stagewidth*0.4)););
+	set(css,get(facebookTextCss));
+" />
+<layer name="emailText"  keep="true" type="text" width="80" height="20" edge="center" align="left" ox="20" oy="-10" parent="layer[ShareBox]"  if="fm_settings.fm_enabled == true" 
+onclick="" html="e-mail" onloaded="
+	if(device.desktop, set(ox, calc(layer[ShareBox].width*0.6));,set(ox, calc(stagewidth*0.6)););
+	set(css,get(facebookTextCss));
+" />
+<layer name="linkText"  keep="true" type="text" width="80" height="20" edge="center" align="left" ox="20" oy="-10" parent="layer[ShareBox]"  if="fm_settings.fm_enabled == true" 
+onclick="" html="Copy link" onloaded="
+	if(device.desktop, set(ox, calc(layer[ShareBox].width*0.8));,set(ox, calc(stagewidth*0.8)););
+	set(css,get(facebookTextCss));
+" />
+<layer name="messengerText"  keep="true" type="text" width="80" height="20" edge="center" align="left" ox="20" oy="80" parent="layer[ShareBox]"  if="fm_settings.fm_enabled == true" 
+html="Messenger" onloaded="
+	set(ox, calc(stagewidth*0.2));
+	set(css,get(facebookTextCss));
+" 
+onclick=""
+/>
+<layer name="whatsupText"  keep="true" type="text" width="70" height="20" edge="center" align="left" ox="20" oy="80" parent="layer[ShareBox]"  if="fm_settings.fm_enabled == true" 
+onclick="" html="WhatsApp" onloaded="
+	set(ox, calc(stagewidth*0.4));
+	set(css,get(facebookTextCss));
+" />
+<layer name="viberText"  keep="true" type="text" width="80" height="20" edge="center" align="left" ox="20" oy="80" parent="layer[ShareBox]"  if="fm_settings.fm_enabled == true" 
+onclick="" html="Viber" onloaded="
+	set(ox, calc(stagewidth*0.6));
+	set(css,get(facebookTextCss));
+" />
+<layer name="smsText"  keep="true" type="text" width="80" height="20" edge="center" align="left" ox="20" oy="80" parent="layer[ShareBox]"  if="fm_settings.fm_enabled == true" 
+onclick="" html="SMS" onloaded="
+	set(ox, calc(stagewidth*0.8));
+	set(css,get(facebookTextCss));
+" />
+<layer name="linkCopied"  keep="true" type="text" width="100%" height="50" align="bottom" ox="0" oy="50" bgcolor="0xffffff" bgalpha="1" zorder="100" vcenter="true"  if="fm_settings.fm_enabled == true" 
+html="Link copied to Clipboard" onloaded="
+	set(linkCopiedCss,null);
+	txtadd(linkCopiedCss,'font-family:Roboto,Arial; font-size:14px; font-weight: normal;color:#000000;text-align:center;vertical-align: middle;');
+	set(css,get(linkCopiedCss));
+" 
+onclick=""
+/>
+
+	<action name="showbm_" protect="true" >
+		stopdelayedcall(bm_HideCall);
+		tween(layer[bm_container].alpha,1,0.6,easeOutQuad);
+	</action>
+
+	   <action name="facebookLinkApp" type="Javascript"  protect="true" >
+   	   <![CDATA[
+		var urlLink =  window.location.href;
+		var encodedURL = encodeURIComponent(urlLink); 
+		
+		window.open('fb://share?link=' + encodedURL );
+		]]>
+  </action>
+   <action name="facebookLink" type="Javascript"  protect="true" >
+		<![CDATA[
+			var urlLink =  window.location.href;
+			var encodedURL = encodeURIComponent(urlLink); 
+			window.open('https://www.facebook.com/sharer/sharer.php?u='+ encodedURL); 
+						
+		]]>
+  </action>
+   <action name="linkedinLink" type="Javascript"  protect="true" >
+		<![CDATA[
+			var urlLink =  window.location.href;
+			var encodedURL = encodeURIComponent(urlLink); 
+			window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + encodedURL+ '&app_id=123454321');
+		]]>
+	</action>
+	<action name="emailLink" type="Javascript"  protect="true" >
+		<![CDATA[
+			var urlLink =  window.location.href;
+			var title = document.title ;
+			var encodedURL = encodeURIComponent(urlLink); 
+			window.open('mailto:?subject='+title+'&body=' + encodedURL);
+		]]>
+	</action>
+	<action name="CopyLink" type="Javascript"  protect="true" >
+		var dummy = document.createElement('input'),
+		text = window.location.href;
+		document.body.appendChild(dummy);
+		dummy.value = text;
+		dummy.select();
+		document.execCommand('copy');
+		document.body.removeChild(dummy);
+	</action>
+   <action name="messengerLink" type="Javascript"  protect="true" >
+	   <![CDATA[
+			var urlLink =  window.location.href;
+			var encodedURL = encodeURIComponent(urlLink); 
+			window.open('fb-messenger://share?link=' + encodedURL + '&app_id=123454321');
+		]]>
+	</action>
+   <action name="whatsappLink" type="Javascript"  protect="true" >
+		<![CDATA[
+			var urlLink =  window.location.href;
+			var encodedURL = encodeURIComponent(urlLink); 
+			window.open('whatsapp://send?text=' + encodedURL);
+		]]>
+	</action>
+     <action name="viberLink" type="Javascript"  protect="true" >
+		 <![CDATA[
+			var urlLink =  window.location.href;
+			var encodedURL = encodeURIComponent(urlLink); 
+			window.open('viber://forward?text=' + encodedURL);
+		]]>
+	</action>
+	<action name="smsLink"   protect="true" >
+  	if(device.ios, 
+  		smsLinkIOS();
+  		,
+  		smsLinkAll();
+  		);
+	</action>
+
+	<action name="smsLinkAll" type="Javascript" protect="true"  >
+		<![CDATA[
+			var urlLink =  window.location.href;
+			var encodedURL = encodeURIComponent(urlLink); 
+			window.open('sms:?body=' + encodedURL);
+		]]>
+	</action>
+	<action name="smsLinkIOS" type="Javascript"  protect="true" >
+		<![CDATA[
+		var urlLink =  window.location.href;
+		var encodedURL = encodeURIComponent(urlLink); 
+		window.open('sms:&body=' + encodedURL);
+		]]>
+	</action>
+
+   <action name="copyLinkIos" type="Javascript"  protect="true" >
+		window.Clipboard = (function(window, document, navigator) {
+		    var textArea,
+		        copy;
+		    function isOS() {
+		        return navigator.userAgent.match(/ipad|iphone/i);
+		    }
+
+		    function createTextArea(text) {
+		        textArea = document.createElement('textArea');
+		        textArea.value = text;
+		        document.body.appendChild(textArea);
+		    }
+
+		    function selectText() {
+		        var range,
+		            selection;
+
+		        if (isOS()) {
+		            range = document.createRange();
+		            range.selectNodeContents(textArea);
+		            selection = window.getSelection();
+		            selection.removeAllRanges();
+		            selection.addRange(range);
+		            textArea.setSelectionRange(0, 999999);
+		        } else {
+		            textArea.select();
+		        }
+		    }
+
+		    function copyToClipboard() {        
+		        document.execCommand('copy');
+		        document.body.removeChild(textArea);
+		    }
+
+		    copy = function(text) {
+		        createTextArea(text);
+		        selectText();
+		        copyToClipboard();
+		    };
+
+		    return {
+		        copy: copy
+		    };
+		})(window, document, navigator);
+
+		Clipboard.copy(window.location.href);
+  </action>
+
+ 
+	<layer name="poweredBy" type="text"  keep="true" visible="true" alpha="1"  zorder="90"
+		width="100" height="50" oy="-10" ox="-10"
+		align="bottomright"	edge="right"
+		bgalpha="0.0"
+		onclick="  openurl(get(mobile.menu_header_poweredby_link),_blank)"
+		onloaded="if(device.mobile, set(visible,false));"
+
+	/>
+	 
+<!-- 	<layer name="poweredBy1" type="text"  keep="true" alpha="1" zorder="100"
+		width="100"	height="50" ox="0"
+		align="topright" edge="topright"
+		bgalpha="0"
+		html="Powered by"
+		onclick="  openurl(get(mobile.menu_header_poweredby_link),_blank)"
+		onloaded="
+			txtadd(poweredBy1Css,'font-family:Arial; font-size:10px; font-weight: normal;color:#ffffff; text-align:right;');
+			set(css,get(poweredBy1Css));
+		"
+		parent="layer[poweredBy]"
+	/> -->
+	<layer name="poweredBy2"  type="text"  keep="true"  alpha="1" zorder="100"
+		width="170" height="50" ox="0" oy="15"
+		align="topright" edge="topright"
+		bgalpha="0"
+		html="get:mobile.menu_header_poweredby_text"
+		onclick="  openurl(get(mobile.menu_header_poweredby_link),_blank)"
+		onloaded="
+			txtadd(poweredBy2Css,'font-family:Arial; font-size:12px; font-weight: normal;color:#ffffff; text-align:right;');
+			set(css,get(poweredBy2Css));
+		"
+		parent="layer[poweredBy]"
+	/>
+
+</krpano>

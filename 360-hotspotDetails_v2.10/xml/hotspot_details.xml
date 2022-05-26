@@ -1,0 +1,517 @@
+<krpano >
+ 
+	<events name="newscene" keep="true" onnewscene=
+		"
+			hotspotDetailsClose();
+			hotspotDetails();
+		"
+	/>
+	<events name="viewchage" keep="true" onviewchange=
+		"
+			if( (device.desktop) AND (hd_isopen),hotspotDetailsPosition );
+		"
+	/>
+		
+	
+	<style name="hd_container_style"  type="container" visible="false" distorted="false"  enabled="true"  alpha="0 " zorder="40" 
+		width="get:hsdet.width" 
+		bgcolor="calc:'0x'+hsdet.bgcolor" bgalpha="get:hsdet.bgalpha"
+		bgshadow="5 5 6 0 0x000000 0.3"
+		handcursor="false"  capture="true"
+
+	/>	
+	<layer name="hd_pointer_mask"  type="container" keep="true"  enabled="false" 
+		bgcolor="0x333333" bgalpha="0"
+		handcursor="false" capture="true" maskchildren="true"
+	/>	
+	<layer name="hd_pointer"  type="container" keep="true"  enabled="false" rotate="45"
+		width="get:hsdet.pointer_size" height="get:hsdet.pointer_size"
+		bgalpha="get:hsdet.bgalpha"
+		handcursor="false" capture="false" maskchildren="true"
+		parent="layer[hd_pointer_mask]"
+		onloaded="
+		set(bgcolor,calc:'0x'+hsdet.bgcolor);
+		set(bgborder, calc(hsdet.border+','+hsdet.border+','+hsdet.border+','+hsdet.border+' 0x'+hsdet.border_color+' '+ hsdet.border_alpha ));
+		"
+	/>	
+	<layer name="hd_header_text"  type="text" keep="true"  enabled="true" 
+		height="auto"
+		backgroundalpha="0.0"
+		align="topleft"
+		handcursor="false" capture="false" maskchildren="true"
+		onclick="hotspotDetailsClose();"
+	/>	
+	<layer name="hd_line"  type="container" keep="true"  enabled="true" visible="true" 
+		height="1" oy="35"
+		bgalpha="1" bgcolor="0x000000"
+		align="top"
+		handcursor="false" capture="false" 
+		onclick="hotspotDetailsClose();"
+	/>	
+	<layer name="hd_button"  type="text" keep="true"  enabled="true" zorder="100" zorder2="1"
+		align="top" vcenter="true"	
+	/>	
+
+	<layer name="directions_button"  type="text" keep="true"  enabled="true" zorder="100" zorder2="1"
+		align="top" vcenter="true"	
+		visible="false"
+	/>	
+
+	<style name="hd_button_style"  type="text" keep="true"  enabled="true" zorder="100" zorder2="1"
+		width="get:hsdet.bttn_width" height="get:hsdet.bttn_height"
+		bgcolor="calc:'0x'+hsdet.bttn_bg_color" bgalpha="get:hsdet.bttn_bg_alpha"
+		bgroundedge="get:hsdet.bttn_edge_radius"
+		align="topcenter" vcenter="true"	
+		onover="
+			tween(bgcolor, 	calc('0x'+hsdet.bttn_bg_color_over),0.15,easeInOutQuad);
+			tween(bgalpha, 	get(hsdet.bttn_bg_alpha_over),0.15,easeInOutQuad);
+			set(css,get(css_over));
+		"
+		onout="
+			tween(bgcolor, calc('0x'+hsdet.bttn_bg_color),0.15,easeInOutQuad);
+			tween(bgalpha, get(hsdet.bttn_bg_alpha),0.15,easeInOutQuad);
+			set(css,get(css_inactive));
+		"
+		onloaded="
+			set(css_inactive,calc:'font-family:'+hsdet.bttn_font+',Arial; font-size:'+hsdet.bttn_font_size+'px; color:#'+hsdet.bttn_font_color+';text-align:center;padding-top:'+hsdet.bttn_font_y_offset+'px;' );
+			set(css_over, calc:'font-family:'+hsdet.bttn_font+',Arial; font-size:'+hsdet.bttn_font_size+'px; color:#'+hsdet.bttn_font_color_over+';text-align:center;padding-top:'+hsdet.bttn_font_y_offset+'px;');
+			set(bgborder, calc(hsdet.bttn_border+' 0x'+hsdet.bttn_border_color+' 1'));
+			set(css,get(css_inactive));
+		"
+	/>	
+
+	<layer name="hd_close_button"  type="text" keep="true"  enabled="true" zorder="100" zorder2="1"
+		width="33" height="25" ox="0" oy="10"
+		align="topright"  vcenter="true"
+		backgroundalpha="0" 
+		onclick="hotspotDetailsClose();"
+	/>	
+	<layer name="hd_paragraph"  type="text" keep="true"  enabled="false" zorder="100" zorder2="1" visible="true" distorted="false"
+		align="top"  vcenter="true"
+		backgroundalpha="0" handcursor="false" 
+		onclick="hotspotDetailsClose();"
+	/>	
+
+
+	<action name="hsdet_init_vars" protect="true" >	
+		set(zOrderVar,10);
+		set(pointerSize,get:hsdet.pointer_size);
+	</action>
+
+	<action name="hotspotDetails" protect="true" >
+		set(parentName,null);
+
+		set(hd_isopen,false);
+
+		hsdet_init_vars();
+	
+		<!-- HD CONTAINER STYLE VARS-->
+
+
+		set(style[hd_container_style].bgborder, calc(hsdet.border+','+hsdet.border+','+hsdet.border+','+hsdet.border+' 0x'+hsdet.border_color+' '+ hsdet.border_alpha ));
+
+		set(style[hd_container_style].bgroundedge, get:hsdet.edge_radius);
+
+		if(device.desktop,
+			<!-- CONTAINER LAYER-->
+			set(layer[HDcontainer].height,calc(layer[hd_button].oy+hd_button_height+hsdet.button_bottom_offset));	 
+
+			
+			set(layer[HDcontainer].capture,true);
+			layer[HDcontainer].loadstyle(hd_container_style);
+			set(layer[HDcontainer].zorder,60);
+		,
+			<!-- CONTAINER HOTSPOT-->
+			set(hotspot[HDcontainer].capture,false);
+			hotspot[HDcontainer].loadstyle(hd_container_style);
+			set(hotspot[HDcontainer].height,calc(layer[hd_button].oy+hd_button_height+hsdet.button_bottom_offset));
+
+		
+		);
+
+		<!-- POINTER I MASK-->	
+		if(device.desktop,
+			set(layer[hd_pointer_mask].parent,layer[HDcontainer]);
+			set(layer[hd_pointer_mask].align,center);
+			set(layer[hd_pointer_mask].x,calc(-hsdet.width/2-pointerSize));
+		,
+			set(layer[hd_pointer_mask].parent,hotspot[HDcontainer]);
+			set(layer[hd_pointer_mask].oy,calc(pointerSize/(-1))); 
+			set(layer[hd_pointer_mask].align,top);
+			set(layer[hd_pointer_mask].edge,top);
+			set(layer[hd_pointer_mask].x,0);
+			set(layer[hd_pointer_mask].y,calc(pointerSize*(-1)));
+		);
+		set(layer[hd_pointer_mask].width,calc(pointerSize*2));
+		set(layer[hd_pointer_mask].height,calc(pointerSize*2));	
+		set(layer[hd_pointer_mask].zorder,calc(zOrderVar-2));
+
+		
+		set(layer[hd_pointer].type,container);
+		set(layer[hd_pointer].align,center);
+		if(device.desktop,
+			set(layer[hd_pointer].x,get(pointerSize));
+			,
+			set(layer[hd_pointer].y,calc(pointerSize*(1)));
+
+		);
+
+	<!-- CONTAINTER HEADER LAYER-->	
+		set(layer[hd_header_text].ox,get:hsdet.internal_margin);
+		set(layer[hd_header_text].oy,get:hsdet.internal_margin);
+		set(layer[hd_header_text].width,calc(hsdet.width-hsdet.internal_margin*2-layer[hd_close_button].width));
+		set(layer[hd_header_text].zorder,get(zOrderVar));
+		if(device.desktop,
+			set(layer[hd_header_text].parent,layer[HDcontainer]);
+			,
+			set(layer[hd_header_text].parent,hotspot[HDcontainer]);
+		);
+
+			if( (parButtonGoogleCalled EQ 'none') AND (parButtonTextCalled EQ 'none'), 
+					set(hd_button_height, 0);
+				,
+					set(hd_button_height, calc(layer[hd_button].height/2));
+				);
+		
+		set(layer[hd_header_text].onautosized,
+			
+			set(layer[hd_line].oy,calc(layer[hd_header_text].height+hsdet.line_y_offset+hsdet.internal_margin));
+			set(layer[hd_paragraph].oy,calc(layer[hd_line].oy+hsdet.paragraph_y_offset));
+
+
+			set(layer[hd_paragraph].onautosized,
+				set(layer[hd_button].oy,calc(layer[hd_paragraph].oy+layer[hd_paragraph].height+layer[hd_button].height/2+hsdet.bttn_y_offset));
+				set(layer[directions_button].oy, get(layer[hd_button].oy));
+				
+				if( (parButtonGoogleCalled EQ 'none') AND (parButtonTextCalled EQ 'none'), 
+					set(hd_button_height, 0);
+				,
+					set(hd_button_height, calc(layer[hd_button].height/2));
+				);
+
+				if(device.desktop,
+		 			set(layer[HDcontainer].height,calc(layer[hd_button].oy+hd_button_height+hsdet.button_bottom_offset));	 
+				,
+					set(hotspot[HDcontainer].height,calc(layer[hd_button].oy+hd_button_height+hsdet.button_bottom_offset));	 
+				);
+			);
+		
+		);
+
+		set(hd_header_textCss,null);
+		set(layer[hd_header_text].css,calc('font-family:'+hsdet.heading_font+',Arial; font-size:'+hsdet.heading_font_size+'px;font-weight:'+hsdet.heading_font_weight+'; color:#'+hsdet.heading_font_color+';text-align:'+hsdet.heading_font_align+'line-height: 115%'));
+	<!-- CONTAINTER LINE-->		
+		set(layer[hd_line].oy,get:hsdet.line_y_offset); 
+		set(layer[hd_line].width, calc(hsdet.width-hsdet.internal_margin*2)); 
+		set(layer[hd_line].height,get:hsdet.line_height); 
+		set(layer[hd_line].zorder,get(zOrderVar));
+		set(layer[hd_line].bgcolor,calc('0x'+hsdet.line_color));
+		set(layer[hd_line].bgalpha,get:hsdet.line_alpha);
+		if(device.desktop,
+			set(layer[hd_line].parent,layer[HDcontainer]);
+		,
+			set(layer[hd_line].parent,hotspot[HDcontainer]);
+		);
+
+
+	<!-- CONTAINTER BUTTON-->		
+		if(device.desktop,
+			set(layer[hd_button].parent,layer[HDcontainer]);
+		,
+			set(layer[hd_button].parent,hotspot[HDcontainer]);
+		);
+		layer[hd_button].loadstyle(hd_button_style);
+		set(layer[hd_button].html,{{ action.buttonText.value}});
+
+		if(device.desktop,
+			set(layer[directions_button].parent,layer[HDcontainer]);
+		,
+			set(layer[directions_button].parent,hotspot[HDcontainer]);
+		);
+		set(layer[directions_button].html,{{ action.buttonText.value}});
+		layer[directions_button].loadstyle(hd_button_style);
+
+
+	<!-- CONTAINTER CLOSE-->		
+		set(layer[hd_close_button].onclick,hotspotDetailsClose());
+		txtadd(hd_close_button_html,'[i class="material-icons" style=" font-size:20px;vertical-align: middle; text-align:center;"]close[/i]');
+		set(layer[hd_close_button].html,get(hd_close_button_html));
+		set(hd_close_button_css, calc('font-family:Arial; font-size:'+hsdet.heading_font_size+'px; color:#'+hsdet.close_bttn_color+';'));
+		set(hd_close_button_css_over, calc('font-family:Arial; font-size:'+hsdet.heading_font_size+'px; color:#'+hsdet.close_bttn_color_over+';font-weight:bold;'));
+		set(layer[hd_close_button].css,get(hd_close_button_css)); 
+		if(device.desktop,
+			set(layer[hd_close_button].parent,layer[HDcontainer]);
+
+			set(layer[hd_close_button].onover,
+				set(layer[hd_close_button].css,get(hd_close_button_css_over)););
+			set(layer[hd_close_button].onout,set(layer[hd_close_button].css,get(hd_close_button_css)););
+		,
+			set(layer[hd_close_button].parent,hotspot[HDcontainer]);
+		);
+
+
+		<!-- CONTAINTER TEXT-->		
+		set(layer[hd_paragraph].oy,calc(layer[hd_line].oy+hsdet.paragraph_y_offset));
+		set(layer[hd_paragraph].width,calc(hsdet.width-hsdet.internal_margin*2));
+		set(layer[hd_paragraph].zorder,get(zOrderVar));
+		if(device.desktop,
+			set(layer[hd_paragraph].parent,layer[HDcontainer]);
+		,
+			set(layer[hd_paragraph].parent,hotspot[HDcontainer]);
+		);
+
+		set(hd_paragraph_css,null);
+		if(device.desktop, 
+			set(layer[hd_paragraph].css,calc('font-family:'+hsdet.paragraph_font+',Arial; font-size:'+hsdet.paragraph_font_size_desktop+'px; color:#'+hsdet.paragraph_font_color+';text-align:'+hsdet.paragraph_font_align+';line-height: '+hsdet.paragraph_line_height+';'));
+		,
+
+		set(layer[hd_paragraph].css,calc('font-family:'+hsdet.paragraph_font+',Arial; font-size:'+hsdet.paragraph_font_size_mobile+'px; color:#'+hsdet.paragraph_font_color+';text-align:'+hsdet.paragraph_font_align+';line-height: '+hsdet.paragraph_line_height+';'));
+		
+		);
+
+		set(layer[hd_paragraph].visible,true);
+		set(layer[hd_paragraph].onclick,hotspotDetailsClose(););
+
+
+
+
+
+
+	</action>
+
+	<action name="setView" protect="true" >	
+		lookto(%1,%2,get(view.fov),tween(easeInOutQuad,0.4),true,true );
+	</action>
+
+	<action name="hotspotDetailsOpen" protect="true" >
+		if( (device.mobile) OR (device.tablet) ,
+			bm_close_all();
+			);
+		ga_click('HS details',get(headTextcalled), 'klik');	
+
+		set(events.onviewchange, 
+			if(device.mobile, 
+				hd_hide_overlapping_hs_mobile();
+				,
+
+				hd_hide_overlapping_hs();
+			); 
+		);
+
+		set(directions_icon_html, null);set(button_icon_read_html, null);set(button_icon_pano_html, null);
+		set(directions_icon_html,calc('[i class="material-icons" style=" font-size:22px;vertical-align: middle; text-align:center;padding-right:5px;"]'+hsdet.icon_directions+'[/i]'));
+		set(button_icon_read_html,calc('[i class="material-icons" style=" font-size:20px;vertical-align: middle; text-align:center;padding-right:5px;"]'+hsdet.icon_read_more+'[/i]'));
+		set(button_icon_pano_html,calc('[i class="material-icons" style=" font-size:20px;vertical-align: middle; text-align:center;padding-right:5px;"]'+hsdet.icon_pano+'[/i]'));
+
+		if( plugin[gyroscope].enabled EQ true,
+			set(gyroWasEnabled,true);
+			set(plugin[gyroscope].enabled, false);
+		);
+				
+		set(hsName,%1); 
+		set(parentName,get(hotspot[get(hsCaled)].name));
+
+		adjusthlookat(get(hsAth));
+		set(hsAth, get(hotspot[get(parentName)].ath));
+		set(hsAtv, get(hotspot[get(parentName)].atv));
+
+		set(hotspot[HDcontainer].ath,get(hsAth));
+		set(hotspot[HDcontainer].atv,get(hsAtv));
+		set(parentWidth,get(hotspot[get(%1)].width));
+		set(parentHeight,get(hotspot[get(%1)].height));	
+		set(hd_isopen,true);
+
+		if (device.desktop,
+			setView(get(hsAth),get(hsAtv));
+			set(layer[HDcontainer].visible,true);
+			tween(layer[HDcontainer].alpha,1,0.3,easeOutQuad);
+		,
+			set(hotspot[HDcontainer].visible,true);
+			set(hotspot[HDcontainer].edge,top);
+			setView(get(hsAth),calc(hsatv+30));
+			tween(view.fov,90,0.4,easeInOutQuad);
+			set(hotspot[HDcontainer].oy,get:hsdet.mobile_y_offset);
+			set(hotspot[HDcontainer].ox,get:hsdet.mobile_x_offset);
+			tween(hotspot[HDcontainer].alpha,1,0.3,easeOutQuad);
+		);
+			
+			
+			set(xOffset,calc(hsdet.desktop_x_offset+pointerSize/2));
+			set(yOffset,calc(hsdet.desktop_y_offset+pointerSize/2));
+
+			set(layer[hd_header_text].html,null);
+			set(layer[hd_header_text].html,get(headTextcalled));
+			set(layer[hd_paragraph].html,null);
+			txtadd(layer[hd_paragraph].html,get(parTextMessage));
+
+			subtxt(checkB,parButtonLinkCalled,0,4);
+
+			if(checkB EQ 'pano',
+				set(layer[hd_button].html,calc(button_icon_pano_html+parButtonTextCalled )); 
+				set(layer[hd_button].onclick,
+					loadscene(get(parButtonLinkCalled), null, MERGE, BLEND(1));
+
+					hotspotDetailsClose();	
+					ga_click('HS details buttons','Goto pano', 'klik');	
+				);
+			,
+				set(layer[hd_button].html, calc(button_icon_read_html+parButtonTextCalled));
+				set(layer[hd_button].onclick,
+					openurl(get(parButtonLinkCalled),get:hsdet.bttn_link_opens_in);
+					hotspotDetailsClose();
+					ga_click('HS details buttons','Ream more link', 'klik');	
+					
+				);
+			);
+
+		if(  parButtonGoogleCalled EQ 'none',
+			
+			set(layer[directions_button].visible, false);
+
+				if( parButtonTextCalled EQ 'none',
+					set(layer[hd_button].visible, false);
+				,
+					set(layer[hd_button].visible, true);
+					set(layer[hd_button].align,topcenter );
+					set(layer[hd_button].edge,center );
+					set(layer[hd_button].ox,0);
+				);
+		,
+			set(layer[directions_button].html,calc(directions_icon_html+parButtonDirectionsTextCalled));
+			set(layer[directions_button].visible, true);
+			set(layer[directions_button].edge, left);
+			
+
+			set(layer[directions_button].onclick,
+				openurl(get(parButtonGoogleCalled),_blank);
+				hotspotDetailsClose();	
+				ga_click('HS details buttons','Directions', 'klik');	
+			);
+
+			if(  parButtonTextCalled EQ 'none',
+				set(layer[hd_button].visible, false);
+				set(layer[directions_button].align, topcenter);
+				set(layer[directions_button].edge, center);
+				set(layer[directions_button].ox, 0);
+			,
+				set(layer[hd_button].visible, true);
+				set(layer[hd_button].edge, right);
+				set(layer[hd_button].ox, -10);;
+
+				set(layer[directions_button].ox, 10);
+			);
+		);
+
+	</action>
+	
+
+
+	<action name="hd_hide_overlapping_hs" protect="true" >
+
+		spheretoscreen(hotspot[get(hsCaled)].ath, hotspot[get(hsCaled)].atv, sts_h, sts_v);
+
+		for(set(i,0), i LT hotspot.count, inc(i),
+			subtxt(hs_act_var,get(hotspot[get(i)].name),0, 4);
+			if(hs_act_var EQ  'spot', 
+
+			spheretoscreen(hotspot[%i].ath, hotspot[%i].atv, sts_non_hd_h, sts_non_hd_v);
+		
+				if( (sts_non_hd_h GT calc(sts_h+10)) AND (sts_non_hd_h LT calc(sts_h+350)) AND (sts_non_hd_v GT calc(sts_v-layer[HDcontainer].height/2)) AND (sts_non_hd_v LT calc(sts_v+layer[HDcontainer].height/2)),
+
+					set(hotspot[%i].alpha,0.3);
+					set(hotspot[%i].enabled,false);
+					set(hotspot[get(hotspot[%i].tt)].alpha,0.5); 
+					,
+					set(hotspot[%i].alpha,1);
+					set(hotspot[%i].enabled,true);
+					if( hotspot[%i].name  !=  hotspot[get(hsCaled)].name, set(hotspot[get(hotspot[%i].tt)].alpha,1);  );
+		
+				); 
+			);
+		);	
+	 
+	</action>
+
+	<action name="hd_hide_overlapping_hs_mobile" protect="true" >
+
+		spheretoscreen(hotspot[get(hsCaled)].ath, hotspot[get(hsCaled)].atv, sts_h, sts_v);
+		for(set(i,0), i LT hotspot.count, inc(i),
+			subtxt(hs_act_var,get(hotspot[get(i)].name),0, 4);
+			if(hs_act_var EQ  'spot', 
+
+			spheretoscreen(hotspot[%i].ath, hotspot[%i].atv, sts_non_hd_h, sts_non_hd_v);
+		
+				if( (sts_non_hd_h GT calc(sts_h-hotspot[HDcontainer].width/2)) AND (sts_non_hd_h LT calc(sts_h+hotspot[HDcontainer].width/2)) AND (sts_non_hd_v GT calc(sts_v+10)) AND (sts_non_hd_v LT calc(sts_v+50+hotspot[HDcontainer].height)) ,
+					set(hotspot[%i].alpha,0.5);
+					set(hotspot[get(hotspot[%i].tt)].alpha,0.0); 
+					,
+					set(hotspot[%i].alpha,1);
+					if( hotspot[%i].name  !=  hotspot[get(hsCaled)].name, set(hotspot[get(hotspot[%i].tt)].alpha,1);  );
+				); 
+			);
+		);	
+		set(layer[hd_test].x, calc(sts_h+320));
+		set(layer[hd_test].y, calc(sts_v-layer[HDcontainer].height/2));
+
+	</action>
+
+	<action name="hd_show_all_hs" protect="true" >
+
+		for(set(i,0), i LT hotspot.count, inc(i),
+			set(hotspot[%i].alpha,1);
+			set(hotspot[%i].enabled,true);
+		);
+
+	</action> 
+
+	<action name="hotspotDetailsClose" protect="true" >
+		events.dispatch("HsDetailsClosing");
+		set(events.onviewchange,check_act_hotspots );	
+		hd_show_all_hs();
+
+		set(hotspot[get(hotspot[get(hsCaled)].tt)].alpha,1);
+		set(hotspot[get(hsCaled)].hd_ispen,false);
+		
+		if( hotspot[get(hsCaled)].name != hotspot[calc(hotspot.count-1)].name,  
+			tween(hotspot[get(hsCaled)].scale, 1,0.1, linear );
+		 ); 
+
+		if( gyroWasEnabled EQ true,
+			set(gyroWasEnabled,false);
+			set(plugin[gyroscope].enabled, true);
+		);
+
+		if(device.desktop,
+			tween(layer[HDcontainer].alpha,0,0,linear,
+				set(layer[HDcontainer].visible,false);
+				);
+		,
+			tween(hotspot[HDcontainer].alpha,0,0,linear,
+				set(hotspot[HDcontainer].visible,false);
+				);
+		);
+		set(layer[hd_header_text].html,'');
+		set(layer[hd_paragraph].html,'');
+		set(layer[hd_button].html,'');
+		set(layer[directions_button].html,'');
+		set(checkB, '');
+		set(hd_isopen,false);
+
+		check_act_hotspots();
+	</action>
+
+	<action name="hotspotDetailsPosition" protect="true" >
+		spheretoscreen(hsAth, hsAtv, toh, tov);
+
+		if(toh GT stagewidth, hotspotDetailsClose());
+		if(toh LT 0, hotspotDetailsClose());
+
+		set(layer[HDcontainer].x,calc(toh+parentWidth/2+xOffset));
+		set(layer[HDcontainer].y,calc(tov+yOffset-layer[HDcontainer].height/2));
+
+	</action>
+
+
+
+
+</krpano>

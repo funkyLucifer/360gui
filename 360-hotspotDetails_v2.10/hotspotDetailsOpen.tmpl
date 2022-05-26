@@ -1,0 +1,43 @@
+{% with p.id as plugname %}
+
+<!-- set(hotspot[hs_tooltip].alpha,0);  -->
+
+	set(hotspot[get(hotspot[get(hsCaled)].tt)].alpha,1);
+	set(hotspot[get(hsCaled)].hd_ispen,false);
+
+	set(hsCaled,get(name));
+	set(hotspot[get(hsCaled)].hd_ispen,true);
+	set(hotspot[get(hotspot[get(hsCaled)].tt)].alpha,0);
+
+
+
+
+set(headTextcalled,'');
+getmessage(headTextcalled,{{ action.headerText.messageid }} ); 
+
+
+
+set(parTextMessage,'');
+getmessage(parTextMessage,{{ action.paragraphText.messageid}} );  
+set(parButtonTextCalled,'');
+getmessage(parButtonTextCalled,{{ action.buttonText.messageid}} );  
+set(parButtonLinkCalled,'');
+getmessage(parButtonLinkCalled,{{ action.buttonLink.messageid}} ); 
+set(parButtonDirectionsTextCalled,'');
+getmessage(parButtonDirectionsTextCalled,{{ action.buttonDirectionsText.messageid}} );  
+set(parButtonGoogleCalled,'');
+getmessage(parButtonGoogleCalled,{{ action.buttonDirections.messageid}} );  
+
+
+
+
+set(panoAjdi , '');
+set(panoAjdi , '{{ action.buttonPano.value}}');
+
+hotspotDetailsOpen();
+
+<!-- hotspotDetailsOpen(get(hsCaled),get(headTextcalled),get(parTextMessage),get(parButtonTextCalled),get(parButtonLinkCalled), get(panoAjdi),  get(parButtonDirectionsTextCalled), get(parButtonGoogleCalled));
+
+ -->
+
+{%endwith%}

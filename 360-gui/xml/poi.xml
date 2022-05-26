@@ -1,0 +1,446 @@
+<krpano>
+
+<hotspot name="poiIcon" keep="true" distorted="false" width="get:poi_settings.poi_w" height="get:poi_settings.poi_h" align="bottom" edge="bottom" type="image" url="%FIRSTXML%/graphics/360-gui/img/poi_empty.png" visible="false" zoom="false" 
+	ath="0" atv="0"
+	ondown="if(edit_mode, poi_ondown);"
+	zorder="99"
+	onup="if(edit_mode,poi_onup);"
+	onclick="if(edit_mode,poi_onclick(););"
+	renderer="css3d"
+	onloaded="
+
+		if(edit_mode,
+			set(ath, get(view.hlookat));
+			set(atv, get(view.vlookat));
+		);
+	" 
+/>
+
+	<action name="poi_edit_action"  >
+		set(edit_mode, true);	
+		edit_poi_action();
+		set(events[poi_view_changed].onviewchanged, generate_poi_url(););
+		set(events[poi_view_changed].keep, true);
+		set(events[poi_mouse_scroll].onmousewheel, 
+			setinterval(poi_view_update_interval,0.1,poiTextChanged(););
+			delayedcall(0.6,clearinterval(poi_view_update_interval));
+			);
+		set(events[poi_mouse_scroll].keep, true);
+	</action>
+
+	<action name="edit_poi_action"   >
+		
+		set(current_poi_icon, 'poi_editor_icon_1');
+		set(layer[%current_poi_icon].onout, null);
+		set(layer[%current_poi_icon].css,calc:'color:#'+poi_settings.icon_color+'; text-align:center;');
+
+		set(layer[poi_editor_container].visible,true);
+		set(layer[poi_focus].visible,true);
+		set(hotspot[poiIcon].visible,true); 
+
+		delayedcall(1,poiTextChanged(););
+
+	</action>
+
+	<action name="poiTextChanged" >
+		generate_poi_url();
+
+		set(pH,get(hotspot[poiIcon].ath));
+		set(pV,get(hotspot[poiIcon].atv));
+
+		roundval(pH,2);
+		roundval(pV,2);
+		set(layer[poiUserText].html,get(layer[poi_editor_name_input].text));
+		if(layer[poiUserText].html != '', 
+			set(layer[poi_focus].visible, false);
+			set(layer[poiUserText].bgalpha, 0.15);
+		,
+			set(layer[poi_focus].visible, true);
+			set(layer[poiUserText].bgalpha, 0.0);
+
+		);
+			
+	</action>
+
+	<action name="generate_poi_url" >
+		<![CDATA[
+
+			txtadd(url_options, '&edit_poi&ic=',get(layer[%current_poi_icon].ic),'poiH=',get(pH),'&poiV=',get(pV),'&label=', get(layer[poi_editor_name_input].text), '&link=', get(layer[poi_editor_link_input].text),'#');
+
+			jscall(
+				var decoded_url = decodeURIComponent(window.location.href);
+				krpano.set("url_current_decoded",decoded_url );
+
+				);
+
+			set(share_url, get(url_current_decoded));
+			txtreplace(share_url, 'edit_poi', 'use_poi');
+			set(layer[poi_editor_url_code].text,get(share_url) );
+
+			set(share_url_2, get(url_current_decoded));
+			txtreplace(share_url_2, 'edit_poi', 'hide_gui=1&use_poi');
+			txtadd(embedd_url, '<iframe src="',get(share_url_2),'width="550" height="550" frameborder="0" scrolling="no" style="width: 100%;"> </iframe> ');
+			set(layer[poi_editor_iframe_code].text,get(embedd_url) );
+
+			replaceCurrentURLInHistory();
+		]]>
+	</action>	
+
+	<action name="poi_use_action"  >
+		<![CDATA[
+		set(use_mode, true);
+		
+		txtsplit(extUrl, 'use_poi', poiArr);
+		
+		txtadd(url_options, '&use_poi', get(poiArr[1].value));
+		set(session_options, get(url_options));
+		check_url_poi();
+		generate_poi_public();	
+
+		set(events[poi_xmlcomplete].keep,true);
+		set(events[poi_xmlcomplete].onxmlcomplete,set(poi_pano, get(xml.scene)););
+			
+		set(events[poi_newscene].onnewscene, poi_new_scene);
+		set(events[poi_newscene].keep,true);
+
+		]]>
+	</action>
+
+	<action name="poi_new_scene"  >
+		set(events[poi_xmlcomplete].onxmlcomplete,null);
+		if( poi_pano != xml.scene,
+			set(layer[poi_material_icon].visible,false);
+			set(hotspot[poiIcon].visible,false);
+			set(url_options,'');
+		,
+			set(url_options,get(session_options));
+			set(layer[poi_material_icon].visible,true);
+			set(hotspot[poiIcon].visible,true);		
+		);
+
+	</action>
+
+	<action name="generate_poi_public" >
+
+		set(layer[poi_editor_container].visible,false);
+		set(hotspot[poiIcon].visible,true); 
+
+		jscall(
+			var decoded_url = decodeURIComponent(window.location.href);
+			krpano.set("url_current_decoded",decoded_url );
+
+			);
+		
+		<!-- PODESI IKONU -->
+		indexoftxt(poi_icon_from_url_index,get(url_current_decoded),'ic=');
+		subtxt(poi_icon_from_url,url_current_decoded,calc(poi_icon_from_url_Index+3),1);
+		for(set(i,1), i LT 6, inc(i), 
+			txtadd(poi_dyn_ikon, 'poi_editor_icon_', get(i));;
+			if( layer[%poi_dyn_ikon].ic EQ poi_icon_from_url, 
+				set(layer[poi_material_icon].mcode, get(layer[%poi_dyn_ikon].mcode));
+				callwith(layer[poi_material_icon],set_poi_material_code()); 
+				);
+		);
+
+		set(layer[poiUserText].bgalpha, 0.15);
+		set(hotspot[poiIcon].onover,
+				tween(scale,  1.3, 0.1, linear );
+				tween(layer[poiUserText].oy,  get(layer[poiUserText].over_oy), 0.1, linear );	
+			);	
+
+		set(hotspot[poiIcon].onout,
+				tween(scale,  1.1, 0.1, linear );
+				tween(layer[poiUserText].oy,  get(layer[poiUserText].start_oy), 0.1, linear );
+			);	
+
+		set(hotspot[poiIcon].onclick, 
+				openURL(get(urlValue),_blank);
+			);	
+
+			<!--  PODESI ATH  i ATV-->
+		indexoftxt(poi_ath_from_url_index,get(url_current_decoded),'poiH=');
+		indexoftxt(poi_atv_from_url_index,get(url_current_decoded),'poiV=');
+		subtxt(poi_ath_from_url,url_current_decoded,calc(poi_ath_from_url_index+5),calc(poi_atv_from_url_index-poi_ath_from_url_index-6));
+		set(hotspot[poiIcon].ath,get(poi_ath_from_url));
+	<!-- 	trace('poi_ath_from_url: ', get(poi_ath_from_url)); -->
+		
+		indexoftxt(poi_label_from_url_index,get(url_current_decoded),'label=');
+		subtxt(poi_atv_from_url,url_current_decoded,calc(poi_atv_from_url_index+5),calc(poi_label_from_url_index-poi_atv_from_url_index-6));
+		set(hotspot[poiIcon].atv,get(poi_atv_from_url));
+
+		<!--  PODESI LABEL  i LINK-->
+		indexoftxt(poi_link_from_url_index,get(url_current_decoded),'link=');
+		subtxt(poi_label_from_url,url_current_decoded,calc(poi_label_from_url_index+6),calc(poi_link_from_url_index-poi_label_from_url_index-7));
+		set(layer[poiUserText].html,get(poi_label_from_url));
+
+		if(layer[poiUserText].html != '', 
+			set(layer[poiUserText].bgalpha, 0.15);
+		,
+			set(layer[poiUserText].bgalpha, 0.0);
+
+		);
+			
+		indexoftxt(poi_hash_from_url_index,get(url_current_decoded),'#');
+		subtxt(poi_link_from_url,url_current_decoded,calc(poi_link_from_url_index+5),calc(poi_hash_from_url_index-poi_link_from_url_index-5));
+		set(hotspot[poiIcon].onclick,openurl(get(poi_link_from_url),_self));
+
+	</action>
+	<action name="poi_ondown" >
+		set(poi_down,true);
+		set(alpha,0.8);
+		drag_poi();
+		set(layer[poi_editor_container].visible,false); 
+	</action>
+	<action name="poi_onup" >
+		set(poi_down,false);
+		set(alpha,1);
+		set(layer[poi_editor_container].visible,true);
+		poiTextChanged();
+	</action>	
+	<action name="poi_onclick" >
+			set(alpha,1);
+			set(layer[poi_editor_container].visible,true);
+			poiTextChanged();
+	</action>
+
+	<action name="drag_poi" >
+
+	asyncloop(poi_down EQ true,
+		set(calculated_y, calc(mouse.y+hotspot[poiIcon].height/2));
+		screentosphere(mouse.x, calculated_y, poi_move_H, poi_move_V);
+	 	set(hotspot[poiIcon].ath, get(poi_move_H));
+	 	set(hotspot[poiIcon].atv, get(poi_move_V));
+	 );
+	</action>
+
+	<layer name="poi_material_icon"  type="text" keep="true" 
+		width="50" height="50" ox="get:poi_settings.icon_x" oy="get:poi_settings.icon_y" align="center" edge="center" 
+		enabled="false" capture="true" handcursor="false"
+		css="calc:'color:#'+poi_settings.icon_color+'; text-align:center;'"
+		bgalpha="0"
+		html=""
+		mcode="info"
+		onloaded="
+			set_poi_material_code();
+
+		"
+		parent="hotspot[poiIcon]"
+		/>	
+
+	<style name="poi_editor_icon_style"  type="text" keep="true" 
+		width="40" height="40" ox="0" oy="3" align="topleft" edge="topleft" 
+		enabled="true" capture="true" handcursor="true"
+		css="calc:'color:#999999; text-align:center;'"
+		onover="set(css,calc:'color:#'+poi_settings.icon_color+'; text-align:center;')"
+		onout="set(css,'color:#999999; text-align:center;');"
+		onclick="
+			set(onout, null);
+			set(css,calc:'color:#'+poi_settings.icon_color+'; text-align:center;');
+			set(layer[%current_poi_icon].css,'color:#999999; text-align:center;');
+			set(layer[%current_poi_icon].onout, set(css,'color:#999999; text-align:center;'););
+			set(current_poi_icon, get(name));
+
+			set(layer[poi_material_icon].mcode, get(mcode)); 
+			callwith(layer[poi_material_icon],set_poi_material_code()); 
+			generate_poi_url();
+		"
+		bgalpha="0"
+		html=""
+		onloaded="set_poi_material_code();"
+		parent="layer[poi_editor_container]"
+		/>	
+
+	<action name="set_poi_material_code" >
+	 	set(poi_material_code, null);
+		txtadd(poi_material_code,calc:'[i class="material-icons" style=" font-size: 24px;vertical-align: middle;  padding-top:4px; padding-right:0px;"]'+mcode+ '[/i]');
+		set(html,get(poi_material_code));
+	</action>
+
+	<layer name="poi_editor_container"  type="text" keep="true" 
+		width="340" height="500" ox="150" oy="0" align="left" edge="left" 
+		bgcolor="get:poi_settings.base_color" bgalpha="1"
+		bgshadow="3 3 3 1 0x000000 0.15" bgborder="1 0x0277bd 1"
+		enabled="true" capture="true" handcursor="false" visible="false"
+		mipmapping="true"
+		oversampling="2.0"
+		parent="hotspot[poiIcon]"
+		/>	
+
+	<layer name="poi_focus"  type="text" keep="true"  url="%FIRSTXML%/graphics/360-gui/img/poi_focus.png" 
+		width="110" height="110" ox="0" oy="0" align="center" edge="center" 
+		enabled="false" capture="false" handcursor="false" visible="false"
+		parent="hotspot[poiIcon]"
+		onloaded="animate_poi_focus"
+		/>	
+	<action name="animate_poi_focus" >
+		tween(alpha, 0, 0.7, linear,
+			tween(alpha, 1, 0.7, linear,
+				animate_poi_focus();
+			);
+		);
+
+	</action>
+
+	<layer name="poi_editor_header"  type="text" keep="true" 
+		width="100%" height="50" ox="" oy="0" align="top" edge="top" 
+		bgcolor="get:poi_settings.high_color" bgalpha="1"
+		enabled="false" parent="layer[poi_editor_container]"
+		html="UREĐIVANJE PRIVATNE OZNAKE" vcenter="true"
+		css="calc:'font-family:Arial; font-size:16px; color:#'+poi_settings.header_font_color+'; text-align:center;'"
+		/>	
+<!-- NAZIV OZNAKE -->
+	<layer name="poi_editor_name_label"  type="text" keep="true" 
+		width="200" height="30" ox="20" oy="60" align="topleft" edge="toplleft" 
+		enabled="false" parent="layer[poi_editor_container]"
+		html="Naziv oznake" vcenter="true"
+		css="calc:'font-family:Arial; font-size:12px; color:#666666; text-align:left;'"
+		/>	
+	<layer name="poi_editor_name_input"  url="%FIRSTXML%/graphics/360-gui/js/textinput.js"  keep="true" 
+		width="calc:layer[poi_editor_container].width-40" height="20" ox="0" oy="calc:layer[poi_editor_name_label].oy+35" align="topcenter" edge="center" 
+		text="" 
+		parent="layer[poi_editor_container]"
+		vcenter="true"
+		css="calc:'font-family:Arial; font-size:14px; color:#333333; text-align:left;'"
+		onchanged="	poiTextChanged();"
+		onclick="generate_poi_url();"
+		/>	
+	<!-- LINK OZNAKE -->
+	<layer name="poi_editor_link_label"  type="text" keep="true" 
+		width="200" height="30" ox="20" oy="115" align="topleft" edge="topleft" 
+		enabled="false" parent="layer[poi_editor_container]"
+		html="Poveznica koja se otvara na klik" vcenter="true"
+		css="calc:'font-family:Arial; font-size:12px; color:#666666; text-align:left;'"
+		/>	
+<layer name="poi_editor_link_input"  url="%FIRSTXML%/graphics/360-gui/js/textinput.js"  keep="true" 
+		width="calc:layer[poi_editor_container].width-40" height="20" ox="0" oy="calc:layer[poi_editor_link_label].oy+35" align="topcenter" edge="center" 
+		text="https://" 
+		parent="layer[poi_editor_container]"
+		vcenter="true"
+		css="calc:'font-family:Arial; font-size:14px; color:#cccccc; text-align:left;'"
+		onchanged="poiTextChanged();"
+		onclick="focus_field_js();generate_poi_url();"
+		/>	
+	<!-- IKONA OZNAKE -->
+	<layer name="poi_editor_icon_label"  type="text" keep="true" 
+		width="200" height="30" ox="20" oy="180" align="topleft" edge="topleft" 
+		enabled="false" parent="layer[poi_editor_container]"
+		html="Ikona oznake:" vcenter="true"
+		css="calc:'font-family:Arial; font-size:12px; color:#666666; text-align:left;'"
+		/>	
+	<layer name="poi_editor_icon_1" style="poi_editor_icon_style" oy="calc:layer[poi_editor_icon_label].oy-5" ox="120" mcode="info"  ic="1" />
+	<layer name="poi_editor_icon_2" style="poi_editor_icon_style" oy="calc:layer[poi_editor_icon_label].oy-5" ox="160" mcode="hotel" ic="2" />
+	<layer name="poi_editor_icon_3" style="poi_editor_icon_style" oy="calc:layer[poi_editor_icon_label].oy-5" ox="200" mcode="restaurant_menu" ic="3" />
+	<layer name="poi_editor_icon_4" style="poi_editor_icon_style" oy="calc:layer[poi_editor_icon_label].oy-5" ox="240" mcode="local_bar" ic="4" />
+	<layer name="poi_editor_icon_5" style="poi_editor_icon_style" oy="calc:layer[poi_editor_icon_label].oy-5" ox="280" mcode="local_grocery_store" ic="5" />
+
+	<layer name="poi_editor_url_label"  type="text" keep="true" 
+		width="200" height="30" ox="20" oy="230" align="topleft" edge="topleft" 
+		enabled="false" parent="layer[poi_editor_container]"
+		html="Link (kopirajte za dijeljenje)" vcenter="true"
+		css="calc:'font-family:Arial; font-size:12px; color:#666666; text-align:left;'"
+		/>	
+
+	<layer name="poi_editor_url_code"  url="%FIRSTXML%/graphics/360-gui/js/textblock.js"  keep="true" 
+		width="calc:layer[poi_editor_container].width-40" height="30" ox="0" oy="calc:layer[poi_editor_url_label].oy+40" align="topcenter" edge="center" 
+		text="https://" 
+		parent="layer[poi_editor_container]"
+		vcenter="true"
+		css="calc:'font-family:Arial; font-size:14px; color:#cccccc; text-align:left;'"
+		onclick="generate_poi_url();"
+		/>	
+
+	<layer name="poi_editor_url_bttn"  type="text" keep="true" 
+		width="100" height="25" ox="20" oy="calc:layer[poi_editor_url_label].oy+65" align="topleft" edge="topleft" 
+		enabled="true" parent="layer[poi_editor_container]"
+		html="Kopiraj link" vcenter="true"
+		bgcolor="get:poi_settings.high_color" bgalpha="1" bgroundedge="5"
+		css="calc:'font-family:Arial; font-size:12px; color:#'+poi_settings.header_font_color+'; text-align:center;'"
+		alpha="0.8"
+		onover="tween(alpha,1,0.1,easeOutQuad);"
+		onout="tween(alpha,0.8,0.1,easeInQuad);"
+		onclick="poiTextChanged();set(html, 'Link kopiran');delayedcall(1, set(html, 'Kopiraj link'));poi_copy_link();"
+		/>	
+
+	<layer name="poi_editor_url_test_bttn"  type="text" keep="true" 
+		width="100" height="25" ox="-20" oy="calc:layer[poi_editor_url_label].oy+65" align="topright" edge="topright" 
+		enabled="true" parent="layer[poi_editor_container]"
+		html="Testiraj link" vcenter="true"
+		bgcolor="0xaaaaaa" bgalpha="1" bgroundedge="5"
+		css="calc:'font-family:Arial; font-size:12px; color:#'+poi_settings.header_font_color+'; text-align:center;'"
+		alpha="0.8"
+		onover="tween(alpha,1,0.1,easeOutQuad);"
+		onout="tween(alpha,0.8,0.1,easeInQuad);"
+		onclick="poiTextChanged();openurl(get(share_url),_blank);"
+		/>	
+	<layer name="poi_editor_iframe_label"  type="text" keep="true" 
+		width="300" height="30" ox="20" oy="340" align="topleft" edge="topleft" 
+		enabled="false" parent="layer[poi_editor_container]"
+		html="HTML kod za umetanje na web stranicu:" vcenter="true"	
+		css="calc:'font-family:Arial; font-size:12px; color:#666666; text-align:left;'"
+		/>	
+	<layer name="poi_editor_iframe_code" url="%FIRSTXML%/graphics/360-gui/js/textblock.js" keep="true" 
+		width="calc:layer[poi_editor_container].width-40" height="60" ox="0" oy="calc:layer[poi_editor_iframe_label].oy+55" align="topcenter" edge="center" 
+		enabled="true" captured="true" parent="layer[poi_editor_container]"
+		dis="true"
+		text="&lt;iframe&gt;Poveznica koja se otvara na klikSLKDJFČLKSJDFLSČKDJFČLAKSJFČLKAJSDČLKJAČLSKDJČALSKDFČALKSJČAKJDČLJSDČAJSFČLJSDLK  likSLKDJFČLKSJDFLSČKDJFČLAKSJFČLKAJSDČLKJAČLSKDJČALSKDFČALKSJČAKJDČLJSDČAJSF" wordwrap="true"
+		css="calc:'font-family:Curier; font-size:12px; color:#666666; text-align:left;white-space:pre-wrap; '"
+		bgborder="1 0xcccccc 1"
+		interactivecontent="true"
+		/>
+
+	<layer name="poi_editor_iframe_bttn"  type="text" keep="true" 
+		width="100" height="25" ox="20" oy="calc:layer[poi_editor_iframe_label].oy+95" align="topleft" edge="topleft" 
+		enabled="true" parent="layer[poi_editor_container]"
+		html="Kopiraj kod" vcenter="true"
+		bgcolor="get:poi_settings.high_color" bgalpha="1" bgroundedge="5"
+		css="calc:'font-family:Arial; font-size:12px; color:#'+poi_settings.header_font_color+'; text-align:center;'"
+		alpha="0.8"
+		onover="tween(alpha,1,0.1,easeOutQuad);"
+		onout="tween(alpha,0.8,0.1,easeInQuad);"
+		onclick="poiTextChanged();set(html, 'Kod je kopiran');delayedcall(1, set(html, 'Kopiraj kod'));poi_copy_iframe();"
+		onloaded="set(isloaded,true);"
+		/>	
+
+	<action name="generate_poi_codes_js" type="Javascript">
+		<![CDATA[
+			var generated_url=String("?s="+krpano.get("xml.scene")+"&h="+krpano.get("poiH")+"&v="+krpano.get("poiV")+"&f="+krpano.get("poiF")+"&poi=true"+"&label="+krpano.get("layer[poi_editor_name_input].text")+"&ll"+"&url="+krpano.get("layer[poi_editor_link_input].text")+"&uu");
+			krpano.set("poi_url",generated_url);
+			krpano.set("layer[poi_editor_iframe_code].html",generated_url);
+		]]>
+	</action>	
+
+	<layer name="poiUserText"  type="text" 	keep="true" 
+		height="20"  oy="-55" align="center" edge="top" html=""  vcenter="true"
+		enabled="false"
+		css="font-family:Arial; font-size:16px; color:#ffffff;text-align:center;padding-left:5px;padding-right:5px;text-shadow: 1px 1px 3px #000000; "
+		bgcolor="0x000000" 	bgalpha="0.0"
+		visible="true" alpha="1"
+		parent="hotspot[poiIcon]"
+		onloaded="
+			set(layer[poiUserText].start_oy, get(oy));
+			set(layer[poiUserText].over_oy, calc(oy-10));
+		"
+		/>
+
+   	<action name="poi_copy_link" type="Javascript" >
+		var dummy = document.createElement('input'),
+		text = krpano.get("share_url");
+		document.body.appendChild(dummy);
+		dummy.value = text;
+		dummy.select();
+		document.execCommand('copy');
+		document.body.removeChild(dummy);
+ 	</action>
+
+  <action name="poi_copy_iframe" type="Javascript" >
+		var dummy = document.createElement('input'),
+		text = krpano.get("embedd_url");
+		document.body.appendChild(dummy);
+		dummy.value = text;
+		dummy.select();
+		document.execCommand('copy');
+		document.body.removeChild(dummy);
+  </action>
+
+
+</krpano>

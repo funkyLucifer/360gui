@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+	
+{%include "metatags.tmpl" %}
+<meta name="theme-color" content="#ffffff" >
+			<style type="text/css">
+			.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+			</style>
+		<style type="text/css">
+			@font-face {
+				font-family: 'open_sansbold';
+				src: url('OpenSans-Bold-webfont.eot');
+				src: url('OpenSans-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+					 url('OpenSans-Bold-webfont.woff2') format('woff2'),
+					 url('OpenSans-Bold-webfont.woff') format('woff'),
+					 url('OpenSans-Bold-webfont.ttf') format('truetype'),
+					 url('OpenSans-Bold-webfont.svg#open_sansbold') format('svg');
+				font-weight: normal;
+				font-style: normal;
+
+			}
+			@-ms-viewport { width: device-width; }
+			@media only screen and (min-device-width: 800px) { html { overflow:hidden; } }
+			@font-face {font-family: Roboto; src: url(https://fonts.googleapis.com/css?family=Roboto);}
+			* { padding: 0; margin: 0; }
+			html { height: 100%; }
+			body { height: 100%; overflow:hidden; }
+			div#container { height: 100%; min-height: 100%; width: 100%; margin: 0 auto; }
+			div#tourDIV {
+				height:100%;
+				position:relative;
+				overflow:hidden;
+			}
+{%include "htmlheadpanocss.tmpl" %}
+		</style>
+{%include "htmlheadscripts.tmpl" %}
+	</head>
+	<body>
+		<div id="container">
+{% comment %}<!-- tourDIV is used to display the VR viewer and all plugins which can be displayed in Fullscreen mode -->{% endcomment %}
+			<div id="tourDIV">
+{%include "htmlpanodiv.tmpl" %}
+{%include "pluginshtmltemplates.tmpl" %}
+{%include "htmlembedpanoscript360.tmpl" %}
+
+
+			</div>
+		</div>
+	</body>
+</html>

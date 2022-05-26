@@ -1,0 +1,98 @@
+	 <plugin id="UI-360" category="tr:00 - 360" name="tr:360 User interface" version="1.0" isGraphical="true" multipleInstance="false" description="tr:360 User interface">
+	  <parameters>	
+
+	  	<group id="general_gr1" name="GENERAL PARAMETERS" >
+
+	  		<filechooser id="settings" name="Settings file" default="" filters="" allowremote="true"/>
+	  		<filechooser id="custom_xml" name="Additional custom xml" default="" filters="" allowremote="true"/>
+	  		<row id="font_r1" name="rowf1" >
+		  		<string id="font_1_name" name="Font #1 Name - used in xml" default="" />
+		  		<filechooser id="font_1" name="Font #1 file " default="" filters="" allowremote="true"/>
+	  		</row>
+	  		<row id="font_r2" name="rowf2" >
+		  		<string id="font_2_name" name="Font #2 Name - used in xml" default="" />
+		  		<filechooser id="font_2" name="Font file #2" default="" filters="" allowremote="true"/>
+		  	</row>
+		  	<filechooser id="logoFile" name="Desktop Logo file " default="" filters="images" allowremote="true"/>
+		  	<filechooser id="mobileLogoFile" name="Mobile top logo  " default="" filters="images" allowremote="true"/>
+		  	<filechooser id="mobileHeaderFile" name="Mobile menu header image (500x200 px) " default="" filters="images" allowremote="true"/>
+		  	<filechooser id="mobileHeaderLogoFile" name="Mobile menu header logo " default="" filters="images" allowremote="true"/>
+		  	<filechooser id="menuBgFile" name="Desktop menu BG file" default="" filters="images" allowremote="true"   conditionalParam="menuBgFileCheck" conditionalValues="true" />
+		 	<filechooser id="mobileMenuBgFile" name="Mobile menu BG file " default="" filters="images" allowremote="true"/>
+		 	<filechooser id="favicon" name="Favicon " default="" filters="images" allowremote="true"/>
+		 	<filechooser id="fm_image" name="Floating menu  desktop image bg. If not set, cube map from each pano is used: " default="" filters="images" allowremote="true"/>
+		  	<string id="logoText" name="Logo text" default="Logo text for desktop and mobile top bar" />
+		  	<string id="mobileHeaderLogoText" name="Mobile header logo text" default="Logo text for mobile menu header" />
+		  	<string id="optionMenuWidth" name="Desktop options menu width" default="100" />
+		  	<string id="optionMenuText" name="Desktop options menu text:" default="Options" />
+		  	<string id="logoUrl" name="Clent logo website url:" default="http://www." />
+
+
+		</group>
+	  	
+	  	<group id="options_text_gr" name="OPTIONS SUBMENU ITEMS TEXT" >
+			<string id="option_1" name="Options Fullscreen text:" default="Fullscreen" />
+			<string id="option_2" name="Options Autotour text:" default="Autotour" />
+			<string id="option_3" name="Options Gyroscope text:" default="Gyroscsope" />
+			<string id="option_4" name="Options VR text:" default="VR mode" />
+		</group>
+
+
+	  	<group id="map_gr" name="CUSTOM MAP PIN" >
+		  	<filechooser id="map_pin_inactive" name="Custom Map pin inactive " default="" filters="" allowremote="true"/>
+		  	<filechooser id="map_pin_active" name="Custom Map pin Active  " default="" filters="" allowremote="true"/>
+		</group>
+
+	  	<group id="subMenuCustomGr" name="SUB MENU CUSTOM ITEM" >
+			<string id="subMebuCustomID" name="Pano ID" default="pano"  />
+			<actionlist id="subMebuCustomActions1" name="tr:ACTIONS " >
+				<actionchooser id="subMebuCustomClick1" name="tr:Action " description="tr:Action done on click"/>
+			</actionlist>
+		</group>
+
+	  </parameters>
+	  
+	<resources>
+		<file url="langIcons/en.png" />
+		<file url="langIcons/hr.png" />
+		<file url="langIcons/de.png" />
+		<file url="langIcons/it.png" />
+		<file url="langIcons/fr.png" />
+		<file url="langIcons/cz.png"/>
+		<file url="langIcons/si.png"/>
+		<file url="img/blackBG.jpg"/>
+		<file url="shareIcons/facebook.png"/>
+		<file url="shareIcons/linkedin.png"/>
+		<file url="shareIcons/mail.png"/>
+		<file url="shareIcons/link.png"/>
+		<file url="shareIcons/link-white.png"/>
+		<file url="shareIcons/messenger.png"/>
+		<file url="shareIcons/whatsapp.png"/>
+		<file url="shareIcons/viber.png"/>
+		<file url="shareIcons/sms.png"/>
+		<file url="js/scrollarea.js"/>
+		<file url="js/blur.js"/>
+		<file url="js/googlemaps.js"/>
+		<file url="js/index_krpano.js"/>
+		<file url="js/textinput.js"/>
+		<file url="js/textblock.js"/>
+		<file url="js/ga.js"/>
+		<file url="js/gyro2.js"/>
+		<file url="xml/fm.xml"/>
+	
+		<file url="xml/spot_range.xml"/>
+		<file url="xml/back.xml"/>
+		<file url="xml/lens_flare.xml"/>
+		<file url="xml/desktop.xml"/>
+		<file url="xml/mobile.xml"/>
+		<file url="map/map_pin.png"/>
+		<file url="map/map_pin_over.png"/>
+		<file url="xml/poi.xml"/>
+		<file url="img/poi_empty.png"/>
+		<file url="img/poi_focus.png"/>
+	</resources>
+	  
+	  <templates>
+	      <template url="360-gui.tmpl" />
+	  </templates>
+	</plugin>

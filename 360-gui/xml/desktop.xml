@@ -1,0 +1,1319 @@
+<krpano >
+
+    <layer name="desktop_vr" keep="true" type="text" 
+         width="100" height="50" align="topright"
+         bgcolor="0xffffff" bgalpha="1"
+         visible="false"
+         parent="layer[sound_icon_bttn]"
+         enabled="true"
+         oy="150"
+         html="ENTER VR"
+         onclick="	js(accessWebVr(get(xml.scene),get(tour_language)));"
+       />
+
+
+
+	<layer name="desktop_menu_container" type="text"  keep="true"  zorder="93" devices="desktop" visible="false"
+		width="1000"  height="get:desktop.menu_height" oy="get:desktop.menu_y_offset"
+		ox="get:desktop.menu_x_offset"
+		align="topleft" edge="topleft"
+		bgalpha="0.0" bgcolor="0x000000"
+		handcursor="false"
+		onloaded=""
+	/>	
+
+
+	<layer name="desktop_menu_background" type="container" keep="true" zorder="92" devices="desktop" visible="false"
+		width="100%" height="get:desktop.menu_height" oy="get:desktop.menu_y_offset"
+		align="topcenter"
+		bgcolor="calc:'0x'+desktop.menu_color" bgalpha="get:desktop.menu_alpha"
+		handcursor="false"
+			onloaded="		
+
+		"
+		/>	
+	<layer name="desktop_menu_background_image" type="text" keep="true" zorder="93" devices="desktop" visible="false"
+		width="100%" height="get:desktop.menu_height" oy="get:desktop.menu_y_offset"
+		align="topcenter"
+		bgalpha="0" bgcolor="#fff000" bgborder="0"
+		handcursor="false"
+			onloaded="		
+			if(desktop_bg_image_check !='', set(url,get:desktop_bg_image_path);
+				set(visible,true);
+				if(desktop.bg_image_width != '', set(width,get:desktop.bg_image_width); );
+				if(desktop.bg_image_height != '', set(height,get:desktop.bg_image_height); set(align,topleft); set(edge,topleft););
+				if(desktop.bg_image_y_offset != '', set(oy,get:desktop.bg_image_y_offset); );
+				if(desktop.bg_image_x_offset != '', set(ox,get:desktop.bg_image_x_offset); );
+
+
+			);
+		"
+		parent="layer[desktop_menu_background]"
+		/>	
+
+
+	<layer name="desktop_submenu_container" type="text" keep="true"  zorder="90" devices="desktop" visible="false"
+		width="1000" height="get:desktop.menu_height" oy="get:desktop.menu_y_offset"
+		align="topleft"
+		bgalpha="0"
+		ox="get:desktop.menu_x_offset"
+		maskchildren="false" handcursor="false"
+		/>
+	<layer name="desktop_background_shaddow" type="container" keep="true" zorder="91" devices="desktop" visible="false"
+		width="100%" height="get:desktop.menu_height" oy="get:desktop.menu_y_offset"
+		align="topcenter"
+		bgalpha="0" bgshadow="2 2 2 1 0x000000 0.15"
+		handcursor="false"
+		/>	
+	<layer name="Desktop-logo" keep="true" zorder="100" devices="desktop" type="text"
+		width="prop" height="get:desktop.logo_height"  ox="get:desktop.logo_x_offset" oy="get:desktop.logo_y_offset"
+		align="leftcenter" vcenter="true"
+		bgalpha="0" bgcolor="#fff000" bgborder="0"
+		parent="layer[desktop_menu_background]"
+		onloaded="set(url, get:desktop_logo_path);"
+
+
+	/>	
+	<layer name="Desktop-logoText" type="text" keep="true" devices="desktop"
+		width="get:desktop.logo_text_width" height="get:desktop.logo_text_height"  ox="get:desktop.logo_text_x_offset" oy="get:desktop.logo_text_y_offset" enabled="true"
+		align="leftcenter" vcenter="true"
+		bgalpha="0"
+		parent="layer[desktop_menu_background]"
+		onloaded="
+			 	
+			set(layer[Desktop-logoText].html,get(desktop_logoText));
+			set(css, calc:'font-family:'+general.logo_text_font+',Arial; font-size:'+desktop.logo_text_font_size+'px; color:#'+desktop.logo_text_font_color+';text-align:left; padding-left:0px');
+	
+		"
+	/>	
+
+
+	<layer name="optionsMenuItem" devices="desktop"	style="desktop_main_options_style" />
+ 
+	<style name="desktop_main_item_style" type="text" keep="true" zorder="93" enabled="true"
+		height="get:desktop.menu_height"
+		align="topright" edge="topleft" vcenter="true" padding="calc:desktop.main_menu_text_y_offset+' 0 0 0'"
+		bgcolor="calc:'0x'+desktop.main_menu_bg_color_over" bgalpha="0"	
+		parent="layer[desktop_menu_container]"
+		handcursor="true"	
+		/>
+	<style name="desktop_main_options_style" type="text" keep="true" zorder="93"
+		height="get:desktop.menu_height"
+		align="topright" edge="topleft" padding="calc:desktop.main_menu_text_y_offset+' 0 0 0'" vcenter="true"
+		bgcolor="calc:'0x'+desktop.main_menu_bg_color_over" bgalpha="0" bgborder="0 0x000000 0.0"
+		renderer="css3d" mipmapping="true" oversampling="2.0" handcursor="true"
+		parent="layer[desktop_menu_container]"		
+	/>
+	<style name="desktop_submenu_cont_style" type="text" keep="true"  zorder="90" visible="false" alpha="0"
+		width="get:desktop.sub_menu_width" height="100"  oy="get:desktop.menu_height" ox="get:desktop.sub_menu_x_offset"
+		align="topleft" edge="topleft"
+		bgcolor="calc:'0x'+desktop.sub_menu_bg_color" bgalpha="get:desktop.sub_menu_bg_alpha" bgroundedge="get:desktop.sub_menu_bg_round_edge"
+		bgshadow="2 2 2 1 0x000000 0.15"
+		maskchildren="true" handcursor="true"
+		
+	/>
+	<style name="desktop_submenu_item_style" type="text" keep="true" zorder="91"
+		width="100%" height="get:desktop.sub_menu_item_height"
+		align="topleft" 
+		bgcolor="calc:'0x'+desktop.sub_menu_item_color_over" bgalpha="0"
+		vcenter="true"
+		css="get(subMenuCss); "	
+		wordwrap="false"
+	/>	
+
+	<style name="desktop_submenu_bullet_style" type="text" keep="true" zorder="93" enabled="false"
+		ox="get:desktop.sub_menu_bullet_x_offset"
+		align="left"
+		bgalpha="0"
+		handcursor="false"
+		/>	
+	<style name="desktop_submenu_flag_style" type="image" keep="true" zorder="93" enabled="false"
+		width="16" height="16" ox="get:desktop.sub_menu_bullet_x_offset"
+		align="left"
+		bgalpha="0"
+		handcursor="false"
+	/>	
+
+	<style name="menuLine-Style" type="container" keep="true"  zorder="100"
+		width="get:desktop.sub_menu_line_width" ox="get:desktop.sub_menu_line_x_offset" y="get:desktop.sub_menu_line_y_offset"
+		align="lefttop"	edge="topleft" vcenter="true"
+		handcursor="false"
+		onloaded="
+			set(bgborder,calc('0,0,1 0x'+desktop.sub_menu_line_color+' '+desktop.sub_menu_line_alpha));
+		"
+	/>	
+	<style name="optionsMobileBttnBG-Style" type="text" keep="true" enabled="false" zorder="95"
+		width="40" 	height="18" 	ox="-20"
+		align="topright" edge="topright"
+		bgcolor="0xdddddd" bgborder="0,0,1 0xdddddd 1"	bgroundedge="10"	
+	/>	
+
+
+
+<!-- ╔═════════════════════════════╗-->
+<!-- ║			 INITIALIZE	  	   ║-->
+<!-- ╚═════════════════════════════╝-->
+
+
+
+
+
+
+
+	<action name="menu_init" protect="true" >
+		
+		set(allMenusWidth,calc(-desktop.lang_menu_width-optionsMenu_Width));
+
+		indexoftxt(lang_index,get(extUrl), 'tour_language=');
+		subtxt(lang_var,get(extUrl),calc(lang_index+14),2);
+		
+		if(lang_index EQ -1,
+			if(device.desktop, 	
+				set(tour_language,get(langArr[0].value));
+				,
+				set(tour_language,get(mobileLangArr[0].value));
+			);
+		,
+			set(tour_language,get(lang_var));
+		);
+
+
+		logoUrlLink();
+
+		
+		set(subItemTopPadding,get:desktop.sub_menu_y_offset);
+		set(subItemBottomPadding,get:desktop.sub_menu_bottom_offset);
+
+		if( device.desktop , 
+			desktop_lang_menu_action();
+			optionsMenuItem-Desktop();
+			if (general.only_1st_level_menu EQ true,
+				desktop_menu_items_1st_level();
+			,
+				desktop_menu_items();	
+			);
+		<!-- 	logoText-Desktop(); -->
+			
+		);
+
+
+	</action>
+
+	<action name="font_init" autorun="preinit" protect="true" >
+
+		if(stagewidth LT desktop.main_menu_font_size_smaller_resolution, 
+			set(main_menu_font_size, get:desktop.main_menu_font_size_smaller);
+			set(sub_menu_item_font_size,get:desktop.sub_menu_item_font_size_smaller);
+			set(style[desktop_submenu_item_style].height,get:desktop.sub_menu_item_height_smaller);
+			set(subItemHeight,get:desktop.sub_menu_item_height_smaller);
+		,
+			set(main_menu_font_size, get:desktop.main_menu_font_size);
+			set(sub_menu_item_font_size,get:desktop.sub_menu_item_font_size);
+			set(style[desktop_submenu_item_style].height,get:desktop.sub_menu_item_height);
+			set(subItemHeight,get:desktop.sub_menu_item_height);
+		);
+
+
+	</action>	
+
+
+	<style name="optionsDesktopBttnBG-Style" type="text" keep="true" enabled="false" zorder="100"
+		width="40" 	height="18" 	ox="-20"
+		align="topright" edge="topright"
+		bgcolor="calc:'0x'+general.options_button_bg_inactive" bgborder="0,0,1 0xdddddd 0"	bgroundedge="15"	
+	/>	
+
+<!-- ╔═════════════════════════════╗-->
+<!-- ║	   OPTIONS MENU DESKTOP    ║-->
+<!-- ╚═════════════════════════════╝-->
+	<action name="optionsMenuItem-Desktop"  autorun="preinit" devices="desktop" >
+			
+
+		set(allMenusWidth,calc(-desktop.lang_menu_width-optionsMenu_Width));
+
+		set(OptionsMenuCss,calc('font-family:'+general.main_menu_font+',Arial; font-size:'+main_menu_font_size+'px; color:#'
+			+desktop.main_menu_font_color+';text-align:center;vertical-align: middle;font-weight:'+desktop.main_menu_font_style ));	
+		set(OptionsMenuCssOver,calc('font-family:'+general.main_menu_font+',Arial; font-size:'+main_menu_font_size+'px; color:#'
+			+desktop.main_menu_font_color_over+';text-align:center;vertical-align: middle;font-weight:'+desktop.main_menu_font_style ));	
+
+		
+	
+		set(optionsMenuText,calc('[i class="material-icons" style=" font-size:'+desktop.options_menu_icon_size+'px;vertical-align: middle;  padding-bottom:'
+			+desktop.options_menu_icon_y_offset+'px;padding-right:'+desktop.options_menu_icon_item_x_offset+'px;"]'
+			+desktop.options_menu_icon+'[/i]'+options_menu_text));
+		
+
+		layer[optionsMenuItem].loadStyle(desktop_main_options_style); 
+		set(layer[optionsMenuItem].html,get(optionsMenuText));
+		set(layer[optionsMenuItem].itemName,get(options_menu_text));
+		set(layer[optionsMenuItem].css,get(OptionsMenuCss));
+		set(layer[optionsMenuItem].active,false);
+		set(layer[optionsMenuItem].width, get(optionsMenu_Width));
+		set(layer[optionsMenuItem].ox,calc(-desktop.lang_menu_width-optionsMenu_Width));
+	
+		set(layer[optionsSubMenuCont].ox,get(ox));
+
+		set(layer[optionsMenuItem].onover,
+			set(bgalpha,get:desktop.main_menu_bg_alpha_over);
+			set(css,get(OptionsMenuCssOver));
+			set(layer[optionsSubMenuCont].visible,true);
+			tween(layer[optionsSubMenuCont].alpha,1,0.2,easeOutQuad);	
+		);
+
+		set(layer[optionsMenuItem].onout,
+			set(bgalpha,0);
+			set(css,get(OptionsMenuCss));
+			set(layer[optionsSubMenuCont].visible,false);
+			tween(layer[optionsSubMenuCont].alpha,0,0.2,easeOutQuad);	
+		);
+
+		set(layer[optionsMenuItem].onclick,
+			if( layer[optionsMenuItem].active EQ false,
+				desktop_close_main_menu();
+				desktop_close_lang_menu();
+				set(bgalpha,get:desktop.main_menu_bg_alpha_over);
+				set(css,get(OptionsMenuCssOver));
+				set(layer[optionsSubMenuCont].visible,true);
+				tween(layer[optionsSubMenuCont].alpha,1,0.2,easeOutQuad);
+				set(layer[optionsMenuItem].active,true);
+			,
+			desktop_close_options_menu();
+			);
+		);
+
+		set(layer[optionsSubMenuCont].tatek,get(layer[optionsMenuItem].name)); 
+		layer[optionsSubMenuCont].loadstyle(desktop_submenu_cont_style); 
+		set(layer[optionsSubMenuCont].parent,get(layer[desktop_submenu_container].name));	
+		set(layer[optionsSubMenuCont].align,topright);
+		set(layer[optionsSubMenuCont].ox,get(layer[optionsMenuItem].ox));
+		set(layer[optionsSubMenuCont].oy, calc(desktop.menu_height-desktop.sub_menu_bg_round_edge));
+		set(layer[optionsSubMenuCont].width,get:desktop.sub_menu_width);
+
+	
+		set(layer[optionsSubMenuCont].onover, 
+			set(visible,true);
+			tween(alpha,1,0.2,easeOutQuad);	
+			set(layer[get(tatek)].bgalpha,get:desktop.main_menu_bg_alpha_over);
+			set(layer[get(tatek)].css,get(OptionsMenuCssOver));
+		);
+
+		set(layer[optionsSubMenuCont].onout, 
+			set(visible,false); 
+			tween(alpha,0,0.2,easeOutQuad);	
+			set(layer[get(tatek)].bgalpha,0);
+			set(layer[get(tatek)].css,get(OptionsMenuCss));
+		);
+
+		set(optionsSubmenuCss,calc('font-family:'+desktop.sub_menu_item_font+',Arial; font-size:'+sub_menu_item_font_size+'px; 
+			color:#'+desktop.sub_menu_item_font_color+';text-align:left; padding-left: '+desktop.sub_menu_options_item_x_offset+'px'));
+		set(optionsSubmenuCssOver,calc('font-family:'+desktop.sub_menu_item_font+',Arial; font-size:'+sub_menu_item_font_size+'px; 
+			color:#'+desktop.sub_menu_item_font_color_over+';text-align:left; padding-left: '+desktop.sub_menu_options_item_x_offset+'px'));
+
+
+
+		set(optionsCounter,0);
+		for(set(i,1), i LT 5, inc(i), 
+			if( options[get(i)].desktop EQ true,
+			set(optionsCounter,calc(optionsCounter+1));
+			set(layer[optionsSubMenuCont].height,calc(optionsCounter*subItemHeight+subItemTopPadding+subItemBottomPadding));	
+		
+			txtadd(optionsSubMenu,'optionsSubMenu',get(i));
+
+			set(optionsSubmenuText,calc('[i class="material-icons" style=" font-size: ' + options[get(i)].iconSize+
+				'px;vertical-align: middle;  padding-bottom:'+desktop.sub_menu_options_icon_y_offset+
+				'px;text-align:left;padding-right:'+desktop.sub_menu_options_icon_item_x_offset+'px;"]'+options[get(i)].icon+
+				'[/i]'+options[get(i)].text));
+
+			set(layer[get(optionsSubMenu)].html,get(optionsSubmenuText));
+			set(layer[get(optionsSubMenu)].itemName,get(options[get(i)].text));
+			layer[get(optionsSubMenu)].loadstyle(desktop_submenu_item_style);
+			set(layer[get(optionsSubMenu)].css,get(optionsSubmenuCss));
+			set(layer[get(optionsSubMenu)].oy,calc(subItemTopPadding+(optionsCounter-1)*subItemHeight));
+			set(optionsPadding,null);
+			txtadd(optionsPadding,'0 0 0 ',get(options[get(i)].iconOffset));
+			set(layer[get(optionsSubMenu)].padding,get(optionsPadding));
+			set(layer[get(optionsSubMenu)].active,false);
+			set(layer[get(optionsSubMenu)].actionNumber,get(i));
+			
+			set(layer[get(optionsSubMenu)].onover,
+					set(bgalpha,get:desktop.sub_menu_item_alpha_over);
+					set(css,get(optionsSubmenuCssOver));
+					desktop_line_anim_in(line);
+				);
+			set(layer[get(optionsSubMenu)].onout,
+					set(bgalpha,0);
+					set(css,get(optionsSubmenuCss));
+					desktop_line_anim_out(line);
+				);
+
+
+			set(optionsActionName,null);
+			txtadd(optionsActionName,'optionActions',get(i));
+			set(layer[get(optionsSubMenu)].onclick,
+				ga_click('Options',get(itemName), 'click');
+				optionActionsAll(get(actionNumber));
+
+				set(bgalpha,get:desktop.sub_menu_item_alpha_over);
+
+		<!-- 		tween(bgalpha,get:desktop.sub_menu_item_alpha_over,0.2,linear,
+					tween(bgalpha,0,0.2,linear);
+					); -->
+				desktop_close_options_menu();
+				if(active EQ false,
+						tween(layer[get(bttn)].ox,-13,0.12,linear,
+							tween(layer[get(bttn)].ox,-15,0.1,linear);
+							);
+						tween(layer[get(bttnBG)].bgcolor,calc('0x'+general.options_button_bg_active));
+
+						set(active,true);
+						,
+						tween(layer[get(bttn)].ox,-32,0.12,linear,
+							tween(layer[get(bttn)].ox,-30,0.1,linear);
+							);
+						tween(layer[get(bttnBG)].bgcolor,calc('0x'+general.options_button_bg_inactive));
+
+						set(active,false);
+						
+						);
+
+				);
+
+			set(layer[get(optionsSubMenu)].parent,get(layer[optionsSubMenuCont].name)); 
+
+			txtadd(optionsSubMenuLine,'optionsSubMenuLine',get(optionsCounter));
+			set(layer[get(optionsSubMenuLine)].height,get(subMenuHeight));
+			layer[get(optionsSubMenuLine)].loadstyle(menuLine-Style);
+			set(layer[get(optionsSubMenuLine)].parent,get(layer[optionsSubMenuCont].name)); 
+			set(layer[get(optionsSubMenuLine)].oy,calc(subItemTopPadding+optionsCounter*subItemHeight));
+			set(layer[get(optionsSubMenu)].line, get(layer[get(optionsSubMenuLine)].name));
+			if( i GT 1,
+			<!-- DESKTOP OPTIONS BTTN -->
+			txtadd(optionsDesktopBttnBG,'optionsDesktopBttnBG',get(optionsCounter));
+			set(layer[get(optionsDesktopBttnBG)].align,topright);
+			layer[get(optionsDesktopBttnBG)].loadstyle(optionsDesktopBttnBG-Style);
+			set(layer[get(optionsDesktopBttnBG)].parent,get(layer[%optionsSubMenu].name));
+			set(layer[get(optionsDesktopBttnBG)].width,30);
+			set(layer[get(optionsDesktopBttnBG)].height,15);
+			set(layer[get(optionsDesktopBttnBG)].ox,-15);
+			set(layer[get(optionsDesktopBttnBG)].oy,calc(subItemHeight/2-layer[get(optionsDesktopBttnBG)].height/2));
+
+			txtadd(optionsDesktopBttn,'optionsDesktopBttn',get(optionsCounter));
+			set(layer[get(optionsDesktopBttn)].align,topright);
+			layer[get(optionsDesktopBttn)].loadstyle(optionsDesktopBttnBG-Style);
+			set(layer[get(optionsDesktopBttn)].parent,get(layer[%optionsSubMenu].name));
+			set(layer[get(optionsDesktopBttn)].width,17);
+			set(layer[get(optionsDesktopBttn)].height,17);
+			set(layer[get(optionsDesktopBttn)].oy,calc(layer[get(optionsDesktopBttnBG)].oy-1));
+			set(layer[get(optionsDesktopBttn)].ox,calc(-30));
+			set(layer[get(optionsDesktopBttn)].bgcolor,calc('0x'+general.options_button_color));
+			set(layer[get(optionsDesktopBttn)].bgborder,'1 0xdddddd 1');
+			set(layer[get(optionsDesktopBttn)].bgroundedge,15);
+			set(layer[get(optionsDesktopBttn)].zorder,100);
+
+			set(layer[get(optionsSubMenu)].bttnBG,get(layer[%optionsDesktopBttnBG].name));
+			set(layer[get(optionsSubMenu)].bttn,get(layer[%optionsDesktopBttn].name)); 
+			);
+		);
+	);
+
+	</action>
+
+
+	<action name="desktop_close_options_menu" protect="true" >
+		set(layer[optionsMenuItem].bgalpha,0);
+		set(layer[optionsMenuItem].css,get(OptionsMenuCss));
+		set(layer[optionsSubMenuCont].visible,false);
+		tween(layer[optionsSubMenuCont].alpha,0,0.2,easeOutQuad);	
+		set(layer[optionsMenuItem].active,false);
+	</action>
+
+<!-- ╔═════════════════════════════╗-->
+<!-- ║	   LANGUAGE MENU DESKTOP   ║-->
+<!-- ╚═════════════════════════════╝-->
+	<action name="desktop_lang_menu_action"  autorun="preinit" devices="desktop" protect="true">
+
+		set(currLangCaps,get(tour_language));
+		toUpper(currLangCaps);
+
+		txtsplit(general.lang_codes, '/', langArr);
+		for(set(i,0), i LT langArr.count, inc(i),
+		  <!-- 	toUpper(langArr[get(i)].value); -->
+	  		);
+
+		if( langArr.count GT 1,
+
+
+	 	set(langMenuCss,calc('font-family:'+general.main_menu_font+',Arial; font-size:'+main_menu_font_size+'px; color:#'
+	 		+desktop.main_menu_font_color+';text-align:left; padding-left: '+desktop.lang_menu_text_x_offset+'px;font-weight:'+desktop.main_menu_font_style ));	
+	 	set(langMenuCssOver,calc('font-family:'+general.main_menu_font+',Arial; font-size:'+main_menu_font_size+'px; color:#'
+	 		+desktop.main_menu_font_color_over+';text-align:left; padding-left: '+desktop.lang_menu_text_x_offset+'px;font-weight:'+desktop.main_menu_font_style ));	
+	
+		set(subMenuLangCss,calc('font-family:'+desktop.sub_menu_item_font+',Arial; font-size:'+sub_menu_item_font_size+'px; color:#'
+			+desktop.sub_menu_item_font_color+';text-align:left; padding-left: '+desktop.lang_menu_text_x_offset+'px'));
+		set(subMenuLangCssOver,calc('font-family:'+desktop.sub_menu_item_font+',Arial; font-size:'+sub_menu_item_font_size+'px; color:#'
+			+desktop.sub_menu_item_font_color_over+';text-align:left; padding-left: '+desktop.lang_menu_text_x_offset+'px'));
+
+		set(viewSubMenuUncheckIconText,calc('[i class="material-icons" style=" font-size: '+desktop.sub_menu_lang_icon_size+'px;vertical-align: middle; padding-right:'
+			+desktop.sub_menu_lang_icon_x_offset+'px;"]'+desktop.sub_menu_lang_inactive_icon+'[/i]'));
+		
+		set(viewSubMenuCheckIconText,calc('[i class="material-icons" style=" font-size: '+desktop.sub_menu_lang_icon_size+'px;vertical-align: middle; padding-right:'
+			+desktop.sub_menu_lang_icon_x_offset+'px;"]'+desktop.sub_menu_lang_active_icon+'[/i]'));
+
+		set(langSubMenuCheckboxCss,calc('font-size:14px; color:#'+desktop.sub_menu_lang_icon_color+';text-align:left; padding-left:
+			'+desktop.lang_menu_text_x_offset+'px'));
+
+		set(subMenuLangHtml,null);
+		txtadd(subMenuLangHtml,get(currLangCaps));
+
+
+		set(layer[desktop_main_lang_menu].html,get(subMenuLangHtml));
+		set(layer[desktop_main_lang_menu].css,get(langMenuCss));
+	  	layer[desktop_main_lang_menu].loadStyle(desktop_main_item_style);
+	  	set(layer[desktop_main_lang_menu].ox,calc(-desktop.lang_menu_width));
+	  	set(layer[desktop_main_lang_menu].width, get(desktop.lang_menu_width));
+		set(layer[desktop_main_lang_menu].align,topright);
+		set(layer[desktop_main_lang_menu].active,false);
+
+	
+		set(layer[desktop_main_lang_menu].onover,
+
+			set(layer[subMenuCont_Lang].visible,true);
+			tween(layer[subMenuCont_Lang].alpha,1,0.2,easeOutQuad);	
+			set(bgalpha,get:desktop.main_menu_bg_alpha_over);
+			set(css,get(langMenuCssOver)); 
+		);
+		set(layer[desktop_main_lang_menu].onout,
+			set(layer[subMenuCont_Lang].visible,false);
+			tween(layer[subMenuCont_Lang].alpha,0,0.2,easeOutQuad);	
+			set(bgalpha,0);
+			set(css,get(langMenuCss));
+		);
+
+		set(layer[desktop_main_lang_menu].onclick,
+			desktop_close_main_menu();
+			desktop_close_options_menu();
+			if( layer[desktop_main_lang_menu].active EQ false,
+				set(layer[subMenuCont_Lang].visible,true);
+				tween(layer[subMenuCont_Lang].alpha,1,0.2,easeOutQuad);	
+				set(bgalpha,get:desktop.main_menu_bg_alpha_over);
+				set(css,get(langMenuCssOver)); 
+				set(layer[desktop_main_lang_menu].active,true);
+
+			,
+				desktop_close_lang_menu();
+
+			);
+
+
+		);
+		<!-- LANGUAGE MENU ICON -->
+		txtadd(langMenuIconVar,get(main_path),'/langIcons/',get(tour_language),'.png');
+		set(layer[langMenuIcon].visible,true);
+		set(layer[langMenuIcon].parent,get(layer[desktop_main_lang_menu].name)); 
+		layer[langMenuIcon].loadstyle(desktop_submenu_flag_style);
+
+		set(layer[langMenuIcon].ox,get(desktop.lang_menu_flag_x_offset)); 
+		set(layer[langMenuIcon].oy,calc( desktop.main_menu_text_y_offset/2 -1)); 
+		set(layer[langMenuIcon].url,get(langMenuIconVar));
+
+
+		<!-- LANGUAGE MENU SUB CONTAINER -->
+		set(layer[subMenuCont_Lang].parent,get(layer[desktop_submenu_container].name));
+		layer[subMenuCont_Lang].loadstyle(desktop_submenu_cont_style); 
+		set(layer[subMenuCont_Lang].align,topright);
+		set(layer[subMenuCont_Lang].ox,calc(-desktop.lang_menu_width));
+		
+
+		set(layer[subMenuCont_Lang].oy, calc(desktop.menu_height-desktop.sub_menu_bg_round_edge));
+		set(layer[subMenuCont_Lang].width,get:desktop.sub_menu_lang_width);
+		set(layer[subMenuCont_Lang].height,calc(langArr.count*subItemHeight+subItemTopPadding+subItemBottomPadding));	 
+
+		set(layer[subMenuCont_Lang].tatek,get(layer[desktop_main_lang_menu].name)); 
+		set(layer[subMenuCont_Lang].onover, 			
+			set(layer[get(tatek)].bgalpha,get:desktop.main_menu_bg_alpha_over);
+			set(layer[get(tatek)].css,get(langMenuCssOver)); 
+			set(visible,true);
+			tween(alpha,1,0.2,easeOutQuad);	
+			);
+		set(layer[subMenuCont_Lang].onout, 
+			set(layer[get(tatek)].bgalpha,0);	
+			 set(layer[get(tatek)].css,get(langMenuCss)); 
+			set(visible,false); 
+			tween(alpha,0,0.2,easeOutQuad);	
+			);
+
+
+
+		for(set(i,0), i LT langArr.count, inc(i), 
+		
+			txtadd(podmenuLang,'podmenuLang',get(i));
+			set(layer[get(podmenuLang)].oy,calc(subItemTopPadding+i*subItemHeight));
+
+			
+
+			set(layer[get(podmenuLang)].html, get(langArr[get(i)].value));
+			set(layer[get(podmenuLang)].langcode, get(langArr[get(i)].value));
+			if(langArr[get(i)].value EQ 'hr',set(layer[get(podmenuLang)].html,'Hrvatski'););
+			if(langArr[get(i)].value EQ 'en',set(layer[get(podmenuLang)].html,'English'););
+			if(langArr[get(i)].value EQ 'de',set(layer[get(podmenuLang)].html,'Deutsch'););
+			layer[get(podmenuLang)].loadstyle(desktop_submenu_item_style);
+			set(layer[get(podmenuLang)].css,get(subMenuLangCss));
+	
+			set(layer[get(podmenuLang)].onover,
+				set(bgalpha,get:desktop.sub_menu_item_alpha_over);
+				set(css,get(subMenuLangCssOver));
+				desktop_line_anim_in(line);
+			);
+			set(layer[get(podmenuLang)].onout,
+				set(bgalpha,0);
+				set(css,get(subMenuLangCss));
+				desktop_line_anim_out(line);
+			);
+			set(layer[get(podmenuLang)].onclick, 
+				tween(bgalpha,get:desktop.sub_menu_item_alpha_over,0.2,linear,
+						tween(bgalpha,0,0.2,linear);
+					);
+				set(tour_language,get(langcode)); 
+				toLower(tour_language);
+  				events.dispatch(language_changed);
+				changeMenuLanguage();
+				desktop_close_lang_menu();
+				ga_click('Language',get(tour_language), 'Desktop click');
+			); 
+
+			set(layer[get(podmenuLang)].parent,get(layer[subMenuCont_Lang].name)); 
+			set(podmenuLangFlagName,null);
+			set(podmenuLangFlagName,get(langArr[get(i)].value));
+			tolower(podmenuLangFlagName);
+			txtadd(podmenuLangFlag,'podmenuLangFlag_',get(podmenuLangFlagName));
+			set(podmenuLangIcon,null);
+
+			txtadd(podmenuLangIcon,get(main_path),'/langIcons/',get(podmenuLangFlagName),'.png');
+			set(layer[get(podmenuLangFlag)].visible,true);
+			layer[get(podmenuLangFlag)].loadstyle(desktop_submenu_flag_style);
+			set(layer[get(podmenuLangFlag)].ox,get:desktop.lang_menu_flag_x_offset); 
+			set(layer[get(podmenuLangFlag)].oy,get:desktop.sub_menu_lang_icon_y_offset); 
+			 
+			set(layer[get(podmenuLangFlag)].url,get(podmenuLangIcon));
+			set(layer[get(podmenuLangFlag)].parent,get(layer[get(podmenuLang)].name)); 
+
+		<!-- ╔═════════════════════╗--> 
+		<!-- ║ LANG SUB CHECKBOX   ║-->
+		<!-- ╚═════════════════════╝-->
+			txtadd(podmenuLangCheck,'podMenuLangCheck',get(langArr[get(i)].value));
+			set(layer[get(podmenuLangCheck)].visible,true);
+			layer[get(podmenuLangCheck)].loadstyle(desktop_submenu_bullet_style);
+			
+			 
+			 set(layer[get(podmenuLangCheck)].css,get(langSubMenuCheckboxCss));
+			 
+			 set(layer[get(podmenuLangCheck)].align,rightcenter);
+			
+			if(langArr[get(i)].value EQ tour_language,
+				set(layer[get(podmenuLangCheck)].html,get(viewSubMenuCheckIconText));
+			,
+				set(layer[get(podmenuLangCheck)].html,get(viewSubMenuUncheckIconText));
+			);
+			set(layer[get(podmenuLangCheck)].parent,get(layer[get(podmenuLang)].name)); 
+			set(layer[get(podmenuLang)].check,get(layer[get(podmenuLangCheck)].name)); 
+
+		<!-- ╔═════════════════════╗--> 
+		<!-- ║	LANG SUB LINES     ║-->
+		<!-- ╚═════════════════════╝-->
+			txtadd(podmenuLangLine,'podMenuLangLine',get(i));
+			set(layer[get(podmenuLangLine)].height,get(subMenuHeight));
+			layer[get(podmenuLangLine)].loadstyle(menuLine-Style);
+			set(layer[get(podmenuLangLine)].parent,get(layer[subMenuCont_Lang].name)); 
+			set(layer[get(podmenuLangLine)].oy,calc(subItemTopPadding+i*subItemHeight+subItemHeight));
+			set(layer[get(podmenuLang)].line,get(layer[get(podmenuLangLine)].name)); 
+		); <!-- END FOR -->
+
+); <!-- END IF CHECK FOR LANGUAGE COUNT -->
+	</action>
+
+	<action name="changeMenuLanguage" devices="desktop" protect="true" >
+
+		set(allMenusWidth,null);
+		set(langMenuIconVar,null);
+		txtadd(langMenuIconVar,get(main_path),'/langIcons/',get(tour_language),'.png');
+		set(layer[langMenuIcon].url,get(langMenuIconVar));
+		set(currLangCaps,get(tour_language));
+		toUpper(currLangCaps);
+
+		set(subMenuLangHtml,null);
+		txtadd(subMenuLangHtml,get(currLangCaps));
+		set(layer[desktop_main_lang_menu].html,get(subMenuLangHtml));
+
+		for(set(i,0), i LT langArr.count, inc(i),
+			txtadd(podmenuLangCheck,'podMenuLangCheck',get(langArr[get(i)].value));
+			if(langArr[get(i)].value EQ tour_language,
+				set(layer[get(podmenuLangCheck)].html,get(viewSubMenuCheckIconText));
+			,
+				set(layer[get(podmenuLangCheck)].html,get(viewSubMenuUncheckIconText));
+			);
+	  	);
+
+		<!-- logoText-Desktop(); -->
+		logoUrlLink();
+		OptionsMenuInit();
+		optionsMenuItem-Desktop();
+
+		if (general.only_1st_level_menu EQ true,
+			desktop_menu_items_1st_level();
+		,
+			desktop_menu_items();	
+		);
+		hotspotDetailsClose();
+
+
+	</action>
+	<action name="desktop_close_lang_menu" protect="true" >
+			set(layer[subMenuCont_Lang].visible,false);
+			tween(layer[subMenuCont_Lang].alpha,0,0.2,easeOutQuad);	
+			set(layer[desktop_main_lang_menu].bgalpha,0);
+			set(layer[desktop_main_lang_menu].css,get(langMenuCss));
+			set(layer[desktop_main_lang_menu].active,false);
+	</action>
+
+
+<!-- ╔═══════════════════════════════════════╗--> 
+<!-- ║			  MAIN MENU ITEMS   	     ║-->
+<!-- ╚═══════════════════════════════════════╝-->
+	
+	<action name="desktop_menu_items" devices="desktop" protect="true" >
+
+		set(desktopMenuOx,calc(-desktop.lang_menu_width-optionsMenu_Width));
+
+		set(desktop_menu_align, get:desktop.menu_align);
+
+		for(set(i,get(panoramagroup.count)), i GT -1, dec(i), 
+				txtadd(glavniMenu,'glavniMenu',get(i));
+				removelayer(get(glavniMenu));
+			);
+
+		set(mainMenuCss,calc('font-family:'+general.main_menu_font+',Arial; font-size:'+main_menu_font_size+'px; color:#'
+			+desktop.main_menu_font_color+';text-align:center;vertical-align: middle; font-weight:'+desktop.main_menu_font_style+';'));
+		set(mainMenuCssOver,calc('font-family:'+general.main_menu_font+',Arial; font-size:'+main_menu_font_size+'px; color:#'
+			+desktop.main_menu_font_color_over+';text-align:center;vertical-align: middle; font-weight:'+desktop.main_menu_font_style+';'));
+
+		set(podMenuBulletHtml,calc('[i class="material-icons" style="font-size:'+desktop.sub_menu_bullet_size+'px;color:#'
+			+desktop.sub_menu_bullet_color+';vertical-align: middle;"]'+desktop.sub_menu_bullet+'[/i]'));
+		set(podMenuBulletHtmlOver,calc('[i class="material-icons" style="font-size:'+desktop.sub_menu_bullet_size+'px;color:#'
+			+desktop.sub_menu_bullet_color_over+';vertical-align: middle;"]'+desktop.sub_menu_bullet+'[/i]'));
+
+		set(subMenuCss,calc('font-family:'+desktop.sub_menu_item_font+',Arial; font-size:'+sub_menu_item_font_size+'px; color:#'
+			+desktop.sub_menu_item_font_color+';text-align:left; padding-left: '+desktop.sub_menu_item_x_offset+'px;'));
+		set(subMenuCssOver,calc('font-family:'+desktop.sub_menu_item_font+',Arial; font-size:'+sub_menu_item_font_size+'px; color:#'
+			+desktop.sub_menu_item_font_color_over+';text-align:left; padding-left: '+desktop.sub_menu_item_x_offset+'px;'));
+
+
+		<!-- ╔═════════════════════╗--> 
+		<!-- ║		MAIN ITEMS     ║-->
+		<!-- ╚═════════════════════╝-->
+
+		set(mainMenuSpacing,null);
+		set(mainMenuSpacing,get:desktop.main_menu_text_spacing);
+
+		for(set(i,get(panoramagroup.count)), i GT -1, dec(i), 
+			
+			set(grupa[get(i)].name,get(panoramagroup[get(i)].name)); 
+		
+			getmessage(grupaNaziv, get(panoramagroup[get(panoramagroup[get(i)].name)].titleid )); 
+			txtadd(glavniMenu,'glavniMenu',get(i));
+			txtadd(glavniMenuSubParent,'glavniMenuSubParent',get(i));
+			addlayer(get(glavniMenu)); 
+			set(layer[%glavniMenu].width, null);
+			set(layer[%glavniMenu].html, get(grupaNaziv));
+			set(layer[%glavniMenu].css, get(mainMenuCss));
+			set(layer[%glavniMenu].rbr, get(i));
+			set(layer[%glavniMenu].boja, get(panoramagroup[get(panoramagroup[get(i)].name)].color ));
+
+			getmessage(grupaOpis, get(panoramagroup[get(panoramagroup[get(i)].name)].descriptionid )); 
+			set(layer[%glavniMenu].singlePanoID, get(grupaOpis ));
+
+
+			set(layer[%glavniMenu].grupa,get(panoramagroup[get(i)].name));
+			layer[%glavniMenu].loadStyle(desktop_main_item_style);
+			set(layer[%glavniMenu].isClicked,false);
+
+			set(layer[%glavniMenuSubParent].enabled,false);
+			layer[%glavniMenuSubParent].loadStyle(desktop_main_item_style);
+
+			set(layer[%glavniMenuSubParent].zorder,70);
+			set(layer[%glavniMenuSubParent].parent,layer[desktop_submenu_container].name); 
+
+			set(layer[%glavniMenu].subParent,get(layer[%glavniMenuSubParent].name));
+			set(layer[%glavniMenu].onautosized,
+
+				set(itemWidth,calc(width+mainMenuSpacing));
+				set(width, 0);
+				set(width, get(itemWidth));
+				sub(desktopMenuOx,get(width));
+				inc(desktop_menu_width,calc(width+mainMenuSpacing));
+				set(ox,calc(desktopMenuOx-mainMenuSpacing));
+
+
+				set(layer[get(subParent)].ox,get(ox));
+
+				set(layer[get(subParent)].width,get(width));
+				<!-- set(layer[desktop_home_icon].ox,calc(ox-layer[desktop_home_icon].width)); -->
+
+
+
+				if(name EQ 'glavnimenu0',
+
+					set(layer[desktop_menu_container].width,calc(desktopMenuOx*(-1)+ mainMenuSpacing));
+					set(layer[desktop_submenu_container].width,calc(desktopMenuOx*(-1)+mainMenuSpacing ));
+				
+<!-- 					if( desktop_menu_align EQ 'right', 
+						set(layer[desktop_menu_container].align,topright);
+						set(layer[desktop_menu_container].edge,topright);
+						set(layer[desktop_menu_container].ox, calc(-desktop.menu_x_offset));
+
+						set(layer[desktop_submenu_container].edge,topright);
+						set(layer[desktop_submenu_container].align,topright);
+						set(layer[desktop_submenu_container].ox, calc( -desktop.menu_x_offset));
+					);
+					if( desktop_menu_align EQ 'left', 
+				
+						set(layer[desktop_menu_container].width,calc(desktopMenuOx*(-1) +mainMenuSpacing));
+						set(layer[desktop_menu_container].ox, get:desktop.menu_x_offset);
+					
+						set(layer[desktop_submenu_container].width,calc(desktopMenuOx*(-1)+mainMenuSpacing ));
+						set(layer[desktop_submenu_container].ox, get:desktop.menu_x_offset);
+					);
+					if( desktop_menu_align EQ 'center', 
+
+						set(layer[desktop_menu_container].align,topcenter);
+						set(layer[desktop_menu_container].edge,topcenter);
+						set(layer[desktop_menu_container].ox, 0);
+
+						set(layer[desktop_submenu_container].edge,topcenter);
+						set(layer[desktop_submenu_container].align,topcenter);
+						set(layer[desktop_submenu_container].ox,0);
+					); -->
+
+			desktop_postition_menu();
+					
+			
+				);  
+			); <!-- END ON AUTOSIZED -->
+
+			set(layer[%glavniMenu].zorder, calc(94+i)); 
+			set(layer[%glavniMenu].onover,
+
+				desktop_show_submenu(name);
+				set(bgalpha,get:desktop.main_menu_bg_alpha_over);
+				set(css,get(mainMenuCssOver));
+			);
+
+			set(layer[%glavniMenu].onout,	
+				if(layer[get(subContChild)].hovering EQ false,
+					desktop_hide_submenu(name);
+					set(bgalpha,0.0);
+					set(css,get(mainMenuCss));
+				);
+			);
+
+			set(layer[%glavniMenu].onclick,
+			
+				desktop_close_options_menu();
+				desktop_close_main_menu();
+				desktop_close_lang_menu();
+				if(layer[%glavniMenu].isClicked EQ false,
+					desktop_show_submenu(name);
+					set(bgalpha,get:desktop.main_menu_bg_alpha_over);
+					set(css,get(mainMenuCssOver));
+					set(layer[%glavniMenu].isClicked,true);
+				,
+					desktop_hide_submenu(layer[%glavniMenu].name);
+					set(bgalpha,0.0);
+					set(css,get(mainMenuCss));
+					set(layer[%glavniMenu].isClicked,false);
+
+				);
+
+			);
+				
+		if( layer[%glavniMenu].boja EQ 'ffffff', 
+			set(layer[%glavniMenu].onover,
+				set(bgalpha,get:desktop.main_menu_bg_alpha_over);
+				set(css,get(mainMenuCssOver));
+			);
+			set(layer[%glavniMenu].onclick,
+				subMebuCustomActions1();
+			);
+			);
+	
+		if( layer[%glavniMenu].boja EQ 'ff0004', 
+			set(layer[%glavniMenu].onover,
+				set(bgalpha,get:desktop.main_menu_bg_alpha_over);
+				set(css,get(mainMenuCssOver));
+			);
+			set(layer[%glavniMenu].onclick,
+				loadscene(get(singlePanoID),null, MERGE, BLEND(0.3));
+			<!-- 	set(currentDesktopPanorama, get(name)); -->
+				set(css,get(mainMenuCssOver));
+			);
+			);
+
+		<!-- ╔═════════════════════╗--> 
+		<!-- ║	  SUB CONTAINER    ║-->
+		<!-- ╚═════════════════════╝-->
+			set(subItemCount[get(i)].count,0);
+			txtadd(subMenuCont, get(glavniMenu),'_subMenuCont');	
+			set(layer[get(subMenuCont)].parent,get(layer[%glavniMenuSubParent].name));
+	
+			layer[get(subMenuCont)].loadstyle(desktop_submenu_cont_style);
+			set(layer[get(subMenuCont)].oy,  calc(desktop.menu_height-desktop.sub_menu_bg_round_edge));
+			set(layer[get(subMenuCont)].tatek,get(layer[%glavniMenu].name));
+			set(layer[get(layer[get(subMenuCont)].tatek)].subContChild,get(subMenuCont));
+			
+			if(device.desktop EQ false,
+				set(layer[get(subMenuCont)].tatek,get(layer[%glavniMenu].name));
+				);
+
+			set(layer[get(subMenuCont)].onover, 
+				set(layer[get(tatek)].bgalpha,get:desktop.main_menu_bg_alpha_over);
+				set(layer[get(tatek)].css,get(mainMenuCssOver));
+				set(visible,true);
+				tween(alpha,1,0.2,easeOutQuad);	
+			);
+			set(layer[get(subMenuCont)].onout, 
+				
+				if( (mouse.y LT calc(desktop.menu_height-10)), set(hovering,true););
+					delayedcall(0.05,set(hovering,false));
+					if(layer[get(tatek)].hovering EQ false,
+					set(layer[get(tatek)].bgalpha,0);	
+					set(layer[get(tatek)].css,get(mainMenuCss));
+					set(visible,false); 
+				);				
+			);
+			<!-- ╔═════════════════════╗--> 
+			<!-- ║	 	SUB ITEMS      ║-->
+			<!-- ╚═════════════════════╝-->
+				for(set(sI,0), sI LT calc(scene.count+1), inc(sI), 
+						
+					getmessage(scenaNaziv, get(scene[get(scene[get(sI)].name)].titleid));
+					set(scena[get(sI)].naziv,get(scenaNaziv));
+					set(scena[get(sI)].group,get(scene[get(sI)].group));
+					set(scenaGrupa, get(scena[get(sI)].group));
+					set(grupaID, get(panoramagroup[get(i)].name));
+					
+					<!-- ╔═════════════════════╗--> 
+					<!-- ║	SUB ITEM FOR LOOP  ║-->
+					<!-- ╚═════════════════════╝-->
+					if( scenaGrupa EQ grupaID,  
+					
+						txtadd(podmenu,get(grupaID),'podMenu',get(subItemCount[get(i)].count));
+						set(layer[get(podmenu)].html,get(scenaNaziv));
+						
+						layer[get(podmenu)].loadstyle(desktop_submenu_item_style);
+						set(layer[get(podmenu)].css, get(subMenuCss));
+						set(layer[get(podmenu)].oy,calc(subItemTopPadding+subItemCount[get(i)].count*subItemHeight));
+						set(layer[get(podmenu)].groupID,get(grupaID));
+						set(layer[get(podmenu)].pano,get(scene[get(scene[get(sI)].name)].name));
+						set(layer[get(podmenu)].tatek,get(layer[%glavniMenu].name));
+
+							if(currentDesktopPanorama EQ null, 
+								set(layer[get(podmenu)].css, get(subMenuCssOver));
+								set(layer[get(podmenu)].bgalpha,get:desktop.sub_menu_item_alpha_over);
+								set(layer[get(podmenu)].enabled,false);
+								set(currentDesktopPanorama, get(layer[get(podmenu)].name));
+								,
+
+								if( xml.scene EQ layer[get(podmenu)].pano,
+									set(layer[get(podmenu)].css, get(subMenuCssOver));
+									set(layer[get(podmenu)].bgalpha,get:desktop.sub_menu_item_alpha_over);
+									set(layer[get(podmenu)].enabled,false);
+									set(currentDesktopPanorama, get(layer[get(podmenu)].name));
+
+									);
+								);
+						set(layer[get(podmenu)].onover, 
+							set(css,get(subMenuCssOver));
+							set(bgalpha,get:desktop.sub_menu_item_alpha_over);
+							desktop_bullet_anim_in(bullet);
+							desktop_line_anim_in(line);
+						);
+						set(layer[get(podmenu)].onout, 
+							set(css,get(subMenuCss));
+							set(bgalpha,0);
+							desktop_bullet_anim_out(bullet);
+							desktop_line_anim_out(line);
+						);
+						set(layer[get(podmenu)].onclick,
+							set(enabled,false);
+							set(layer[get(currentDesktopPanorama)].enabled,true);
+							set(layer[get(currentDesktopPanorama)].css,get(subMenuCss));
+							set(layer[get(layer[get(currentDesktopPanorama)].bullet)].html,get(podMenuBulletHtml));
+							set(layer[get(currentDesktopPanorama)].bgalpha,0);
+							set(css,get(subMenuCssOver));
+							set(bgalpha,get:desktop.sub_menu_item_alpha_over);
+							desktop_bullet_anim_out(bullet);
+
+							desktop_hide_submenu(tatek);
+							set(layer[get(tatek)].bgalpha,0.0);
+							set(layer[get(tatek)].css,get(mainMenuCss));
+							set(layer[get(tatek)].isClicked,false);
+
+							loadscene(get(pano),null, MERGE, BLEND(0.3));
+							set(currentDesktopPanorama, get(name));
+
+							getmessage(gtag_scene_name, get(scene[get(pano)].titleid));
+							ga_click('Menu click',get(gtag_scene_name), 'Desktop ');
+							
+						); 
+						if(layer[get(podmenu)].pano EQ submenu_custom_id, 
+							set(layer[get(podmenu)].onclick,
+								subMebuCustomActions1();
+							);
+						);
+
+
+
+						set(layer[get(podmenu)].parent,get(layer[get(subMenuCont)].name)); 
+
+					<!-- ╔═════════════════════╗--> 
+					<!-- ║	SUB ITEM BULLET    ║-->
+					<!-- ╚═════════════════════╝-->
+						txtadd(podmenuBullet,get(grupaID),'podMenuBullet',get(subItemCount[get(i)].count));
+						set(layer[get(podmenuBullet)].visible,true);
+						layer[get(podmenuBullet)].loadstyle(desktop_submenu_bullet_style);
+						set(layer[get(podmenuBullet)].html,get(podMenuBulletHtml));
+						set(layer[get(podmenuBullet)].parent,get(layer[get(podmenu)].name)); 
+						set(layer[get(podmenu)].bullet,get(layer[get(podmenuBullet)].name));
+						
+
+					<!-- ╔═════════════════════╗--> 
+					<!-- ║	SUB ITEM LINES     ║-->
+					<!-- ╚═════════════════════╝-->
+						txtadd(podmenuLine,get(grupaID),'podMenuLine',get(subItemCount[get(i)].count));
+						set(layer[get(podmenuLine)].visible,true);
+						layer[get(podmenuLine)].loadstyle(menuLine-Style);
+						set(layer[get(podmenuLine)].parent,get(layer[get(subMenuCont)].name)); 
+						set(layer[get(podmenuLine)].oy,calc(subItemTopPadding+subItemCount[get(i)].count*subItemHeight+subItemHeight)); 
+						set(layer[get(podmenuLine)].height,get(subMenuHeight));
+						set(layer[get(podmenu)].line,get(layer[get(podmenuLine)].name));
+
+
+						calc(subItemCount[get(i)].count, subItemCount[get(i)].count+1);
+
+					); <!-- END IF -->
+				);<!-- END FOR SUBITEMS -->
+				
+				set(layer[%glavniMenu].subItemCount,get(subItemCount[get(i)].count));
+				set(layer[get(subMenuCont)].height,calc(layer[%glavniMenu].subItemCount*subItemHeight+subItemTopPadding+subItemBottomPadding));	
+
+
+		);	<!-- END FOR ALL ITEMS -->
+	
+</action>
+
+
+	<action name="desktop_menu_items_1st_level" devices="desktop" protect="true" >
+
+		set(desktopMenuOx,calc(-desktop.lang_menu_width-optionsMenu_Width));
+
+		set(desktop_menu_align, get:desktop.menu_align);
+
+		for(set(i,get(panoramagroup.count)), i GT -1, dec(i), 
+				txtadd(glavniMenu,'glavniMenu',get(i));
+				removelayer(get(glavniMenu));
+			);
+
+		set(mainMenuCss,calc('font-family:'+general.main_menu_font+',Arial; font-size:'+main_menu_font_size+'px; color:#'
+			+desktop.main_menu_font_color+';text-align:center;vertical-align: middle; font-weight:'+desktop.main_menu_font_style+';'));
+		set(mainMenuCssOver,calc('font-family:'+general.main_menu_font+',Arial; font-size:'+main_menu_font_size+'px; color:#'
+			+desktop.main_menu_font_color_over+';text-align:center;vertical-align: middle; font-weight:'+desktop.main_menu_font_style+';'));
+
+		set(podMenuBulletHtml,calc('[i class="material-icons" style="font-size:'+desktop.sub_menu_bullet_size+'px;color:#'
+			+desktop.sub_menu_bullet_color+';vertical-align: middle;"]'+desktop.sub_menu_bullet+'[/i]'));
+		set(podMenuBulletHtmlOver,calc('[i class="material-icons" style="font-size:'+desktop.sub_menu_bullet_size+'px;color:#'
+			+desktop.sub_menu_bullet_color_over+';vertical-align: middle;"]'+desktop.sub_menu_bullet+'[/i]'));
+
+		set(subMenuCss,calc('font-family:'+desktop.sub_menu_item_font+',Arial; font-size:'+sub_menu_item_font_size+'px; color:#'
+			+desktop.sub_menu_item_font_color+';text-align:left; padding-left: '+desktop.sub_menu_item_x_offset+'px;'));
+		set(subMenuCssOver,calc('font-family:'+desktop.sub_menu_item_font+',Arial; font-size:'+sub_menu_item_font_size+'px; color:#'
+			+desktop.sub_menu_item_font_color_over+';text-align:left; padding-left: '+desktop.sub_menu_item_x_offset+'px;'));
+
+
+		<!-- ╔═════════════════════╗--> 
+		<!-- ║		MAIN ITEMS     ║-->
+		<!-- ╚═════════════════════╝-->
+
+		set(mainMenuSpacing,null);
+		set(mainMenuSpacing,get:desktop.main_menu_text_spacing);
+
+		for(set(i,get(panoramagroup.count)), i GT -1, dec(i), 
+			
+			set(grupa[get(i)].name,get(panoramagroup[get(i)].name)); 
+		
+			getmessage(grupaNaziv, get(panoramagroup[get(panoramagroup[get(i)].name)].titleid )); 
+			txtadd(glavniMenu,'glavniMenu',get(i));
+			addlayer(get(glavniMenu)); 
+			set(layer[%glavniMenu].width, null);
+			set(layer[%glavniMenu].html, get(grupaNaziv));
+			set(layer[%glavniMenu].css, get(mainMenuCss));
+			set(layer[%glavniMenu].rbr, get(i));
+			set(layer[%glavniMenu].boja, get(panoramagroup[get(panoramagroup[get(i)].name)].color ));
+			set(layer[%glavniMenu].grupa,get(panoramagroup[get(i)].name));
+			layer[%glavniMenu].loadStyle(desktop_main_item_style);
+			set(layer[%glavniMenu].isClicked,false);
+
+
+
+			set(layer[%glavniMenu].onautosized,
+				set(itemWidth,calc(width+mainMenuSpacing));
+				set(width, 0);
+				set(width, get(itemWidth));
+				sub(desktopMenuOx,get(width));
+				inc(desktop_menu_width,calc(width+mainMenuSpacing));
+				set(ox,calc(desktopMenuOx-mainMenuSpacing));
+
+
+				set(layer[get(subParent)].ox,get(ox));
+
+				set(layer[get(subParent)].width,get(width));
+				<!-- set(layer[desktop_home_icon].ox,calc(ox-layer[desktop_home_icon].width)); -->
+
+
+
+				if(name EQ 'glavnimenu0',
+
+					set(layer[desktop_menu_container].width,calc(desktopMenuOx*(-1)+ mainMenuSpacing));
+					set(layer[desktop_submenu_container].width,calc(desktopMenuOx*(-1)+mainMenuSpacing ));
+					desktop_postition_menu();
+				);  
+			); <!-- END ON AUTOSIZED -->
+
+
+				for(set(sI,0), sI LT calc(scene.count+1), inc(sI), 
+
+					if( scene[get(sI)].group EQ panoramagroup[get(i)].name, 
+						set(layer[%glavniMenu].panolink, get(scene[get(sI)].name));			
+
+					);
+				);
+
+			set(layer[%glavniMenu].zorder, calc(94+i)); 
+			set(layer[%glavniMenu].onover,
+				set(bgalpha,get:desktop.main_menu_bg_alpha_over);
+				set(css,get(mainMenuCssOver));
+			);
+
+			set(layer[%glavniMenu].onout,	
+				set(bgalpha,0.0);
+				set(css,get(mainMenuCss));
+			);
+
+			set(layer[%glavniMenu].onclick,
+				set(bgalpha,get:desktop.main_menu_bg_alpha_over);
+				set(css,get(mainMenuCssOver));
+				
+				loadscene(get(panolink),null, MERGE, BLEND(0.3));
+
+				getmessage(gtag_scene_name, get(scene[get(panolink)].titleid));
+				ga_click('Menu click',get(gtag_scene_name), 'Desktop ');
+
+			);	
+
+
+		);	<!-- END FOR ALL ITEMS -->
+	
+</action>
+
+
+<!-- 	if(screensize EQ null, set(screensize, calc(stagewidth/stageheight));	
+	if(screensize != calc(stagewidth/stageheight),
+		changeMenuLanguage();
+		set(screensize,calc(stagewidth/stageheight));
+	); -->
+
+	<events name="desktop_resize_event" keep="true"	onresize="
+ 		if(last_stagewidth != stagewidth ,
+            events.dispatch('resize_width_event');
+        );
+        copy(last_stagewidth, stagewidth);
+            
+
+
+	
+		font_init();
+		desktop_lang_menu_action();
+	
+		desktop_postition_menu();
+
+	" />		
+		<events name="resize_menu_event" keep="true" resize_width_event="
+				delayedcall(0.2,
+				changeMenuLanguage();
+				panoramaHsClicked();
+				);
+		" />
+
+	<action name="desktop_postition_menu" protect="true" >
+		if( desktop_menu_align EQ 'right',
+			if(stagewidth LT calc(layer[desktop_menu_container].width+430+desktop.menu_x_offset),
+				set(layer[desktop_menu_container].align,topleft);
+				set(layer[desktop_menu_container].edge,topleft);
+				set(layer[desktop_menu_container].ox, 430);
+					
+				set(layer[desktop_submenu_container].align,topleft);
+				set(layer[desktop_submenu_container].edge,topleft);
+				set(layer[desktop_submenu_container].ox, 430);
+			,
+
+				set(layer[desktop_menu_container].align,topright);
+				set(layer[desktop_menu_container].edge,topright);
+				set(layer[desktop_menu_container].ox, calc(-desktop.menu_x_offset));
+
+				set(layer[desktop_submenu_container].edge,topright);
+				set(layer[desktop_submenu_container].align,topright);
+				set(layer[desktop_submenu_container].ox, calc( -desktop.menu_x_offset));
+
+			);
+		);
+
+			if( desktop_menu_align EQ 'center',
+				if(stagewidth LT calc(layer[desktop_menu_container].width+860),
+					set(layer[desktop_menu_container].align,topleft);
+					set(layer[desktop_menu_container].edge,topleft);
+					set(layer[desktop_menu_container].ox, 430);
+						
+					set(layer[desktop_submenu_container].align,topleft);
+					set(layer[desktop_submenu_container].edge,topleft);
+					set(layer[desktop_submenu_container].ox, 430);
+				,
+
+					set(layer[desktop_menu_container].align,topcenter);
+					set(layer[desktop_menu_container].edge,topcenter);
+					set(layer[desktop_menu_container].ox, 0);
+
+					set(layer[desktop_submenu_container].edge,topcenter);
+					set(layer[desktop_submenu_container].align,topcenter);
+					set(layer[desktop_submenu_container].ox,0);
+
+			);
+		);
+		
+	</action>
+
+
+	<action name="desktop_close_main_menu" protect="true" >
+		for(set(i,get(panoramagroup.count)), i GT -1, dec(i),
+			txtadd(glavniMenu,'glavniMenu',get(i));
+			desktop_hide_submenu(layer[%glavniMenu].name);
+			set(layer[%glavniMenu].bgalpha,0.0);
+			set(layer[%glavniMenu].css,get(mainMenuCss));
+			set(layer[%glavniMenu].isClicked,false);
+		);
+	</action>
+
+
+	<action name="panoramaHsClicked" protect="true" >
+		set(layer[get(currentDesktopPanorama)].enabled,true);
+		set(layer[get(currentDesktopPanorama)].css,get(subMenuCss));
+		set(layer[get(layer[get(currentDesktopPanorama)].bullet)].html,get(podMenuBulletHtml));
+
+		set(layer[get(layer[get(currentDesktopPanorama)].line)].width,get(desktop.sub_menu_line_width));
+		set(layer[get(layer[get(currentDesktopPanorama)].line)].bgborder,calc('0,0,1 0x'+desktop.sub_menu_line_color+' 1'));
+		set(layer[get(layer[get(currentDesktopPanorama)].line)].alpha,get(desktop.sub_menu_line_alpha));
+
+
+		set(layer[get(currentDesktopPanorama)].bgalpha,0);
+		for(set(sI,0), sI LT layer.count, inc(sI), 
+			if( xml.scene EQ layer[get(sI)].pano,
+				set(layer[get(sI)].css,get(subMenuCssOver));
+				set(layer[get(layer[get(sI)].bullet)].html,get(podMenuBulletHtmlOver));
+
+				set(layer[get(sI)].bgalpha,get:desktop.sub_menu_item_alpha_over);
+				set(layer[get(sI)].enabled,false);
+
+				set(layer[get(layer[get(sI)].line)].width,get(desktop.sub_menu_line_width_over));
+				set(layer[get(layer[get(sI)].line)].bgborder,calc('0,0,1 0x'+desktop.sub_menu_line_color_over+' 1'));
+				set(layer[get(layer[get(sI)].line)].alpha,get(desktop.sub_menu_line_alpha_over));
+
+
+
+				set(currentDesktopPanorama, get(layer[get(sI)].name));
+			);
+		);
+
+	new_scene_desktop_menu_1st_level_active();
+	</action>
+
+<action name="new_scene_desktop_menu_1st_level_active" protect="true" >
+
+		
+		set(layer[get(active_menu_item)].enabled,true);
+		set(layer[get(active_menu_item)].bgalpha,0);
+		set(layer[get(active_menu_item)].css,get(mainMenuCss)); 
+
+
+		for(set(i,0), i LT panoramagroup.count, inc(i), 
+
+			txtadd(glavniMenu,'glavniMenu',get(i));
+		
+		
+			if(xml.scene EQ layer[%glavniMenu].panolink,
+				set(layer[%glavniMenu].bgalpha, 0.3);			
+				set(layer[%glavniMenu].css,get(mainMenuCssOver));
+				set(layer[%glavniMenu].enabled,false);
+
+				set(active_menu_item,get(layer[%glavniMenu].name));
+		);
+			);
+
+
+
+
+
+	</action>
+
+
+
+
+	<action name="desktop_bullet_anim_in" protect="true" >
+		tween(layer[Get(%1)].x,get(desktop.sub_menu_bullet_x_offset_anim),0.1,easeInQuad);
+		set(layer[Get(%1)].html,get(podMenuBulletHtmlOver));
+	</action>
+	<action name="desktop_bullet_anim_out" protect="true" >
+		tween(layer[Get(%1)].x,0,0.1,easeOutQuad);
+		set(layer[Get(%1)].html,get(podMenuBulletHtml));
+	</action>
+
+	<action name="desktop_line_anim_in" protect="true" >
+		if( desktop.sub_menu_line_width_over  EQ 'auto', 
+			tween(layer[Get(%1)].width,get(%2),0.1,easeInQuad);
+		,
+			tween(layer[Get(%1)].width,get(desktop.sub_menu_line_width_over),0.1,easeInQuad);
+		);
+		
+		tween(layer[Get(%1)].alpha,get(desktop.sub_menu_line_alpha_over),0.1,easeInQuad);
+		set(layer[Get(%1)].bgborder,calc('0,0,1 0x'+desktop.sub_menu_line_color_over+' 1'));
+
+	</action>
+	<action name="desktop_line_anim_out" protect="true" >
+		tween(layer[Get(%1)].width,get(desktop.sub_menu_line_width),0.1,easeInQuad);
+		tween(layer[Get(%1)].alpha,get(desktop.sub_menu_line_alpha),0.1,easeInQuad);
+		set(layer[Get(%1)].bgborder,calc('0,0,1 0x'+desktop.sub_menu_line_color+' 1'));
+	</action>
+
+
+	<action name="desktop_show_submenu" protect="true" >
+		txtadd(containerName, get(%1),'_subMenuCont');		
+		set(layer[get(containerName)].visible,true);	
+
+		tween(layer[get(containerName)].alpha,1,0.2,easeOutQuad);	
+<!-- 		set(layer[get(containerName)].tatek.bgalpha,0.1); -->
+	</action>
+
+	<action name="desktop_hide_submenu" protect="true" >
+		txtadd(containerName, get(%1),'_subMenuCont');	
+		set(layer[get(containerName)].visible,false);
+		tween(layer[get(containerName)].alpha,0,0.2,easeOutQuad);	
+<!-- 		set(layer[get(containerName)].tatek.bgalpha,0.0); -->
+	</action>
+
+</krpano>

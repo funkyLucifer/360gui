@@ -1,0 +1,69 @@
+<krpano>
+
+
+	<events name="hsCircle_start" keep="true" onnewscene="hsCircleAction"/>
+
+
+
+<action name="hsCircleAction"  protect="true" >
+    for(set(i,0), i LT hotspot.count, inc(i), 
+        subtxt(hs_circle_var,get(hotspot[get(i)].name),0, 4);
+
+
+        if(hs_circle_var EQ  'spot', 
+            set(hotspot[get(i)].scalechildren, true);
+
+            txtadd(hotspotName,'hotspot[',get(hotspot[get(i)].name),']');
+            txtadd(hsCircle,'circleHS', get(i));
+            txtadd(hsImage,'circleHSImage', get(i));
+
+           
+             txtadd(circleName,'layer[',get(hsCircle),']');
+            set(layer[get(hsCircle)].type,container);
+            set(layer[get(hsCircle)].width,70);
+            set(layer[get(hsCircle)].height,70);	
+            set(layer[get(hsCircle)].bgborder,'6 0xFFFFFF 1');
+            set(layer[get(hsCircle)].bgroundedge,100);
+            set(layer[get(hsCircle)].alpha,1);
+            set(layer[get(hsCircle)].align,center);
+            set(layer[get(hsCircle)].parent,get(hotspotName));
+            set(layer[get(hsCircle)].zorder,99);
+            set(layer[get(hsCircle)].maskchildren, true);   
+             set(layer[get(hsCircle)].enabled, false);   
+
+            showlog();
+            trace( get(layer[get(hsCircle)].name));
+
+            trace( get(hotspot[get(i)].linktarget));
+            set(hsPano,  get(hotspot[get(i)].linktarget));
+           
+            trace(
+                 get(scene[get(hsPano)].thumburl)
+             );
+
+
+             set(layer[get(hsImage)].type,image);
+            set(layer[get(hsImage)].url, get(scene[get(hsPano)].thumburl));
+            set(layer[get(hsImage)].width,200);
+            set(layer[get(hsImage)].height,200);	
+            set(layer[get(hsImage)].alpha,1);
+            set(layer[get(hsImage)].align,center);
+
+        	txtadd(layer[get(hsImage)].parent, 'layer[', get(hsCircle), ']'); 
+            set(layer[get(hsImage)].zorder,99);
+
+
+
+            
+    );
+
+    );
+</action>
+
+
+
+
+</krpano>
+
+
+

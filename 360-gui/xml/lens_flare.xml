@@ -1,0 +1,173 @@
+
+<krpano>
+	<action name="lens_flare_init" autorun="preinit" >
+
+		showlog();
+		if (device.desktop, 
+		  	set(lf_range,20);
+		,
+		  	set(lf_range,10);
+		);
+	
+	</action>
+
+	<events name="lens_flare_events" keep="true"   
+		onnewpano="lens_enable"
+	 	onviewchanged="show_lens_flare"
+
+	/>
+
+	<action name="lens_enable" >
+		for(set(k,0), k LT hotspot.count, inc(k),
+		  	subtxt(lens_act_var,get(hotspot[get(k)].style),0, 8);
+		  	if(lens_act_var EQ  'Iconlens', 
+		  		trace(get(hotspot[get(k)].name));
+		  		showlog();
+		  		set(hotspot[get(k)].visible, false); 
+				set(lens_ath, get(hotspot[get(k)].ath)); 
+				set(lens_atv, get(hotspot[get(k)].atv)); 
+				set(hotspot[lens_1].ath, get(lens_ath)); set(hotspot[lens_1].atv, get(lens_atv)); 
+				set(hotspot[lens_2].ath, get(lens_ath)); set(hotspot[lens_2].atv, get(lens_atv)); 
+				set(hotspot[lens_5].ath, get(lens_ath)); set(hotspot[lens_5].atv, get(lens_atv)); 
+				set(hotspot[lens_6].ath, get(lens_ath)); set(hotspot[lens_6].atv, get(lens_atv)); 
+				set(hotspot[lens_7].ath, get(lens_ath)); set(hotspot[lens_7].atv, get(lens_atv)); 
+
+				);
+
+
+		  );
+
+	</action>
+
+
+
+
+	<hotspot name="lens_1"  type="image" keep="true" enabled="false" distorted="true" visible="true" zorder="95" zorder2="1" url="/indexdata/graphics/flare1.png"
+		width="500"  height="500" ox="0" oy="0"
+		align="center" edge="center" vcenter="true"
+		ath="-0" atv="-24.88"
+
+	/>	
+	<hotspot name="lens_2"  type="image" keep="true" enabled="false" distorted="true" visible="true" zorder="95" zorder2="1" url="/indexdata/graphics/flare2.png"
+		width="500"  height="500" ox="0" oy="0"
+		align="center" edge="center"
+		ath="0" atv="-24.88"
+
+
+	/>	
+	<layer name="lens_5"  type="image" keep="true" enabled="false" distorted="false" visible="true" zorder="95" zorder2="1"  url="/indexdata/graphics/flare6.png"
+
+		width="500"  height="500" ox="0" oy="0"
+		align="center" edge="center"
+		ath="0" atv="-24.88"
+		flying="0.0"
+
+	/>	
+
+	<layer name="lens_6"  type="image" keep="true" enabled="false" distorted="false" visible="true" zorder="95" zorder2="1"  url="/indexdata/graphics/flare7.png"
+
+		width="500"  height="500" ox="0" oy="0"
+		align="center" edge="center" 
+		ath="0" atv="-24.88"
+		flying="0.0"
+
+	/>	
+
+
+	<hotspot name="lens_7"  type="image" keep="true" enabled="false" distorted="false" visible="true" zorder="95" zorder2="1"  url="/indexdata/graphics/flare6.png"
+
+		width="500"  height="500" ox="" oy="0"
+		align="center" edge="center" vcenter="true"
+		ath="0" atv="-24.88"
+		flying="0"
+
+	/>	
+
+
+<!-- 	<hotspot name="lens_6"  type="text" keep="true" enabled="false" distorted="false" visible="true" zorder="95" zorder2="1" 
+
+		width="500"  height="500" ox="" oy=""
+		align="center" edge="center" vcenter="true"
+		ath="-121.88" atv="-24.88"
+		flying="0.0"
+
+	/>	
+	<hotspot name="lens_7"  type="text" keep="true" enabled="false" distorted="false" visible="true" zorder="95" zorder2="1" 
+
+		width="500"  height="500" ox="" oy=""
+		align="center" edge="center" vcenter="true"
+		ath="0" atv="-24.88"
+		flying="0"
+
+	/>	 -->
+<!-- 	<action name="calc_screen_center" >
+		set(screencenter_toh, calc(stagewidth/2));
+		set(screencenter_tov, calc(stageheight/2));
+	</action> -->
+
+
+
+	<action name="show_lens_flare">
+				
+		set(lf_ath, get(hotspot[lens_1].ath));
+		set(lf_atv, get(hotspot[lens_1].atv));
+		
+		getlooktodistance(lf_dist, lf_ath, lf_atv);
+	<!-- 	getlooktodistance(lf_h_dist, lf_ath, 0); -->
+
+		if(lf_dist LT 50,
+			set(hotspot[lens_1].visible, true);
+			set(hotspot[lens_2].visible, true);
+<!-- 			set(hotspot[lens_1].alpha, calc(0.5-lf_dist/100) );
+			set(hotspot[lens_2].alpha, calc(0.5-lf_dist/100) );
+			set(hotspot[lens_5].alpha, calc(0.6-lf_dist/100) );
+			set(hotspot[lens_6].alpha, calc(0.6-lf_dist/100) );
+			set(hotspot[lens_7].alpha, calc(0.6-lf_dist/100) ); -->
+
+			
+
+
+			spheretoscreen(lf_ath, lf_atv, toh, tov); 
+		<!-- 	trace(calc(stagewidth/2-toh)); -->
+
+			set(layer[lens_5].ox, calc(stagewidth-toh*0.02));
+			set(layer[lens_5].oy, calc(stageheight-tov*0.02)); 
+
+			set(layer[lens_6].ox, calc(stagewidth*0.35)); 
+			set(layer[lens_6].oy, calc(stageheight-tov*0.35)); 
+
+			set(layer[lens_7].ox, calc(stagewidthh*0.5)); 
+			set(layer[lens_7].oy, calc(stageheight-tov*0.5)); 
+
+			
+		,
+<!-- 			set(hotspot[lens_1].visible, false);
+			set(hotspot[lens_2].visible, false); -->
+<!-- 			set(hotspot[lens_1].alpha,0 );
+			set(hotspot[lens_2].alpha, 0 );
+			set(hotspot[lens_5].alpha, 0);
+			set(hotspot[lens_6].alpha, 0 );
+			set(hotspot[lens_7].alpha, 0 ); -->
+		);
+
+		<!-- trace(get(lf_dist)); -->
+
+	<!-- 	spheretoscreen(lf_ath, lf_atv, lf_tox, lf_toy); -->
+
+		
+		           
+<!-- 		set(layer[lens_1].x, calc(lf_tox+(stagewidth/2-lf_tox)*0.2)); 
+		set(layer[lens_1].y, calc(lf_toy+(stageheight/2-lf_toy)*0.2)); 
+
+		trace(get(lf_tox));
+		trace(get(layer[lens_1].x)); -->
+
+		<!-- set(layer[lens_2].x, calc(lf_tox+(stagewidth/2/lf_tox)*10));  -->
+	<!-- 	set(layer[lens_2].y, calc(lf_toy+(stageheight/2-lf_toy)/5));  --> 
+
+
+	</action>
+
+
+
+</krpano>

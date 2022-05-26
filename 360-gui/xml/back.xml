@@ -1,0 +1,80 @@
+<krpano>
+
+
+	<events name="back_start" keep="true" ontourstart="back_start();"/>
+	<events name="back_new_scene" keep="true" onnewscene="back_new_scene_action();"/>
+
+	<action name="back_start" type="Javascript" protect="true" >
+		<![CDATA[
+		/* on back/forward */
+		krpano.call("replaceCurrentURLInHistory()");
+		window.onpopstate = function(event) {
+			/* on back/forward ne zelimo pushati state u history */
+			krpano.set("pushURLToHistory", false);
+			var url = new URL(location.href);
+
+			var loadscene_params = "";
+			if (url.searchParams.get("v") != null) {
+				loadscene_params += "view.vlookat=" + url.searchParams.get("v");
+			}
+			if (url.searchParams.get("h") != null) {
+				if (loadscene_params != "") {
+					loadscene_params += "&";
+				}
+				loadscene_params += "view.hlookat=" + url.searchParams.get("h");
+			}
+			if (url.searchParams.get("f") != null) {
+				if (loadscene_params != "") {
+					loadscene_params += "&";
+				}
+				loadscene_params += "view.fov=" + url.searchParams.get("f");
+			}
+
+			krpano.set("loadscene_params", loadscene_params);
+			krpano.set("loadscene_pano", url.searchParams.get("s"));
+			krpano.call("loadSceneWithUrlParams()");
+		};
+		]]>
+	</action>
+
+	<action name="loadSceneWithUrlParams" protect="true" >
+		loadscene(get("loadscene_pano"), get("loadscene_params"), MERGE, BLEND(1));
+	</action>
+	<action name="pushCurrentURLToHistory" type="Javascript" protect="true" >
+		<![CDATA[
+		history.pushState(null, "", "?s=" + krpano.get("xml.scene") + "&tour_language=" + krpano.get("tour_language") + krpano.get("hide_options")+ krpano.get("url_options"));
+		]]>
+	</action>
+	<action name="back_new_scene_action" protect="true" >
+
+		if(pushURLToHistory == true,
+			pushCurrentURLToHistory();
+		);
+
+		set("pushURLToHistory", true);
+	</action>
+
+<events name="onmouseDown" onmousedown="stopdelayedcall(mouseUpCall);setinterval(view_update_interval,0.1,replaceCurrentURLInHistory(););" keep="true"/>
+<events name="onmouseRelease" onmouseup="delayedcall(mouseUpCall,0.5,clearinterval(view_update_interval));" keep="true"/>
+<events name="onmouseWheel" onmousewheel="stopdelayedcall(mousewheel_clear); clearinterval(view_update_interval); setinterval(view_update_interval,0.1,replaceCurrentURLInHistory();); delayedcall(mousewheel_clear, 0.5, clearinterval(view_update_interval));" keep="true"/>
+
+<action name="replaceCurrentURLInHistory"  protect="true" >
+	<![CDATA[
+	adjusthlookat(0);
+	math.round(hRounded, view.hlookat);
+	math.round(vRounded, view.vlookat);
+	math.round(fRounded, view.fov);
+	txtadd(view_url_var, '&v=',get(vRounded),'&h=',get(hRounded),'&f=',get(fRounded));
+
+	jscall(
+		history.replaceState(null, null, "?s=" + krpano.get("xml.scene") + krpano.get("view_url_var") + "&tour_language=" + krpano.get("tour_language") + krpano.get("hide_options")+krpano.get("url_options"));
+	);
+	]]>
+</action>
+
+
+
+</krpano>
+
+
+

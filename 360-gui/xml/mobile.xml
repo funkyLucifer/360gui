@@ -1,0 +1,1494 @@
+<krpano >
+
+
+
+
+	<style name="mobile_top_style"  type="text" keep="true" zorder="90" aktivan="false"
+		width="get:mobile.top_bar_height" height="get:mobile.top_bar_height"
+		align="topleft" edge="topleft" vcenter="true"
+		bgcolor="calc:'0x'+mobile.top_bar_color" bgalpha="0"	
+	/>
+	<layer name="Mobile-backgroundShaddow" type="container" keep="true" zorder="100" devices="mobile.or.tablet"
+		width="100%" height="get:mobile.top_bar_height"
+		align="top"
+		bgalpha="0" bgshadow="3 3 3 1 0x000000 0.15"	
+		parent="layer[mobileBG]" handcursor="false"
+	/>	
+	<layer name="mobile_top_logo"  keep="true"  devices="mobile.or.tablet"  type="text" zorder="100" enabled="true"
+		width="prop" height="get:mobile.top_bar_logo_height" oy="get:mobile.top_bar_logo_y_offset"
+		align="leftcenter" edge="leftcenter"
+		bgborder="0"
+		vcenter="true"	
+		parent="layer[mobileBG]"
+		onloaded="
+		
+			set(url, get:mobile_top_logo_path);
+	
+			if ( mobile.top_bar_logo_centered EQ true,
+				set(edge,center);
+				set(align,center);
+			,
+				set(layer[mobile_top_logo].ox,calc(mobile.top_bar_height+mobile.top_bar_logo_x_offset));
+			);
+		"
+	/>
+	<layer name="mobile_logo_text" type="text" keep="true" devices="mobile.or.tablet"  zorder="91" 
+		width="get:mobile.top_bar_logo_text_width" height="get:mobile.top_bar_height"
+		ox="get:mobile.top_bar_logo_text_x_offset" oy="get:mobile.top_bar_logo_text_y_offset"
+		align="leftcenter" vcenter="true"
+		bgalpha="0"
+		parent="layer[mobileBG]"
+		onloaded="	
+			if(mobile_logoText EQ '',
+				set(visible,false);
+			,
+				set(html,get(mobile_logoText));
+				set(css, calc:'font-family:'+general.logo_text_font+',Arial; font-size:'+mobile.top_bar_logo_text_font_size+'px; color:#'+mobile.top_bar_logo_text_font_color+';text-align:left; padding-left:0px');
+			);
+		"
+	/>	
+	<style name="panoramaMenuMobile-Style" type="text" 	keep="true"	visible="false" zorder="95"
+		height="100%" oy="0"
+		align="topleft"	edge="topleft" vcenter="true"
+		bgcolor="0xffffff"
+		maskchildren="true"
+	/>
+	<layer name="mobile_menu_dark_overlay" type="text" keep="true" enabled="false" alpha="0" zorder="94"
+		width="100%" height="100%"
+		bgcolor="0x00000" bgalpha="1"
+		ondown="mobileMenuClose(0.35);"
+	/>
+	<layer name="mobileMenuHeaderCont"  type="text"	keep="true" zorder="96" visible="false"
+		width="100%" height="20%"
+		align="topcenter" edge="top" vcenter="true"
+		bgcolor="0x000000" bgalpha="1"
+		parent="layer[panoramaMenuContMobile]"	
+	/>
+	<layer name="mobileMenuHeaderImage"  type="text" keep="true" zorder="90" visible="false" alpha="1"
+		width="prop" height="100%" oy="0"
+		align="center"	edge="center" vcenter="true"
+		bgborder="0"
+		parent="layer[mobileMenuHeaderCont]"
+		ondown="mainMenuMobileSwipe();"
+		onup="mainMenuMobileSwipeUP();"	
+		onloaded="
+		set(url, get:mobile_menu_header_image_path);
+
+		set(ondown,mainMenuMobileSwipe(););
+		set(onup,mainMenuMobileSwipeUP(););
+		"
+	/>
+	<layer name="mobileMenuHeaderLogo"  type="text"  keep="true" zorder="91" visible="false" alpha="1"
+        bgborder="0"
+		width="40%" height="prop"
+		ox="get:mobile.menu_header_logo_x_offset" oy="get:mobile.menu_header_logo_y_offset"
+		align="topleft"	edge="topleft" 
+		parent="layer[mobileMenuHeaderCont]"
+		ondown="mainMenuMobileSwipe();"
+		onup="mainMenuMobileSwipeUP();"
+		onloaded="
+			set(width,calc:mobile.menu_header_logo_width_percent+'%');
+			set(url, get(mobile_menu_header_logo_path));
+			set(visible,true);
+			if ( mobile.menu_header_logo_centered EQ true,
+				set(align,center);
+				set(edge,center);
+			);
+			
+			
+		"
+	/>
+	<layer name="mobileMenuHeaderLogoText" type="text"  keep="true" devices="mobile.or.tablet" visible="false" zorder="91"
+		width="get:mobile.menu_header_logo_text_width"  
+		ox="get:mobile.menu_header_logo_text_x_offset" oy="get:mobile.menu_header_logo_text_y_offset"
+		align="topleft"	edge="topleft" vcenter="true"
+		bgalpha="0"	
+		parent="layer[mobileMenuHeaderCont]"
+		ondown="mainMenuMobileSwipe();"
+		onup="mainMenuMobileSwipeUP();"
+		onloaded="
+		set(html, get(logoHeaderText));
+		set(logoTextHeaderCss,calc('font-family:'+general.logo_text_font+',Arial; font-size:'
+			+mobile.menu_header_logo_text_font_size+'px; color:#'+mobile.menu_header_logo_text_font_color+';text-align:left; padding-left:0px'));
+		
+			set(layer[mobileMenuHeaderLogoText].css,get(logoTextHeaderCss));
+		"	
+	/>	
+	<layer name="mobile_header_powered_by"  type="text" keep="true" visible="false" zorder="100"
+		width="get:mobile.menu_header_poweredby_text_width" height="40" 
+		ox="get:mobile.menu_header_poweredby_text_x_offset" oy="get:mobile.menu_header_poweredby_text_y_offset"
+		align="bottomright" edge="bottomright" vcenter="true"
+		bgalpha="0"
+		html="BLAAA"
+		parent="layer[mobileMenuHeaderCont]"
+		ondown="mainMenuMobileSwipe();"
+		onup="mainMenuMobileSwipeUP();"
+		onclick="
+        openurl(get(mobile.menu_header_poweredby_link),_blank)
+        "
+	/>
+	<style name="optionsMobileCont" type="text" keep="true" zorder="89" 
+		height="100%" oy="get:mobile.top_bar_height"
+		align="topright" edge="topright"
+		bgcolor="0xffffff"
+		maskchildren="true"	
+	/>
+	<style name="optionsMobileItem-Style" type="text" keep="true" zorder="94"
+		width="100%" height="30"
+		align="topleft" vcenter="true" padding="3 0 0 0"
+		bgcolor="0xdddddd"	bgalpha="0"
+		css="get(subMenuCss); "
+	/>	
+	<style name="optionsMobileBttnBG-Style" type="text" keep="true" enabled="false" zorder="95"
+		width="40" 	height="18" ox="-20"
+		align="topright" edge="topright"
+		bgcolor="0xeeeeee" bgborder="1 0xdddddd 1"	bgroundedge="10"	
+	/>	
+
+	<style name="menuLine-Style" type="container" keep="true"  zorder="100"
+		width="get:mobile.sub_menu_options_line_width" ox="get:mobile.sub_menu_options_line_x_offset"
+		align="lefttop"	edge="topleft" vcenter="true"
+		handcursor="false"
+		onloaded="
+			set(bgborder,calc('0,0,1 '+mobile.sub_menu_options_line_color+' '+mobile.sub_menu_options_line_alpha));
+		"
+	/>
+
+	<style name="optionsMobileLangBttn-Style" type="text" keep="true" enabled="true" alpha="1" zorder="100"
+		width="get:mobile.lang_submenu_box_size" height="get:mobile.lang_submenu_box_size"
+		align="topright" edge="topright" vcenter="true"
+		bgcolor="calc:'0x'+mobile.lang_submenu_bg_color_over" bgalpha="0" bgborder="1 0xdddddd 1" bgroundedge="0"		
+	/>	
+	<layer name="optionsMobileMenuBGClick"  type="text" keep="true" enabled="false" alpha="0.0" zorder="80"
+		width="100%" height="100%"	
+		align="topleft"	edge="topleft"
+		bgcolor="0x00000" bgalpha="1"
+		ondown="optionsMenuMobileClose();set(layer[mobileSetting].aktivan,false);"	
+	/>
+	<style name="MobileMainitem-Style"  type="text" keep="true" enabled="true" zorder="93"
+		width="100%" height="50"
+		align="topleft" edge="topleft" vcenter="true" padding="0 0 0 0" 
+		bgalpha="1"
+		parent="layer[panoramaMenuContMobile]" handcursor="true"	
+	/>
+	<style name="MobileSubitem-Style" type="text" keep="true" zorder="91"
+		width="100%" height="50"
+		bgcolor="calc:'0x'+mobile.menu_item_active_bg_color"	bgalpha="0"
+		align="topleft" vcenter="true"
+		css="get(mobileSubMenuCss); "	
+		wordwrap="false"	
+	/>	
+	<style name="mobileSubCont-Style"  type="text" keep="true" alpha="1" zorder="90" 
+		width="100%"  height="100"
+		align="topleft" edge="topleft"
+		bgcolor="0x00000" bgalpha="0.0"
+		maskchildren="true"	
+	/>	
+
+	<style name="mobile_menu_line_style" 	type="container" keep="true"  zorder="100" alpha="get:mobile.menu_group_line_alpha"
+		width="get:mobile.menu_group_line_width" ox="mobile.menu_group_line_x_offset"
+		bgborder="calc:'0,0,1 0x'+mobile.menu_group_line_color+' '+ mobile.menu_group_line_alpha"
+		align="lefttop"	edge="topleft" vcenter="true"
+		handcursor="false"
+	/>
+	<style name="mobileMenuPanoLine-Style" type="container" keep="true" zorder="100"
+		width="get:molbile.menu_item_line_width" ox="0"
+		align="lefttop"	edge="topleft"	vcenter="true"
+		bgborder="calc:'0,0,1 0x'+mobile.menu_item_line_color+' '+mobile.menu_item_line_alpha"
+		handcursor="false"
+	
+	/>
+	<layer name="MobileScreenRotate" keep="true" devices="mobile.or.tablet" type="text" alpha="0"  zorder="100" enabled="false"
+		width="55" height="55" x="0" y="80"
+		align="bottom" edge="center" vcenter="true" rotate="-45"
+		bgalpha="0"	
+
+	/>	
+	<layer name="MobileScreenRotateText" type="text"  keep="true" devices="mobile.or.tablet" zorder="100" alpha="0" enabled="false"
+		width="90" x="0" y="30"
+		align="bottom" edge="center" vcenter="true"
+		bgalpha="0"
+		html="Rotate your device for full Menu"
+	/>
+
+
+
+
+	<action name="checkMobileOptionsResponsive" protect="true" >
+
+		set(mainMenuLandscapeCss,calc('font-family:'+mobile.main_menu_font+',Arial; font-size:25px; 
+			color:#ffffff;text-align:center;vertical-align: middle;'));
+
+		set(MobileMenuLandscapeHtml,calc('[i class="material-icons" style=" font-size:25px;vertical-align: middle;
+		 text-align:center;padding-left:0px;padding-top:'+mobileMenuTopPadding+'px;"]'+mobile.top_bar_menu_icon+'[/i]'));
+
+		scrollBarInit();
+
+		if( layer[panoramaMenuContMobile].height GT stageheight,
+			set(layer[mainMenuMobileScrollbar].visible, true);
+		,
+			set(layer[mainMenuMobileScrollbar].visible, false);
+		);
+
+		set(layer[optionsMenuMobileScrollbar].alpha,0);
+
+		if( stagewidth GT stageheight ,
+
+			set(mobileMenuWidth,calc(stagewidth*(stageheight/stagewidth)*stagescale));
+			
+			if( (hide_gui_index != -1) OR (hide_all_index != -1),
+				set(layer[mobileMenu].visible,false);
+			,
+				set(layer[mobileMenu].visible,true);
+				set(layer[mobileMenu].bgroundedge,25);
+				set(layer[mobileMenu].ox,10);
+				set(layer[mobileMenu].oy,10);
+				set(layer[mobileMenu].bgborder,0);
+				set(layer[mobileMenu].bgalpha,1);
+				set(layer[mobileMenu].bgshadow,'30 30 30 30 0x000000 0.8');
+			);
+		
+			set(layer[mobileBG].visible,false);
+			set(layer[mobileSetting].visible,false);
+			set(layer[optionsMenuMobile].visible,false);
+			set(layer[panoramaMenuMobile].visible,true);
+			set(layer[mobile_menu_dark_overlay].visible,true);
+			set(layer[optionsMobileMenuBGClick].visible,false);
+
+			set(view.fovmax,  get(general.mobile_init_max_fov_landscape));
+
+			bm_hide();
+
+			if( (newSceneListener EQ false) AND (hide_gui_index EQ -1),
+				rotate_tutorial();
+				);
+		,
+
+			
+
+			set(view.fovmax, get(general.mobile_init_max_fov)); set(view.fov, get(general.mobile_init_max_fov));
+			set(mobileMenuWidth,calc(stagewidth*0.85*stagescale));
+
+
+			if( (hide_gui_index != -1) OR (hide_all_index != -1),
+				set(layer[mobileBG].visible,false);
+				set(layer[mobileMenu].visible,false);
+				set(layer[mobileSetting].visible,false);
+				,
+				set(layer[mobileBG].visible,true);
+				set(layer[mobileMenu].visible,true);
+				set(layer[mobileSetting].visible,true);
+			
+			);
+			
+			set(layer[mobileMenu].bgalpha,0);
+			set(layer[mobileMenu].css,get(mainMenuCss));
+			set(layer[mobileMenu].bgroundedge,0);
+			set(layer[mobileMenu].ox,0);
+			set(layer[mobileMenu].oy,0);
+			
+			set(layer[optionsMenuMobile].visible,true);
+			set(layer[panoramaMenuMobile].visible,true);
+			set(layer[mobile_menu_dark_overlay].visible,true);
+			set(layer[optionsMobileMenuBGClick].visible,true);
+			
+			if( (hide_all_index EQ -1) AND (hide_gui_index EQ -1) ,  bm_show();, bm_hide(); );
+
+			stopdelayedcall(screenRotateCall);
+			stopdelayedcall(screenRotateCall2);
+			<!-- stopdelayedcall(tutorialCall); -->
+			set(layer[MobileScreenRotate].alpha,0);
+			set(layer[MobileScreenRotateText].alpha,0);
+			set(layer[MobileScreenRotate].rotate, -45);
+
+
+	
+			set(newSceneListener, false);
+		);
+
+		if(stageheight GT stagewidth,
+			set(mobileMenuWidth,calc(stagewidth*0.85*stagescale));
+		,
+			set(mobileMenuWidth,calc(stagewidth*(stageheight/stagewidth)*stagescale));
+		);
+
+<!-- 	clearinterval(draggInterval);
+		
+		if(stageheight GT OptionsMenuHeight,
+			set(layer[optionsMenuMobile].height,get(OptionsMenuHeight));
+
+			set(layer[optionsMenuContMobile].draggable,false);
+			,
+			set(layer[optionsMenuMobile].height,calc(stageheight-50));
+			set(layer[optionsMenuContMobile].draggable,true);
+
+		); -->
+	</action>
+
+	<action name="rotate_tutorial" protect="true" >
+				tween(layer[tutorialIcon].alpha,0,0.3,linear);
+				tween(layer[TutorialText].alpha,0,0.3,linear);
+				stopdelayedcall(tutorialCall);
+				delayedcall(screenRotateCall,0.5,
+					tween(layer[MobileScreenRotate].alpha,1,0.3,linear,
+						tween(layer[MobileScreenRotateText].alpha,1,0.5,linear);
+						tween(layer[MobileScreenRotate].rotate,45,0.5,easeInOutQuad,
+
+								delayedcall(screenRotateCall2,2,
+									tween(layer[MobileScreenRotate].alpha,0,0.5,linear);
+									tween(layer[MobileScreenRotateText].alpha,0,0.5,linear);
+								);
+							);
+						);
+
+					);
+	</action>
+
+	<action name="newSceneMobile" protect="true" >
+		set(layer[get(currentPanorama)].enabled,true);
+		set(layer[get(currentPanorama)].css,get(mobileSubMenuCss));
+		set(layer[get(currentPanorama)].bgalpha,0);
+
+		for(set(sI,0), sI LT layer.count, inc(sI), 
+			if( xml.scene EQ layer[get(sI)].pano,
+				set(layer[get(sI)].css,get(mobileSubMenuCssOver));
+				set(layer[get(sI)].bgalpha,get:mobile.menu_item_active_bg_alpha);
+				set(currentPanorama, get(layer[get(sI)].name));
+			);
+		);
+	</action>
+
+	<action name="newSceneMobile_only_1st" protect="true" >
+		set(layer[get(currentPanorama)].enabled,true);
+		set(layer[get(currentPanorama)].css,get(mobileSubMenuCss));
+		set(layer[get(currentPanorama)].bgalpha,0);
+
+		for(set(i,0), i LT panoramagroup.count, inc(i), 
+			txtadd(mobileGlavniMenu,'mobileGlavniMenu',get(i));
+			if( xml.scene EQ layer[%mobileGlavniMenu].panolink, 
+				set(layer[%mobileGlavniMenu].css,get(mobileSubMenuCssOver));
+				set(layer[%mobileGlavniMenu].bgalpha,get:mobile.menu_item_active_bg_alpha);
+				set(layer[%mobileGlavniMenu].css,get(mobileSubMenuCssOver));
+				set(currentPanorama, get(layer[%mobileGlavniMenu].name));		
+			,
+				
+
+			);
+		);
+
+
+	</action>
+
+
+	<action name="mobileInit" devices="mobile.or.tablet" autorun="preinit" protect="true" >
+
+		logoUrlLink();
+
+
+		setupScreenRotate();
+
+		set(mainMenuCss,calc('font-family:'+general.main_menu_font+',Arial; font-size:'
+			+mobile.top_bar_menu_icon_size+'px; color:#'+mobile.top_bar_menu_icons_color+';text-align:center;vertical-align: middle;'));
+		set(mainMenuCssOver,calc('font-family:'+general.main_menu_font+',Arial; font-size:'
+			+mobile.top_bar_menu_icon_size+'px; color:#'+mobile.top_bar_menu_icons_color_over+';text-align:center;vertical-align: middle;'));
+
+	<!-- 	BACKGROUND -->
+		set(layer[mobileBG].height,get:mobile.top_bar_height);
+		layer[mobileBG].loadStyle(mobile_top_style);
+		set(layer[mobileBG].width,get(stageWidth));
+		set(layer[mobileBG].bgalpha,1);
+
+
+		set(layer[mobileBG].zorder,90);
+
+		if(mobile_top_image_check!= '',
+			set(layer[mobileBG].url,get:mobile_top_image_path);
+			set(layer[mobileBG].width,100%);
+			);
+
+		set(MobileMenuHtml,null);
+		set(mobileMenuTopPadding,calc(mobile.top_bar_height-50));
+		
+
+		set(MobileMenuHtml,calc('[i class="material-icons" style=" font-size:25px;vertical-align: middle; 
+			text-align:center;padding-left:0px;padding-top:'+mobileMenuTopPadding+'px;"]'
+			+mobile.top_bar_menu_icon+'[/i]'));
+		
+		set(layer[mobileMenu].html,get(MobileMenuHtml));
+		layer[mobileMenu].loadStyle(mobile_top_style);
+		set(layer[mobileMenu].css,get(mainMenuCss));
+		set(layer[mobileMenu].onclick,mobileMenuPressed(););
+		set(layer[mobileMenu].bgalpha,get:mobile.top_bar_menu_icons_bg_alpha);
+		set(layer[mobileMenu].devices,mobile);
+
+
+		set(mobileSettingHtml,calc('[i class="material-icons" style=" font-size:25px;vertical-align: middle;text-align:center; padding-left:0px;padding-top:'
+			+mobileMenuTopPadding+'px;"]'+mobile.top_bar_settings_icon+'[/i]'));
+
+		set(mobileSettingCssOver,calc('font-family:'+general.main_menu_font+',Arial; font-size:'+mobile.top_bar_icons_font_size+'px; color:#'
+			+mobile.top_bar_menu_icons_color_over+';text-align:center;vertical-align: middle;'));	
+
+
+		set(layer[mobileSetting].html,get(mobileSettingHtml));
+		set(layer[mobileSetting].css,get(mainMenuCss));
+
+		layer[mobileSetting].loadStyle(mobile_top_style);
+		set(layer[mobileSetting].align,topright);
+		set(layer[mobileSetting].edge,topright);
+		set(layer[mobileSetting].aktivan,false);
+		set(layer[mobileSetting].onclick,optionsMenuMobileClicked(););
+		set(layer[mobileSetting].bgcolor,calc('0x'+mobile.top_bar_menu_icons_bg_color_over));
+
+		set(mobWidth, get(stagewidth));
+<!-- 
+		set(mobileMenuWidth,calc(stagewidth*0.85*stagescale));
+		copy(mobileOptionsWidth,calc(stagewidth*0.8*stagescale)); -->
+
+		checkMobileOptionsResponsive();
+
+
+		set(mobileMenuOx, calc(mobileMenuWidth*(-1)));
+
+		set(layer[panoramaMenuMobile].width, get(mobileMenuWidth)); 
+		set(layer[panoramaMenuMobile].ox, calc(mobileMenuOx-20));  
+		set(layer[panoramaMenuMobile].visible, true);
+
+		set(layer[mobileMenuHeaderCont].visible, true);
+		set(layer[mobileMenuHeaderImage].visible, true);
+		set(layer[mobileMenuHeaderLogo].visible, true);
+		set(layer[mobileMenuHeaderLogoText].visible, true);
+
+		set(layer[mobile_header_powered_by].visible, true);
+		set(layer[panoramaMenuMobile].visible, true);
+
+		OptionsMenuInit();
+		
+
+		if (general.only_1st_level_menu EQ true,
+			MobilemenuItems_1st_level();
+		,
+			MobilemenuItems();	
+		);
+		
+		optionsMenuMobile();
+
+	</action>
+
+	<action name="optionsMenuMobileClicked" protect="true" >
+		if(layer[mobileSetting].aktivan EQ false,
+			optionsMenuMobileOpen();
+			set(layer[mobileSetting].aktivan,true);
+		,
+			optionsMenuMobileClose();
+			set(layer[mobileSetting].aktivan,false);
+		);
+		
+	</action>
+
+	<action name="optionsMenuMobileClose" protect="true" >
+		tween(layer[optionsMenuMobile].oy,calc(OptionsMenuHeight*(-1)-mobile.top_bar_height),0.25,easeInOutQuad,
+			set(layer[optionsMenuMobile].visible,false);
+			);
+		set(layer[optionsMobileMenuBGClick].enabled,false);
+		tween(layer[optionsMobileMenuBGClick].alpha,0.0,0.15,linear);
+		tween(layer[mobileSetting].bgalpha,0,0.15,linear);
+		set(layer[mobileSetting].css,get(mainMenuCss));
+	</action>
+
+	<action name="optionsMenuMobileOpen" protect="true" >
+
+		set(layer[mobileSetting].css,get(mobileSettingCssOver));
+		set(layer[optionsMenuMobile].visible,true);
+		tween(layer[optionsMenuMobile].oy,calc(mobile.top_bar_height),0.25,easeInOutQuad);
+		set(layer[optionsMobileMenuBGClick].enabled,true);
+		tween(layer[optionsMobileMenuBGClick].alpha,0.6,0.2,linear);
+		set(layer[mobileSetting].bgalpha,get:mobile.top_bar_menu_icons_bg_alpha);
+		set(layer[bottomBarBgClick].enabled,false);
+		tween(layer[bottomBarBgClick].alpha,0,0.3,linear);
+
+		<!-- Bottom BAR Close -->
+		if(ptplugin[panotourmapsArea].isOpen,ptpMapClose(););
+		if(ptplugin[description].isOpen,ptpDescClose(););
+		if(layer[bottomBarShare].isOpen EQ true, shareBoxClose());
+		set(layer[bottomBarBgClick].enabled,false);
+		tween(layer[bottomBarBg].oy,0,0.3,easeInOutQuad);
+
+		<!-- ScrollBarInit(); -->
+	</action>
+
+	<action name="optionsMenuMobileSwipe" protect="true" >
+		stopdelayedcall(optionsScrollbarFade);
+		tween(layer[optionsMenuMobileScrollbar].alpha,0.5,0.1,linear);
+
+		set(draggTime,0);
+		set(swipeStartY,get(mouse.y));
+			setinterval(draggInterval,0.001,
+				set(draggTime,calc(draggTime+1));
+				set(swipeMovement,calc(swipeStartY-mouse.y));
+				if(swipeMovement GT 0,
+					set(layer[optionsMenuMobile].oy,calc(mobile.top_bar_height+1-swipeMovement));
+				);
+			);
+			set(onup,
+				clearinterval(draggInterval);
+				delayedcall(optionsScrollbarFade,1,tween(layer[optionsMenuMobileScrollbar].alpha,0,0.6,linear););
+				if((draggTime LT 10 ) AND (swipeMovement GT 10),
+					optionsMenuMobileClose();
+					set(layer[mobileSetting].aktivan,false);
+					,
+					if(swipeMovement GT calc(layer[optionsMenuMobile].height/2.5),
+						optionsMenuMobileClose();
+						set(layer[mobileSetting].aktivan,false);
+						,
+						tween(layer[optionsMenuMobile].oy,calc(mobile.top_bar_height),0.1,easeInOutQuad);
+						);
+				);
+		);
+	</action>
+
+	<action name="changeMobileLanguage" protect="true" >
+		logoText-Mobile();
+		logoUrlLink();
+		if (general.only_1st_level_menu EQ true,
+			MobilemenuItems_1st_level();
+		,
+			MobilemenuItems();	
+		);
+		OptionsMenuInit();
+		optionsMenuMobile(); 
+		if(general.only_1st_level_menu EQ false, 
+					newSceneMobile();
+				,
+					newSceneMobile_only_1st();
+				);
+
+		hotspotDetailsClose();
+		delayedcall(0.2,optionsMenuMobileClose();set(layer[mobileSetting].aktivan,false););
+	</action>
+
+<layer name="optionsMenuMobile" keep="true" visible="false" type="container" style="optionsMobileCont" width="80%" height="100px" oy="-1000" bgcolor="0xFFFFFF" bgalpha="1" onloaded="">
+<layer name="optionsMenuContMobile"  keep="true" type="container" align="top" width="100%" height="100" direction="all" onscroll="optionsMenuScrollbarAnimate"
+	onloaded="set(url,get(scrollarea_path));" >
+</layer>
+</layer>
+<layer name="optionsMenuMobileScrollbar" keep="true" visible="false" type="container" align="right"   width="5px" height="70%"  bgcolor="0x000000" bgalpha="0.3" parent="layer[optionsMenuMobile]" />
+
+
+	<action name="optionsScrollBarInit" protect="true" >
+		set(optionsScrollBarHeight, calc(stageheight/layer[optionsMenuContMobile].height*stageheight));
+		set(layer[optionsMenuMobileScrollbar].height,get(scrollBarHeight));
+	</action>
+
+	<action name="optionsMenuScrollbarAnimate" protect="true" >
+		set(layer[optionsMenuMobileScrollbar].oy,calc(layer[optionsMenuContMobile].toverflow*stageheight/layer[optionsMenuContMobile].height)); 
+	</action>
+
+	<action name="optionsScrollbarAnimate" protect="true" >
+
+		<!-- set(layer[optionsMenuMobileScrollbar].oy,calc(layer[optionsMenuContMobile].toverflow*0.7));  -->
+	</action>
+	<action name="optionsMenuMobile" protect="true" >
+ 		set(layer[optionsMenuContMobile].direction,v);
+		set(layer[optionsMenuContMobile].draggable,true);
+		set(layer[optionsMenuContMobile].onhover_autoscrolling,false);
+		set(layer[optionsMenuContMobile].overscroll,0.8);
+		set(layer[optionsMenuContMobile].friction,0.95);
+		set(layer[optionsMenuContMobile].acceleration,0.08);
+		set(layer[optionsMenuContMobile].returnacceleration,0.15);
+		set(layer[optionsMenuContMobile].momentum,0.06);  
+		
+		set(optionsMobileTopPadding,get:mobile.sub_menu_options_y_offset);
+		set(optionsMobileBottomPadding,get:mobile.sub_menu_options_bottom_offset);
+		set(optionsMobileHorizontalPadding,get:mobile.sub_menu_options_x_offset);
+		set(optionsMobileItemHeight,get:mobile.sub_menu_options_item_height);
+		set(optionsMobileIconBottomPadding,get:mobile.sub_menu_options_icon_item_y_offse);
+		if( stagewidth GT stageheight,
+			set(optionsMenuMobileWidth, calc(stagewidth*0.5*0.5));
+			,
+			set(optionsMenuMobileWidth, calc(stagewidth*0.8*0.5));
+			);
+		set(layer[optionsMenuMobile].ox,0);
+
+
+		set(optionsMobileIconSize,25);
+		set(optionsMobileCounter,0);
+
+		set(optionsMobileCss,calc('font-family:'+mobile.menu_item_font+',Arial; font-size'+mobile.menu_item_font_size+'px; color:#'
+			+subMenuMobileTextColor+';text-align:left;padding-left:'+subMenuMobileLeftPadding+'px; padding-top:0px'));
+
+		for(set(i,1), i LT 7, inc(i), 
+			if( options[get(i)].mobile EQ true,
+			
+				if( (device.ios) AND (i EQ 2),
+					
+				,
+					
+					set(optionsMobileCounter,calc(optionsMobileCounter+1));
+					set(OptionsMenuHeight,calc(optionsMobileItemHeight+(optionsMobileCounter-1)*optionsMobileItemHeight+optionsMobileTopPadding+optionsMobileBottomPadding));	
+				
+					set(layer[optionsMenuContMobile].height,get(OptionsMenuHeight));
+					set(layer[optionsMenuMobile].height,get(OptionsMenuHeight));
+					set(layer[optionsMenuContMobile].bgalpha,0.0);
+					set(layer[optionsMenuContMobile].ondown,optionsMenuMobileSwipe());
+
+					txtadd(optionsMobileMenu,'optionsMobileMenu',get(i));
+					set(optionsMobileText,null);
+
+					set(optionsMobileText,calc('[i class="material-icons" style=" font-size: '+optionsMobileIconSize+'px;vertical-align: middle;
+					  padding-bottom:'+optionsMobileIconBottomPadding+'px;text-align:left;padding-right:'+mobile.sub_menu_options_icon_item_x_offset+
+					  'px;"]'+options[get(i)].icon+'[/i]'+options[get(i)].text));
+
+					<!-- MOBILE OPTIONS   ITEM -->
+					set(layer[get(optionsMobileMenu)].html,get(optionsMobileText));
+					set(layer[get(optionsMobileMenu)].itemName,get(options[get(i)].text));
+					layer[get(optionsMobileMenu)].loadstyle(optionsMobileItem-Style);
+					set(layer[get(optionsMobileMenu)].css,get(optionsMobileCss));
+					set(layer[get(optionsMobileMenu)].height,get(optionsMobileItemHeight));
+					set(layer[get(optionsMobileMenu)].oy,calc(optionsMobileTopPadding+(optionsMobileCounter-1)*(optionsMobileItemHeight)));
+					set(layer[get(optionsMobileMenu)].parent,get(layer[optionsMenuContMobile].name)); 
+					set(layer[get(optionsMobileMenu)].maskchildren,true);
+					set(layer[get(optionsMobileMenu)].active,false);
+					set(layer[get(optionsMobileMenu)].actionNumber,get(i));
+					set(optionsActionName,null);
+					txtadd(optionsActionName,'optionActions',get(i));
+					<!-- set(layer[get(optionsMobileMenu)].onup,get(optionsActionName)); -->
+ 					 set(layer[get(optionsMobileMenu)].ondown,
+ 					 	if(stageheight GT calc(OptionsMenuHeight+50),
+ 					 		optionsMenuMobileSwipe();
+ 					 		); 
+ 					 	);
+
+					set(layer[get(optionsMobileMenu)].onclick,
+						ga_click('Options',get(itemName), 'Mobile click');
+					
+						optionActionsAll(get(actionNumber));
+						<!-- get(optionsActionName); -->
+						tween(bgalpha,0.6,0.15,linear,
+						tween(bgalpha,0.0,0.35,easeOutQuad);
+								);
+						if(active EQ false,
+
+							tween(layer[get(bttn)].ox,-26,0.12,linear,
+								tween(layer[get(bttn)].ox,-28,0.1,linear);
+								);
+							tween(layer[get(bttnBG)].bgcolor,calc('0x'+general.options_button_bg_active));
+
+							set(active,true);
+							,
+							tween(layer[get(bttn)].ox,-52,0.12,linear,
+								tween(layer[get(bttn)].ox,-50,0.1,linear); 
+								);
+							tween(layer[get(bttnBG)].bgcolor,'0xdddddd');
+			
+							set(active,false);
+
+							);
+					);
+				
+
+			if( i !== 1,
+				<!-- MOBILE OPTIONS BTTN -->
+				txtadd(optionsMobileBttnBG,'optionsMobileBttnBG',get(optionsMobileCounter));
+				set(layer[get(optionsMobileBttnBG)].align,topright);
+				layer[get(optionsMobileBttnBG)].loadstyle(optionsMobileBttnBG-Style);
+				set(layer[get(optionsMobileBttnBG)].parent,get(layer[%optionsMobileMenu].name));
+				set(layer[get(optionsMobileBttnBG)].ox,calc(-optionsMobileHorizontalPadding));
+				set(layer[get(optionsMobileBttnBG)].oy,calc(mobile.sub_menu_options_item_height/2-10+1));
+
+				txtadd(optionsMobileBttn,'optionsMobileBttn',get(optionsMobileCounter));
+				set(layer[get(optionsMobileBttn)].align,topright);
+				layer[get(optionsMobileBttn)].loadstyle(optionsMobileBttnBG-Style);
+				set(layer[get(optionsMobileBttn)].parent,get(layer[%optionsMobileMenu].name));
+				set(layer[get(optionsMobileBttn)].width,20);
+				set(layer[get(optionsMobileBttn)].height,20);
+				set(layer[get(optionsMobileBttn)].oy,calc(layer[get(optionsMobileBttnBG)].oy-1));
+				set(layer[get(optionsMobileBttn)].ox,calc(-20-optionsMobileHorizontalPadding));
+				set(layer[get(optionsMobileBttn)].bgcolor,calc('0x'+general.options_button_color));
+				set(layer[get(optionsMobileBttn)].bgborder,'1 0xdddddd 1');
+				set(layer[get(optionsMobileBttn)].bgroundedge,20);
+				set(layer[get(optionsMobileBttn)].zorder,100);
+
+				set(layer[get(optionsMobileMenu)].bttnBG,get(layer[%optionsMobileBttnBG].name));
+				set(layer[get(optionsMobileMenu)].bttn,get(layer[%optionsMobileBttn].name));
+
+			);
+
+			<!-- MOBILE OPTIONS LINE -->
+			txtadd(optionsMobileLine,'optionsMobileLine',get(optionsMobileCounter));
+			set(layer[get(optionsMobileLine)].height,get(optionsMobileItemHeight));
+			layer[get(optionsMobileLine)].loadstyle(menuLine-Style);
+			set(layer[get(optionsMobileLine)].width,90%);
+			set(layer[get(optionsMobileLine)].align,topcenter);
+			set(layer[get(optionsMobileLine)].edge,topcenter);
+			set(layer[get(optionsMobileLine)].height,get(optionsMobileItemHeight));
+			set(layer[get(optionsMobileLine)].parent,get(layer[optionsMenuContMobile].name)); 
+			set(layer[get(optionsMobileLine)].oy,get(layer[%optionsMobileMenu].oy));
+			set(layer[get(optionsMobileLine)].bgborder,'0,0,0.5 0xdddddd 1');
+
+
+		);
+	); 
+
+);
+			txtsplit(general.lang_codes, '/', mobileLangArr);
+		
+			if( mobileLangArr.count GT 1,
+				
+
+					set(OptionsMenuHeight,calc(layer[optionsMenuContMobile].height+mobile.lang_submenu_box_size+30));	 
+
+					set(layer[optionsMenuContMobile].height,get(OptionsMenuHeight));
+					set(layer[optionsMenuMobile].height,get(OptionsMenuHeight));
+
+					set(languageMobileText,calc('[i class="material-icons" style=" font-size: '+optionsMobileIconSize+'px;vertical-align: middle;
+					  padding-bottom:2px;text-align:left;padding-right:'+mobile.sub_menu_options_icon_item_x_offset+'px;"]'+
+					  mobile.lang_submenu_icon+'[/i]'));
+
+					<!-- LANGUAGE OPTIONS   ITEM -->
+					set(layer[languageMobileIcon].html,get(languageMobileText));
+					layer[languageMobileIcon].loadstyle(optionsMobileItem-Style);
+					set(layer[languageMobileIcon].css,get(optionsMobileCss));
+					set(layer[languageMobileIcon].height,calc(mobile.lang_submenu_box_size+30));
+					set(layer[languageMobileIcon].oy,calc(optionsMobileTopPadding+optionsMobileCounter*(optionsMobileItemHeight)));
+					set(layer[languageMobileIcon].parent,get(layer[optionsMenuContMobile].name)); 
+					set(layer[languageMobileIcon].ondown, optionsMenuMobileSwipe());
+
+					for( set(i,0), i LT mobileLangArr.count, inc(i), 
+						txtadd(mobileLang,'mobileLang',get(i));
+						set(layer[%mobileLang].alpha,1);
+						layer[%mobileLang].loadstyle(optionsMobileLangBttn-Style); 
+						set(layer[%mobileLang].parent,get(layer[optionsMenuContMobile].name)); 
+						set(layer[%mobileLang].ox,calc(
+						mobileLangArr.count
+						*(-mobile.lang_submenu_box_size)
+						+optionsMobileHorizontalPadding
+						+i
+						*(mobile.lang_submenu_box_size+1)));
+
+						set(layer[%mobileLang].oy,calc(optionsMobileTopPadding+(optionsMobileCounter)*(optionsMobileItemHeight)+15));
+						
+						set(mobileLangCss,calc('font-family:'+mobile.menu_item_font+',Arial; font-size:'+mobile.menu_item_font_size+'px;
+						 color:#'+subMenuMobileTextColor+';text-align:center '));
+				
+						set(mobileLangCssOver,calc('font-family:'+mobile.menu_item_font+',Arial; font-size:'+mobile.menu_item_font_size+'px;
+						 color:#'+mobile.lang_submenu_text_color_over+';text-align:center '));
+
+						set(MobileLangCaps,get(mobileLangArr[get(i)].value));
+						toUpper(MobileLangCaps);
+						set(mobileLangHtml,null);
+						txtadd(mobileLangHtml,get(MobileLangCaps));
+
+						set(layer[%mobileLang].html,get(mobileLangHtml));
+						set(layer[%mobileLang].css,get(mobileLangCss));
+
+						if (mobileLangArr[get(i)].value EQ tour_language,
+							set(layer[%mobileLang].bgalpha,1);
+							set(layer[%mobileLang].css,get(mobileLangCssOver));
+							set(currentLangMobile,get(layer[%mobileLang].name));
+							);
+
+						set(layer[get(mobileLang)].onclick,
+
+							tween(layer[get(currentLangMobile)].bgalpha,0,0.15,linear);
+							set(layer[get(currentLangMobile)].css,get(mobileLangCss));
+							tween(bgalpha,1,0.15,linear);
+							set(css,get(mobileLangCssOver));
+
+							set(mobileLangVar,null);
+							txtadd(mobileLangVar, get(html));
+							toLower(mobileLangVar);
+							set(currentLangMobile,get(name));
+							set(tour_language, get(mobileLangVar));
+							<!-- setTourLanguage(get(mobileLangVar)); -->
+						<!-- 	js(eventTourChangeLanguage(get(tour_language))); -->
+  							<!-- events.dispatch(changetourlanguage); -->
+
+  							events.dispatch(language_changed);
+							changeMobileLanguage();
+							ga_click('Language',get(mobileLangVar), 'Mobile click');
+						);
+			
+						set(layer[get(mobileLang)].ondown, optionsMenuMobileSwipe());
+
+					);
+
+					set(layer[langMobileLine].height,30);
+					layer[langMobileLine].loadstyle(menuLine-Style);
+					set(layer[langMobileLine].width,90%);
+					set(layer[langMobileLine].align,topcenter);
+					set(layer[langMobileLine].edge,topcenter);
+					set(layer[langMobileLine].height,get(optionsMobileItemHeight));
+					set(layer[langMobileLine].parent,get(layer[optionsMenuContMobile].name)); 
+					set(layer[langMobileLine].oy,calc(optionsMobileTopPadding+(optionsMobileCounter-1)*(optionsMobileItemHeight)+mobile.lang_submenu_box_size+30));
+					set(layer[langMobileLine].bgborder,'0,0,0.5 0xdddddd 1');
+				);
+
+			set(layer[optionsMenuMobile].oy, calc(OptionsMenuHeight*(-1)));
+	</action>
+
+	<action name="mobileMenuPressed" protect="true" >
+
+		mobileMenuOpen();
+	</action>
+
+	<action name="mobileMenuOpen" protect="true" >
+		stopmovements();
+		if(ptplugin[panotourmapsArea].isOpen,ptpMapClose(););
+		if(layer[bottomBarShare].isOpen EQ true, shareBoxClose());
+		if(ptplugin[description].isOpen,ptpDescClose(););
+		tween(layer[bottomBarBg].oy,0,0.3,easeInOutQuad);
+		set(layer[bottomBarBgClick].enabled,false);
+		tween(layer[bottomBarBgClick].alpha,0,0.3,linear);
+		optionsMenuMobileClose();
+		set(layer[mobileSetting].aktivan,false);
+		tween(layer[panoramaMenuMobile].ox,0,0.25,easeOutQuad,scrollBarInit(););
+		tween(layer[mobile_menu_dark_overlay].alpha,0.5,0.25,linear,
+			set(layer[mobile_menu_dark_overlay].enabled,true); 
+			);
+	</action>
+
+	<action name="mobileMenuClose" protect="true" >
+		tween(layer[mobile_menu_dark_overlay].alpha,0,%1,linear);
+		tween(layer[panoramaMenuMobile].ox,calc(mobileMenuOx-20),%1,easeOutQuad,
+		set(layer[mobile_menu_dark_overlay].enabled,false);
+		);		
+	</action>
+
+	<action name="mainMenuMobileSwipe" protect="true" >
+
+			clearinterval(draggInterval);
+			set(layer[panoramaMenuContMobile].draggable,true);
+			stopdelayedcall(scrollbarFade);
+			tween(layer[mainMenuMobileScrollbar].alpha,0.5,0.1,linear);
+			set(draggTime,0);
+			
+			set(swipeStartX,get(mouse.x));
+			set(swipeStartY,get(mouse.y));
+			set(swipeStartCont, get(layer[panoramaMenuContMobile].y));
+			setinterval(draggInterval,0,
+
+				inc(draggTime,1);
+				set(swipeMovementX,calc(swipeStartX-mouse.x));math.abs(swipeMovementX);
+				set(swipeMovementY,calc(swipeStartY-mouse.y));math.abs(swipeMovementY);
+				
+				if( swipeMovementY GT swipeMovementX,
+					set(layer[panoramaMenuContMobile].draggable,true);
+					endScrollAnim();
+					clearinterval(draggInterval);
+					set(scrollVertical,true);
+					set(scrollHorizontal,false);
+				);
+				if( swipeMovementX GT swipeMovementY,
+						clearinterval(draggInterval);
+						set(layer[panoramaMenuContMobile].draggable,false);
+						set(scrollVertical,false);
+						set(scrollHorizontal,true);
+						setinterval(draggInterval2,0,
+							inc(draggTime,1);
+							set(swipeMovementX,calc(swipeStartX-mouse.x));math.abs(swipeMovementX);
+							set(swipeMovementY,calc(swipeStartY-mouse.y));math.abs(swipeMovementY);
+
+							set(swipeMovementXactual,calc(swipeStartX-mouse.x));
+							if(swipeMovementXactual GT 0 ,
+								set(layer[panoramaMenuMobile].ox,calc(swipeMovementXactual*(-1)));
+							);
+							
+							); 
+						);
+					
+				
+			); <!-- END INTERVAL -->
+
+	</action>
+
+
+	<action name="mainMenuMobileSwipeUP" protect="true" >
+
+
+			clearinterval(draggInterval);
+			clearinterval(draggInterval2);
+			clearinterval(endScrollInterval);
+			clearinterval(endScrollInterval2);
+	
+			set(layer[panoramaMenuContMobile].draggable,true);
+			math.abs(swipeMovementX);
+			tween(layer[scrollOver].height,1000,0.4,linear);
+			tween(layer[scrollOver].ox,0,0.2,linear);
+			tween(layer[scrollUnder].height,1000,0.4,linear);
+			tween(layer[scrollUnder].ox,0,0.2,linear); 
+		
+			delayedcall(scrollbarFade,1,tween(layer[mainMenuMobileScrollbar].alpha,0,0.6,linear););
+		
+				if( (draggTime LT 10) AND (swipeMovementX GT 1) AND (scrollVertical EQ false),
+					set(closeTime, 0.2);
+					mobileMenuClose(0.2);
+					clearinterval(draggInterval);
+					layer[panoramaMenuContMobile].stopscrolling();
+					,
+
+					if(	swipeMovementX LT calc(layer[panoramaMenuMobile].width/2) ,
+					
+							tween(layer[panoramaMenuMobile].ox,0,0.1,easeInOutQuad);
+							,
+							mobileMenuClose(0.2);
+							); 
+				);
+
+			set(scrollVertical,false);
+			set(scrollHorizontal,true);
+
+			callwhen(toverCall, layer[panoramaMenuContMobile].toverflow EQ 0,
+			
+			if( scrollOverCheck EQ false ,
+						 
+						clearinterval(endScrollInterval);
+						clearinterval(endScrollInterval2);
+						set(autoScrollAnim,true);
+						set(layer[scrollOver].ox,0);
+						tween(layer[scrollOver].height, 1040,0.2,easeOutQuad);
+
+						tween(layer[scrollOver].alpha, 0.3,0.2,easeOutQuad,
+
+							tween(layer[scrollOver].height, 1000,0.2,easeInQuad);
+							tween(layer[scrollOver].alpha, 0,0.2,easeInQuad,
+								set(autoScrollAnim,false);
+								);
+						);
+				
+			);	
+			);
+
+			callwhen(boverCall, layer[panoramaMenuContMobile].boverflow LE 0,
+			if( scrollUnderCheck EQ false ,
+						 
+						clearinterval(endScrollInterval);
+						clearinterval(endScrollInterval2);
+						set(autoScrollAnim,true);
+						set(layer[scrollUnder].ox,0);
+						tween(layer[scrollUnder].height, 1040,0.2,easeOutQuad);
+
+						tween(layer[scrollUnder].alpha, 0.3,0.2,easeOutQuad,
+
+							tween(layer[scrollUnder].height, 1000,0.2,easeInQuad);
+							tween(layer[scrollUnder].alpha, 0,0.2,easeInQuad,
+								set(autoScrollAnim,false);
+								);
+						);
+				
+			);	
+
+
+
+		);
+		callwhen(boverCall, layer[panoramaMenuContMobile].boverflow EQ 0,
+			
+			if(scrollUnderCheck EQ false,
+						
+						clearinterval(endScrollInterval);
+						clearinterval(endScrollInterval2);
+
+						set(autoScrollAnim,true);
+						set(layer[scrollUnder].ox,0);
+						tween(layer[scrollUnder].height, 1040,0.2,easeOutQuad);
+						tween(layer[scrollUnder].alpha, 0.3,0.2,easeOutQuad,
+
+							tween(layer[scrollUnder].height, 1000,0.2,easeInQuad);
+							tween(layer[scrollUnder].alpha, 0,0.2,easeInQuad,
+								set(autoScrollAnim,false);
+								);
+						);
+					
+			);			
+		);
+
+	</action>	
+
+	<action name="endScrollAnim" protect="true" >
+		set(scrollOverCheck,false);
+		set(scrollUnderCheck,false);
+
+	<!-- 	if( layer[panoramaMenuMobile].ox EQ 0, -->
+
+			set(layer[scrollOver].ox,0);
+			set(endScrollMouseY,get(mouse.y));
+			set(endScrollMouseX,get(mouse.x));
+			if(layer[panoramaMenuContMobile].toverflow EQ 0 ,
+				stopcallwhen(toverCall);
+				setinterval(endScrollInterval, 0.01,
+
+					set(layer[scrollOver].height, calc(1000+(mouse.y-endScrollMouseY)/4.8));
+					set(layer[scrollOver].alpha,calc((layer[scrollOver].height-1000)/300));
+					set(layer[scrollOver].ox,calc((mouse.x-endScrollMouseX)*0.7));
+					set(scrollOverCheck,true); 
+				);
+			);
+			if(layer[panoramaMenuContMobile].boverflow LE 0,
+				stopcallwhen(boverCall);
+				setinterval(endScrollInterval2, 0.01,
+					set(layer[scrollUnder].height, calc(1000+(endScrollMouseY-mouse.y)/4.8));
+					set(layer[scrollUnder].alpha,calc((layer[scrollUnder].height-1000)/300));
+					set(layer[scrollUnder].ox,calc((mouse.x-endScrollMouseX)*0.7));
+					set(scrollUnderCheck,true); 
+				);
+			);
+		<!-- ); --> <!-- END IF -->
+
+	</action>
+
+<layer name="scrollOver"  type="text" keep="true" enabled="false" alpha="0.2" zorder="80" visible="true"
+		width="1000" height="1000" oy="-1000"
+		align="topcenter" edge="topcenter"
+		bgcolor="0x000000" bgalpha="1" bgroundedge="600"
+		parent="layer[panoramaMenuMobile]"
+		
+	/>
+<layer name="scrollUnder" type="text" keep="true" enabled="false" alpha="0.2" zorder="80"
+		width="1000" height="1000" oy="1000"
+		align="bottom" edge="bottom"
+		bgcolor="0x000000" bgalpha="1" bgroundedge="600"
+		parent="layer[panoramaMenuMobile]"
+		visible="true"
+	/>
+
+
+<layer name="mainMenuMobileScrollbar" keep="true" visible="true" type="container" align="topright" alpha="0"  width="4px" ox="0px" zorder="100" height=""  bgcolor="0x000000" bgalpha="1" parent="layer[panoramaMenuMobile]" />
+
+	<action name="scrollBarInit" protect="true" >
+
+		set(scrollBarHeight, calc(stageheight/layer[panoramaMenuContMobile].height*stageheight));
+		set(layer[mainMenuMobileScrollbar].height,get(scrollBarHeight));
+	</action>
+
+	<action name="mainMenuScrollbarAnimate"  protect="true" >
+		set(layer[mainMenuMobileScrollbar].oy,calc(layer[panoramaMenuContMobile].toverflow*stageheight/layer[panoramaMenuContMobile].height)); 
+	</action>
+
+	<action name="MobilemenuItems" protect="true" >
+		set(layer[panoramaMenuContMobile].direction,v);
+		set(layer[panoramaMenuContMobile].draggable,true);
+		set(layer[panoramaMenuContMobile].onhover_autoscrolling,false);
+		set(layer[panoramaMenuContMobile].overscroll,0.0);
+		set(layer[panoramaMenuContMobile].friction,0.90);
+		set(layer[panoramaMenuContMobile].acceleration,0.08);
+		set(layer[panoramaMenuContMobile].returnacceleration,0.35);
+		set(layer[panoramaMenuContMobile].momentum,0.06);  
+
+		set(mobileHeaderTextHtml,null);
+		set(mobileHeaderTextCss,null);
+		set(mobileHeaderTextHtml,get:mobile.menu_header_poweredby_text);  
+
+		set(mobileHeaderTextCss,calc('font-family:'+mobile.menu_header_poweredby_text_font+',Arial; font-size:'+mpbile.menu_header_poweredby_text_font_size+'px;color:#'
+			+mobile.menu_header_poweredby_text_font_color+';text-align:left;padding-left:'+mainMenuMobileGroupLeftPadding+'px;vertical-align: middle;'));
+		
+		set(layer[mobile_header_powered_by].html,get(mobileHeaderTextHtml));
+		set(layer[mobile_header_powered_by].css,get(mobileHeaderTextCss)); 
+		set(layer[mobile_header_powered_by].alpha,get:mobile.menu_header_poweredby_text_font_alpha );
+
+		set(layer[mobileMenuHeaderCont].height,140);
+		set(mainMenuMobileTop,get(layer[mobileMenuHeaderCont].height));
+		set(mainMenuMobileHeight,50);
+
+		<!-- ╔═════════════════════════════╗--> 
+		<!-- ║	MOBILE MAIN VAR SETTINGS   ║-->
+		<!-- ╚═════════════════════════════╝-->
+
+		<!-- ALL ITEMS -->
+		set(allMenuMobileGroupIconBottomPadding,2);
+		set(allMenuMobileTopPadding,5);
+
+		<!-- GROUP ITEMS -->
+		set(mainMenuMobileGroupLeftPadding,get:mobile.menu_group_icon_x_offset);
+		set(mainMenuMobileGroupTopPadding, get:mobile.menu_group_y_offset);
+		set(mainMenuMobileGroupTextColor,calc:'0x'+mobile.menu_group_font_color);
+		set(mainMenuMobileGroupIconCode,get:mobile.menu_group_icon);
+		set(mainMenuMobileGroupIconSize,get:mobile.menu_group_icon_size);
+
+		set(mainMenuMobileGroupIconRightPadding,get:mobile.menu_group_text_x_offset);
+		set(mobileMainItemBGColor,calc:'0x'+mobile.menu_group_bg_color);
+		set(mobileMainItemBGAlpha,get:mobile.menu_group_bg_alpha);
+		set(mobileMainItemBGBorder,calc('1,0,0,0 '+mobile.menu_group_line_color+' '+ mobile.menu_group_line_alpha));
+
+		<!-- 	SUBITEMS -->
+		set(subMenuMobileLeftPadding,get:mobile.menu_item_icon_x_offset);
+		set(subMenuMobileGroupIconCode,get:mobile.menu_item_icon);
+		set(subMenuMobileGroupIconRightPadding,get:mobile.menu_item_text_x_offset);
+		set(subMenuMobileTextColor,get:mobile.menu_item_font_color);
+		set(subMenuMobileTextColorActive,get:mobile.menu_item_font_color_active);
+
+		set(mainMenuMobileBottomPadding,10);	
+
+		set(mobileMainMenuCss,calc('font-family:'+general.main_menu_font+',Arial; font-size:'+mobile.menu_group_font_size+'px; color:#'
+			+mainMenuMobileGroupTextColor+';text-align:left;padding-top:'+mainMenuMobileGroupTopPadding+'px;padding-left:'+mainMenuMobileGroupLeftPadding
+			+'px;vertical-align: middle;'));
+
+		set(mobileSubMenuCss,calc('font-family:'+mobile.menu_item_font+',Arial; font-size:'+mobile.menu_item_font_size+'px; color:#'
+			+subMenuMobileTextColor+';text-align:left;padding-left:'+subMenuMobileLeftPadding+'px;'));
+
+		set(mobileSubMenuCssOver,calc('font-family:'+mobile.menu_item_font+',Arial; font-size:'+mobile.menu_item_font_size+'px; color:#'
+			+subMenuMobileTextColorActive+';text-align:left;padding-left:'+subMenuMobileLeftPadding+'px;font-weight:'+mobile.menu_item_font_style_active));
+
+
+		set(allMobileMainMenuPad,null);
+		txtadd(allMobileMainMenuPad,get(allMenuMobileTopPadding),' 0 0 0');
+		<!-- ╔═════════════════════╗--> 
+		<!-- ║	MOBILE MAIN ITEMS  ║-->
+		<!-- ╚═════════════════════╝-->
+
+		set(allGroupsHeight,0);
+		set(previousGroupHeight,0);
+		set(mobileGroupedPanoCount,0);
+		for(set(i,0), i LT panoramagroup.count, inc(i), 
+			set(mobileGrupa[get(i)].name,get(panoramagroup[get(i)].name)); 
+			getmessage(mobileGrupaNaziv, get(panoramagroup[get(panoramagroup[get(i)].name)].titleid )); 
+			if ( mobile.menu_group_font_caps EQ true, toUpper(mobileGrupaNaziv));
+			if ( mobile.menu_group_font_bold EQ true, 
+				txtadd(mobileGrupaNaziv, '<b>',get(mobileGrupaNaziv),'</b>');
+			);
+
+
+			txtadd(mobileGlavniMenu,'mobileGlavniMenu',get(i));
+			
+			txtadd(MobileMainMenuHtml,'[i class="material-icons" style=" font-size:',get(mainMenuMobileGroupIconSize)
+				,'px;vertical-align: middle; padding-right:',get(mainMenuMobileGroupIconRightPadding),'px;padding-bottom:'
+				,get(allMenuMobileGroupIconBottomPadding),'px;"]',get(mainMenuMobileGroupIconCode),'[/i]',get(mobileGrupaNaziv));
+		
+
+			set(layer[%mobileGlavniMenu].html, get(MobileMainMenuHtml));
+			set(layer[%mobileGlavniMenu].css, get(mobileMainMenuCss));
+			set(layer[%mobileGlavniMenu].mobileGrupa,get(panoramagroup[get(i)].name));
+			layer[%mobileGlavniMenu].loadStyle(MobileMainitem-Style);
+			set(layer[%mobileGlavniMenu].bgcolor,get(mobileMainItemBGColor));
+			set(layer[%mobileGlavniMenu].bgalpha,get(mobileMainItemBGAlpha));
+			set(layer[%mobileGlavniMenu].oy, calc(mainMenuMobileTop+mainMenuMobileHeight*i));
+			set(layer[%mobileGlavniMenu].zorder, calc(100)); 
+			
+			set(layer[].padding,get(allMobileMainMenuPad));
+
+			set(layer[%mobileGlavniMenu].ondown,mainMenuMobileSwipe());
+			set(layer[%mobileGlavniMenu].onup,mainMenuMobileSwipeUP());
+
+			txtadd(mobileGroupLine,'mobileGroupLine',get(i));
+			set(layer[get(mobileGroupLine)].visible,true);
+			layer[get(mobileGroupLine)].loadstyle(mobile_menu_line_style);
+			set(layer[get(mobileGroupLine)].parent,layer[panoramaMenuContMobile]);
+			set(layer[get(mobileGroupLine)].height,get(layer[%mobileGlavniMenu].height)); 
+			set(layer[get(mobileGroupLine)].align,topcenter);
+			set(layer[get(mobileGroupLine)].edge,topcenter);
+			
+			set(layer[get(mobileGroupLine)].width,100%);
+			set(layer[get(mobileGroupLine)].zorder,90);
+
+		<!-- ╔════════════════════════╗--> 
+		<!-- ║  MOBILE SUB CONTAINER  ║-->
+		<!-- ╚════════════════════════╝-->
+			set(mobileSubItemCount[get(i)].count,0);
+			txtadd(mobileSubMenuCont, get(mobileGlavniMenu),'_mobileSubMenuCont');	
+			set(layer[get(mobileSubMenuCont)].parent,get(layer[panoramaMenuContMobile].name));
+			set(layer[get(mobileSubMenuCont)].oy, calc(mainMenuMobileTop+mainMenuMobileHeight*i));
+			layer[get(mobileSubMenuCont)].loadstyle(mobileSubCont-Style);
+			set(layer[get(mobileSubMenuCont)].tatek,get(layer[%mobileGlavniMenu].name));
+			set(layer[get(layer[get(mobileSubMenuCont)].tatek)].subContChild,get(mobileSubMenuCont));
+
+			<!-- ╔═════════════════════╗--> 
+			<!-- ║	 MOBILE SUB ITEMS  ║-->
+			<!-- ╚═════════════════════╝-->
+				
+				for(set(sI,0), sI LT scene.count, inc(sI), 
+						
+					getmessage(mobilemobileScenaNaziv, get(scene[get(scene[get(sI)].name)].titleid));
+					getmessage(mobile_pano_text, get(scene[get(scene[get(sI)].name)].titleid));
+
+					if ( mobile.main_menu_bold_check EQ true, 
+						txtadd(mobilemobileScenaNaziv, '<b>',get(mobilemobileScenaNaziv),'</b>');
+							);
+					
+					set(mobileScena[get(sI)].naziv,get(mobilemobileScenaNaziv));
+					set(mobileScena[get(sI)].group,get(scene[get(sI)].group));
+					set(mobileScenaGrupa, get(mobileScena[get(sI)].group));
+					set(mobileGrupaID, get(panoramagroup[get(i)].name));
+					
+					<!-- ╔═══════════════════════════╗--> 
+					<!-- ║ MOBILE SUB ITEM FOR LOOP  ║-->
+					<!-- ╚═══════════════════════════╝-->
+
+					if( mobileScenaGrupa EQ mobileGrupaID,  
+						inc(mobileGroupedPanoCount,1);
+
+						txtadd(mobilePodmenu,get(mobileGrupaID),'mobilePodmenu',get(mobileSubItemCount[get(i)].count));
+
+						set(MobileSubMenuHtml,calc('[i class="material-icons" style=" font-size:'+mobile.menu_item_icon_size+'px;vertical-align: middle; padding-right:'
+							+subMenuMobileGroupIconRightPadding+'px;padding-bottom:'+allMenuMobileGroupIconBottomPadding+'px;"]'+subMenuMobileGroupIconCode
+							+'[/i]'+mobilemobileScenaNaziv));
+						
+						set(layer[get(mobilePodmenu)].html,get(MobileSubMenuHtml));
+						set(layer[get(mobilePodmenu)].panoName,get(mobile_pano_text));
+						layer[get(mobilePodmenu)].loadstyle(MobileSubitem-Style);
+						set(layer[get(mobilePodmenu)].css, get(mobileSubMenuCss));
+						
+						set(layer[get(mobilePodmenu)].groupID,get(mobileGrupaID));
+						set(layer[get(mobilePodmenu)].pano,get(scene[get(scene[get(sI)].name)].name));
+						set(layer[get(mobilePodmenu)].tatek,get(layer[%mobileGlavniMenu].name));
+						set(layer[get(mobilePodmenu)].padding,get(allMobileMainMenuPad));
+						set(layer[get(mobilePodmenu)].zorder,99);
+						if(sI EQ 0, 
+							set(layer[get(mobilePodmenu)].css, get(mobileSubMenuCss));
+							set(currentPanorama, get(layer[get(mobilePodmenu)].name));
+							); 
+						
+						set(layer[get(mobilePodmenu)].onclick,
+							clearinterval(draggInterval);
+							clearinterval(draggInterval2);
+						 	clearinterval(endScrollInterval);
+						 	clearinterval(endScrollInterval2);
+
+							<!-- trace('gtag_scene_name: ',get(panoName));  -->
+							ga_click('Menu click ',get(panoName), 'Mobile ');
+							
+							if(currentPanorama EQ name,
+							<!-- 	tween(bgalpha,0.2,0.1,linear,
+									tween(bgalpha,get:mobile.menu_item_active_bg_alpha,0.35,easeOutQuad);
+								);  -->
+							,			
+								set(bgalpha,get:mobile.menu_item_active_bg_alpha); 
+								set(layer[get(currentPanorama)].bgalpha,0);
+								set(layer[get(currentPanorama)].css,get(mobileSubMenuCss));
+								set(currentPanorama, get(name));
+								set(css,get(mobileSubMenuCssOver)); 
+								mobileMenuClose(0.2); 
+								delayedcall(0.45, loadscene(get(pano),null, MERGE, BLEND(0.3));)
+							);
+						);
+
+						if(layer[get(mobilePodmenu)].pano EQ submenu_custom_id, 
+							set(layer[get(mobilePodmenu)].onclick,
+								
+								clearinterval(draggInterval);
+								clearinterval(draggInterval2);
+						 		clearinterval(endScrollInterval);
+						 		clearinterval(endScrollInterval2);
+								subMebuCustomActions1();
+								mobileMenuClose(0.2); 
+
+							);
+						);
+
+						 
+						set(layer[get(mobilePodmenu)].ondown,mainMenuMobileSwipe());
+						set(layer[get(mobilePodmenu)].onup,mainMenuMobileSwipeUP());
+
+						set(layer[get(mobilePodmenu)].parent,get(layer[get(mobileSubMenuCont)].name)); 
+
+					<!-- ╔════════════════════════╗--> 
+					<!-- ║	MOBILE SUB ITEM LINES ║-->
+					<!-- ╚════════════════════════╝-->
+						txtadd(mobilePodmenuLine,get(mobileGrupaID),'mobilePodmenuLine',get(mobileSubItemCount[get(i)].count));
+						set(layer[get(mobilePodmenuLine)].visible,true);
+						layer[get(mobilePodmenuLine)].loadstyle(mobileMenuPanoLine-Style);
+						set(layer[get(mobilePodmenuLine)].parent,get(layer[get(mobileSubMenuCont)].name)); 
+						set(layer[get(mobilePodmenuLine)].height,get(subMenuHeight));
+						set(layer[get(mobilePodmenuLine)].align,topcenter);
+						set(layer[get(mobilePodmenuLine)].edge,topcenter);
+						set(layer[get(mobilePodmenuLine)].width,90%);
+			<!-- 			set(layer[get(mobilePodmenuLine)].bgborder,'0,0,0.5 0xdddddd 0'); -->
+						inc(groupedPanoCount, 1);
+						calc(mobileSubItemCount[get(i)].count, mobileSubItemCount[get(i)].count+1);
+						set(layer[get(mobilePodmenu)].oy,calc((mobileSubItemCount[get(i)].count-1)*50));
+						set(layer[get(mobilePodmenuLine)].oy,calc((mobileSubItemCount[get(i)].count)*50));
+
+					); <!-- END IF -->
+
+
+				);<!-- END FOR SUBITEMS -->
+				
+				set(layer[%mobileGlavniMenu].mobileSubItemCount,get(mobileSubItemCount[get(i)].count));
+				set(layer[get(mobileSubMenuCont)].height,calc(layer[%mobileGlavniMenu].mobileSubItemCount*mainMenuMobileHeight));	
+				set(previousGroupHeight, calc((mobileSubItemCount[calc(i-1)].count+1)*mainMenuMobileHeight));
+				if(previousGroupHeight EQ 'NaN', set(previousGroupHeight,0));
+				set(allGroupsHeight, calc(allGroupsHeight+previousGroupHeight));
+				set(layer[%mobileGlavniMenu].oy, calc(mainMenuMobileTop+allGroupsHeight));
+				set(layer[get(mobileGroupLine)].oy,calc(mainMenuMobileTop+allGroupsHeight));
+				set(layer[get(mobileSubMenuCont)].oy,calc(layer[%mobileGlavniMenu].oy+mainMenuMobileHeight));
+		
+				set(layer[panoramaMenuContMobile].height, calc(i*50+mobileGroupedPanoCount*50+200));
+
+
+		);	<!-- END FOR ALL ITEMS -->
+		
+
+</action>
+
+
+
+
+	<action name="MobilemenuItems_1st_level" protect="true" >
+
+		set(layer[panoramaMenuContMobile].direction,v);
+		set(layer[panoramaMenuContMobile].draggable,true);
+		set(layer[panoramaMenuContMobile].onhover_autoscrolling,false);
+		set(layer[panoramaMenuContMobile].overscroll,0.0);
+		set(layer[panoramaMenuContMobile].friction,0.90);
+		set(layer[panoramaMenuContMobile].acceleration,0.08);
+		set(layer[panoramaMenuContMobile].returnacceleration,0.35);
+		set(layer[panoramaMenuContMobile].momentum,0.06);  
+
+		set(mobileHeaderTextHtml,null);
+		set(mobileHeaderTextCss,null);
+		set(mobileHeaderTextHtml,get:mobile.menu_header_poweredby_text);  
+
+		set(mobileHeaderTextCss,calc('font-family:'+mobile.menu_header_poweredby_text_font+',Arial; font-size:'+mpbile.menu_header_poweredby_text_font_size+'px;color:#'
+			+mobile.menu_header_poweredby_text_font_color+';text-align:left;padding-left:'+mainMenuMobileGroupLeftPadding+'px;vertical-align: middle;'));
+		
+		set(layer[mobile_header_powered_by].html,get(mobileHeaderTextHtml));
+		set(layer[mobile_header_powered_by].css,get(mobileHeaderTextCss)); 
+		set(layer[mobile_header_powered_by].alpha,get:mobile.menu_header_poweredby_text_font_alpha );
+
+		set(layer[mobileMenuHeaderCont].height,140);
+		set(mainMenuMobileTop,calc(layer[mobileMenuHeaderCont].height+20));
+		set(mainMenuMobileHeight,50);
+
+		<!-- ╔═════════════════════════════╗--> 
+		<!-- ║	MOBILE MAIN VAR SETTINGS   ║-->
+		<!-- ╚═════════════════════════════╝-->
+
+		<!-- ALL ITEMS -->
+		set(allMenuMobileGroupIconBottomPadding,2);
+		set(allMenuMobileTopPadding,5);
+
+		<!-- GROUP ITEMS -->
+		set(mainMenuMobileGroupLeftPadding,get:mobile.menu_group_icon_x_offset);
+		set(mainMenuMobileGroupTopPadding, get:mobile.menu_group_y_offset);
+		set(mainMenuMobileGroupTextColor,calc:'0x'+mobile.menu_group_font_color);
+		set(mainMenuMobileGroupIconCode,get:mobile.menu_group_icon);
+		set(mainMenuMobileGroupIconSize,get:mobile.menu_group_icon_size);
+
+		set(mainMenuMobileGroupIconRightPadding,get:mobile.menu_group_text_x_offset);
+		set(mobileMainItemBGColor,calc:'0x'+mobile.menu_group_bg_color);
+		set(mobileMainItemBGAlpha,get:mobile.menu_group_bg_alpha);
+		set(mobileMainItemBGBorder,calc('1,0,0,0 '+mobile.menu_group_line_color+' '+ mobile.menu_group_line_alpha));
+
+		<!-- 	SUBITEMS -->
+		set(subMenuMobileLeftPadding,get:mobile.menu_item_icon_x_offset);
+		set(subMenuMobileGroupIconCode,get:mobile.menu_item_icon);
+		set(subMenuMobileGroupIconRightPadding,get:mobile.menu_item_text_x_offset);
+		set(subMenuMobileTextColor,get:mobile.menu_item_font_color);
+		set(subMenuMobileTextColorActive,get:mobile.menu_item_font_color_active);
+
+		set(mainMenuMobileBottomPadding,0);	
+
+		set(mobileMainMenuCss,calc('font-family:'+general.main_menu_font+',Arial; font-size:'+mobile.menu_group_font_size+'px; color:#'
+			+mainMenuMobileGroupTextColor+';text-align:left;padding-top:0px;padding-left:'+mainMenuMobileGroupLeftPadding
+			+'px;vertical-align: middle;'));
+
+		set(mobileSubMenuCss,calc('font-family:'+mobile.menu_item_font+',Arial; font-size:'+mobile.menu_item_font_size+'px; color:#'
+			+subMenuMobileTextColor+';text-align:left;padding-left:'+subMenuMobileLeftPadding+'px;'));
+
+		set(mobileSubMenuCssOver,calc('font-family:'+mobile.menu_item_font+',Arial; font-size:'+mobile.menu_item_font_size+'px; color:#'
+			+subMenuMobileTextColorActive+';text-align:left;padding-left:'+subMenuMobileLeftPadding+'px;font-weight:'+mobile.menu_item_font_style_active));
+
+
+		set(allMobileMainMenuPad,null);
+		txtadd(allMobileMainMenuPad,get(allMenuMobileTopPadding),' 0 0 0');
+		<!-- ╔═════════════════════╗--> 
+		<!-- ║	MOBILE MAIN ITEMS  ║-->
+		<!-- ╚═════════════════════╝-->
+
+		set(allGroupsHeight,0);
+		set(previousGroupHeight,0);
+		set(mobileGroupedPanoCount,0);
+		for(set(i,0), i LT panoramagroup.count, inc(i), 
+			set(mobileGrupa[get(i)].name,get(panoramagroup[get(i)].name)); 
+			getmessage(mobileGrupaNazivMessage, get(panoramagroup[get(panoramagroup[get(i)].name)].titleid )); 
+			txtreplace(mobileGrupaNaziv, mobileGrupaNazivMessage, '[br]', '');
+			trace(get(mobileGrupaNaziv));
+
+			<!-- getmessage(mobileGrupaNaziv, get(panoramagroup[get(panoramagroup[get(i)].name)].titleid ));  -->
+			if ( mobile.menu_group_font_caps EQ true, toUpper(mobileGrupaNaziv));
+			if ( mobile.menu_group_font_bold EQ true, 
+				txtadd(mobileGrupaNaziv, '<b>',get(mobileGrupaNaziv),'</b>');
+			);
+
+			txtadd(mobileGlavniMenu,'mobileGlavniMenu',get(i));
+			
+			txtadd(MobileMainMenuHtml,'[i class="material-icons" style=" font-size:',get(mainMenuMobileGroupIconSize)
+				,'px;vertical-align: middle; padding-right:',get(mainMenuMobileGroupIconRightPadding),'px;padding-bottom:0px;"]',get(mainMenuMobileGroupIconCode),'[/i]',get(mobileGrupaNaziv));
+		
+
+			set(layer[%mobileGlavniMenu].html, get(MobileMainMenuHtml));
+			set(layer[%mobileGlavniMenu].css, get(mobileSubMenuCss));
+			set(layer[%mobileGlavniMenu].mobileGrupa,get(panoramagroup[get(i)].name));
+			layer[%mobileGlavniMenu].loadStyle(MobileMainitem-Style);
+			set(layer[%mobileGlavniMenu].bgcolor,calc:'0x'+mobile.menu_item_active_bg_color);
+			set(layer[%mobileGlavniMenu].bgalpha,get(mobileMainItemBGAlpha));
+			set(layer[%mobileGlavniMenu].oy, calc(mainMenuMobileTop+mainMenuMobileHeight*i));
+			
+			set(layer[%mobileGlavniMenu].zorder, calc(100)); 
+			
+
+			set(layer[%mobileGlavniMenu].ondown,mainMenuMobileSwipe());
+			set(layer[%mobileGlavniMenu].onup,mainMenuMobileSwipeUP());
+
+
+	
+				for(set(sI,0), sI LT calc(scene.count+1), inc(sI), 
+
+					if( scene[get(sI)].group EQ panoramagroup[get(i)].name, 
+						set(layer[%mobileGlavniMenu].panolink, get(scene[get(sI)].name));			
+
+					);
+				);
+
+			set(layer[%mobileGlavniMenu].onclick,
+
+				clearinterval(draggInterval);
+				clearinterval(draggInterval2);
+			 	clearinterval(endScrollInterval);
+			 	clearinterval(endScrollInterval2);
+
+				getmessage(gtag_scene_name, get(scene[get(panolink)].titleid));
+				ga_click('Menu click',get(gtag_scene_name), 'Mobile ');
+
+				if(currentPanorama EQ name,
+
+					tween(bgalpha,0.85,0.1,linear,
+						tween(bgalpha,0.5,0.35,easeOutQuad);
+					); 
+				,	
+					
+					set(layer[get(currentPanorama)].bgalpha,0);
+					set(layer[get(currentPanorama)].css,get(mobileSubMenuCss));
+					
+					set(css,get(mobileSubMenuCssOver)); 
+					set(bgalpha,1); 
+					set(currentPanorama, get(name));
+					mobileMenuClose(0.2); 
+					delayedcall(0.45, loadscene(get(panolink),null, MERGE, BLEND(0.3));)
+
+				);
+			);
+
+		
+
+				set(layer[panoramaMenuContMobile].height, calc(mainMenuMobileTop+i*50)); 
+
+
+		);	<!-- END FOR ALL ITEMS -->
+		
+
+</action>
+
+
+	<action name="setupScreenRotate"  protect="true" >
+		set(screenRotateIconCss,null);
+		txtadd(screenRotateIconCss,'color:#ffffff;text-align:center;vertical-align: middle;text-shadow: 2px 2px 8px #000000;');
+	
+		txtadd(screenRotateIcon,'[i class="material-icons" style=" font-size:50px;vertical-align: middle; text-align:center;"]screen_rotation[/i]');
+		set(layer[MobileScreenRotate].html,get(screenRotateIcon));
+		set(layer[MobileScreenRotate].css,get(screenRotateIconCss));
+
+		set(screenRotateTextCss,null);
+		txtadd(screenRotateTextCss,'font-size:12px;color:#ffffff;text-align:center;vertical-align: middle;text-shadow: 1px 1px 2px #000000;');
+		set(layer[MobileScreenRotateText].css,get(screenRotateTextCss));
+	</action>
+
+
+	</krpano>

@@ -1,0 +1,19 @@
+<krpano>
+	<action name="testClick"  autorun="preinit"  >
+
+    showlog();
+
+<!--     for(set(i,0), i LT hotspot.count, inc(i), 
+        set(hotspot[get(i)].onclick, trace(get(name));
+
+    ) -->
+    for(set(i,0), i LT layer.count, inc(i), 
+       set(layer[get(i)].onclick, trace(get(name));
+         set(layer[get(i)].visible, true);
+          set(layer[get(i)].alpha, 1);
+          set(layer[get(i)].enabled, true);
+    )
+
+    </action>
+
+    </krpano>

@@ -1,0 +1,509 @@
+	<krpano idletime="0.3" />
+
+	<include url="%FIRSTXML%/graphics/360-gui/xml/settings.xml" />
+
+	<action name="checkInitURL" type="javascript" autorun="preinit" protect="true">
+		var urlLink =  window.location.href;
+		krpano.set("extUrl",urlLink);
+	</action>
+
+	<action name="load_font" type="javascript" protect="true" >
+	<![CDATA[
+		var font_url = krpano.get("krpano_font_url");
+			$('head').append('<link href="'+font_url+'" rel="stylesheet" >');
+		]]>
+	</action>
+
+	<action name="load_xml_fonts" autorun="preinit" protect="true" >
+		for(set(i,0), i LT font_code.count, inc(i),
+			set(krpano_font_url, get(font_code[%i].url));
+			load_font(krpano_font_url);
+		);
+		
+	</action>
+
+	<action name="setup_favicon" type="javascript" autorun="preinit" protect="true" >
+		<![CDATA[
+		$('head').append('<link href="'+'indexdata/{{pluginDirectory}}/{{p.favicon.fileName}}' + '" rel="shortcut icon" >');
+		]]>
+	</action>
+
+  <layer name="loader_bg" type="container" keep="true" visible="false" alpha="get:general.loader_bg_alpha" enabled="false" zorder="98"
+		width="get:general.loader_size" height="get:general.loader_size"
+		align="center"
+		bgcolor="0xffffff"	bgalpha="0"
+		bgroundedge="get:general.loader_size"
+		onloaded="
+			set(bgborder,calc(general.loader_thickness+','+general.loader_thickness+','+general.loader_thickness+','+general.loader_thickness
+			+' 0x'+general.loader_bg_color+' 1'));
+		"
+
+	/>		 
+  <layer name="loader_mask" type="container" keep="true" visible="true" alpha="1" enabled="false" zorder="99"
+		width="get:general.loader_size" height="get:general.loader_size"
+		ox="calc:general.loader_size/2"
+		oy="calc:general.loader_size/2"
+		align="center" rotate="-90"
+		bgcolor="0x000000" bgalpha="0.0" bgroundedge="0" maskchildren="true"
+		 />		
+	 <layer name="loader_anim" 	type="container"  keep="true" visible="true" alpha="1" enabled="false" zorder="98"
+		width="get:general.loader_size" height="get:general.loader_size"
+		ox="calc:(-general.loader_size/2)" oy="calc:(-general.loader_size/2)"
+		align="left"
+		bgcolor="0x000000" bgalpha="0" bgroundedge="get:general.loader_size" maskchildren="true"
+		parent="layer[loader_mask]"
+		onloaded="
+			set(bgborder,calc(general.loader_thickness+','+general.loader_thickness+','+general.loader_thickness+','+general.loader_thickness
+			+' 0x'+general.loader_bg_color+' 1'));
+		"
+		 />	
+
+	<plugin name="gyroscope" devices="html5" keep="true"
+        url=" %FIRSTXML%/{{pluginDirectory}}/js/gyro2.js" 
+        enabled="false"
+        camroll="true"
+        friction="0.0"
+        touch_mode="full"
+        sensor_mode="1"
+        softstart="0.5"
+        autocalibration="false"
+        onavailable=""
+        onunavailable=""
+        onenable=""
+        ondisable=""
+        />
+
+	 
+  <action name="display_loader" protect="true" > 	
+	set(counter,-90);
+	setinterval(time, 0.01, 
+		set(counter,calc(counter+general.loader_speed*2));
+		set(layer[loader_mask].rotate,get(counter));
+  	);
+	
+	set(layer[loader_bg].visible, %1);
+	set(layer[loader_mask].visible, %1);
+	set(layer[loader_anim].visible, %1); 
+  </action>
+
+	<events name="display_loader_events" keep="true"
+		onnewpano="display_loader(true);"
+		onremovepano="display_loader(true);"
+		onloadcomplete="display_loader(false);clearinterval(time);"
+	/>
+
+
+
+	<action name="setupVars"  autorun="preinit"  protect="true" >
+	
+		set(url_options, '');
+		set(hide_options,'');
+
+		check_hide_parameters();
+
+		set(shown_scene,0);
+
+		set(main_path, '%FIRSTXML%/{{pluginDirectory}}');
+		set(scrollarea_path, calc:main_path+'/js/scrollarea.js');
+		set(desktop_logo_path, %FIRSTXML%/{{pluginDirectory}}/{{p.logoFile.fileName}});
+		set(desktop_bg_image_check, {{p.menuBgFile.fileName}} );
+		set(desktop_bg_image_path, %FIRSTXML%/{{pluginDirectory}}/{{p.menuBgFile.fileName}});
+		getmessage(desktop_logoText,{{ p.logoText.messageid }}); 
+		getmessage(mobile_logoText,{{ p.logoText.messageid }}); 
+		getmessage(logoHeaderText,{{ p.mobileHeaderLogoText.messageid }}); 
+		getmessage(optionsMenu_Width,{{ p.optionMenuWidth.messageid }}); 
+		getmessage(options_menu_text,{{ p.optionMenuText.messageid }});  
+		getmessage(logoUrlVar,{{ p.logoUrl.messageid }}); 
+
+		set(mobile_top_image_check, {{p.mobileMenuBgFile.fileName}} );
+		set(mobile_top_image_path,%FIRSTXML%/{{pluginDirectory}}/{{p.mobileMenuBgFile.fileName}});
+		set(mobile_top_logo_path, %FIRSTXML%/{{pluginDirectory}}/{{p.mobileLogoFile.fileName}});
+		set(mobile_menu_header_image_path,%FIRSTXML%/{{pluginDirectory}}/{{p.mobileHeaderFile.fileName}});
+		set(mobile_menu_header_logo_path,%FIRSTXML%/{{pluginDirectory}}/{{p.mobileHeaderLogoFile.fileName}});
+	
+		set(submenu_custom_id, {{ p.subMebuCustomID.value }});
+
+		
+	</action>
+
+
+
+	<action name="OptionsMenuInit" autorun="preinit" protect="true" >
+	
+		set(options[1].desktop,true);
+		set(options[1].mobile,true);
+		set(options[1].icon,'fullscreen');
+		set(options[1].iconSize,20);
+		set(options[1].iconOffset,-2);
+		getmessage(optionsNaziv1,{{ p.option_1.messageid }});  
+		set(options[1].text,get(optionsNaziv1));
+
+		set(options[2].desktop,true);
+		set(options[2].mobile,true);
+		set(options[2].icon,'play_circle_outline');
+		set(options[2].iconSize,18);
+		set(options[2].iconOffset,0);
+		getmessage(optionsNaziv3,{{ p.option_2.messageid }});  
+		set(options[2].text,get(optionsNaziv3));
+
+		set(options[3].desktop,false);
+		set(options[3].mobile,true);
+		set(options[3].icon,'play_circle_outline');
+		set(options[3].iconSize,18);
+		set(options[3].iconOffset,0);
+		getmessage(optionsNaziv3,{{ p.option_3.messageid }});  
+		set(options[3].text,get(optionsNaziv3));
+
+		set(options[4].desktop,false);
+		set(options[4].mobile,true);
+		set(options[4].icon,'play_circle_outline');
+		set(options[4].iconSize,18);
+		set(options[4].iconOffset,0);
+		getmessage(optionsNaziv4,{{ p.option_4.messageid }});  
+		set(options[4].text,get(optionsNaziv4));
+
+	</action>
+
+
+<layer name="panoramaMenuMobile" keep="true" visible="false" renderer="css3d" type="container" style="panoramaMenuMobile-Style" width="90%" height="100%" oy="0" bgcolor="0xFFFFFF" bgalpha="1" onloaded="">
+<layer name="panoramaMenuContMobile"  keep="true" url="%FIRSTXML%/{{pluginDirectory}}/js/scrollarea.js" align="top" width="100%" height="100" direction="all"   onscroll=" mainMenuScrollbarAnimate();"
+		onloaded="set(url,get(scrollarea_path));">
+</layer>
+</layer>
+
+
+	<action name="check_hide_parameters" protect="true" >
+
+	<![CDATA[
+
+		indexoftxt(hide_gui_index,get(extUrl), 'hide_gui');
+		if(hide_gui_index != -1,
+			set(hide_options, '&hide_gui'); 
+			
+		);
+
+		indexoftxt(hide_all_index,get(extUrl), 'hide_all');
+		if(hide_all_index != -1,
+			set(hide_options, '&hide_all'); 
+			hide_all();
+			set(hide_gui_index, 1);
+		);
+
+		indexoftxt(vr_mode_index,get(extUrl), 'vr_mode');
+		if(vr_mode_index != -1,
+			set(url_options, '&vr_mode'); 
+			js(accessWebVr(get(xml.scene),get(tour_language)));
+	
+		);
+
+		indexoftxt(start_poi_index,get(extUrl), 'edit_poi');
+		if(start_poi_index != -1,
+				poi_edit_action();
+		);
+
+		indexoftxt(start_poi_index,get(extUrl), 'use_poi');
+		if(start_poi_index != -1,
+				poi_use_action();
+		);
+
+	]]>
+	</action>
+
+	<action name="show_gui" protect="true" >
+		set(layer[desktop_menu_background].visible, true); 
+		set(layer[desktop_menu_container].visible, true); 
+		set(layer[desktop_background_shaddow].visible, true); 
+		set(layer[desktop_submenu_container].visible, true); 
+	</action>
+
+	<action name="hide_gui" protect="true" >
+		set(layer[desktop_menu_background].visible, false); 
+		set(layer[desktop_menu_container].visible, false); 
+		set(layer[desktop_background_shaddow].visible, false); 
+		set(layer[desktop_submenu_container].visible, false); 
+	</action>
+
+	<action name="hide_all" protect="true" >
+
+		set(events.onnewscene, 	
+			hide_all_hotspots();
+			hide_all_layers();
+			);
+
+		delayedcall(2,
+			set(events.onviewchange, null);	
+			set(events.onviewchanged, null);	
+			hide_all_hotspots();
+			hide_all_layers();
+		);
+
+	</action>
+
+	<action name="hide_all_hotspots" protect="true" >
+		for(set(i,0), i LT hotspot.count, inc(i),
+			set(hotspot[%i].visible,false);
+			set(hotspot[%i].alpha,0);
+			set(hotspot[%i].enabled,false);
+
+			);
+	</action>
+		<action name="hide_all_layers" protect="true" >
+		for(set(i,0), i LT hotspot.count, inc(i),
+			set(layer[%i].visible,false);
+			set(layer[%i].alpha,0);
+			set(layer[%i].enabled,false);
+
+			);
+	</action>
+
+	<action name="ga_init" type="Javascript" autorun="preinit" protect="true" >
+        jQuery.loadScript = function (url, callback) {
+            jQuery.ajax({
+                url: url,
+                dataType: 'script',
+                success: callback,
+                async: true
+            });
+        }
+  
+        $.loadScript("https://www.googletagmanager.com/gtag/js?id=" + krpano.get("ga_id"), function(){
+            $.loadScript("indexdata/graphics/360-gui/js/ga.js", function() {
+                gtag('js', new Date());
+                gtag('config', krpano.get("general.ga_code"));
+            });
+        });
+
+    </action>
+
+ 	<action name="ga_click" type="Javascript" protect="true" >
+ 			var kategorija = args[1];
+ 			var labela = args[2];
+ 			var akcija = args[3];
+
+ 			gtag('event', akcija, {
+  				'event_category': kategorija,	
+ 				 'event_label': labela
+			});
+	</action>	
+
+	<action name="ga_new_scene" protect="true" >
+		getmessage(new_scene_name, get(scene[get(xml.scene)].titleid));
+		ga_click('Pano view',get(new_scene_name), 'Neka vrijednost');
+	</action>
+
+
+	<action name="fovSettings"  protect="true"  >
+		set(view.maxpixelzoom,calc(general.max_zoom/100)); 
+		if (device.mobile, 
+			set(view.fovmax, get(general.mobile_init_max_fov));
+			set(view.fov, get(general.mobile_init_max_fov));
+		,
+			set(view.fovmax, get(general.desktop_tablet_init_max_fov));
+		);
+	</action>
+
+
+	<events name="new_scene_event" keep="true"  
+		onnewscene="
+			inc(shown_scene, 1);
+			ga_new_scene();
+			fovSettings();
+			set(newSceneListener,true);
+			if(device.desktop, panoramaHsClicked());
+			if(device.mobile,	newSceneMobile());
+		 " 
+		 />		
+
+	<events name="tour_start_event" keep="true" 
+		onxmlcomplete=" 
+		if( (shown_scene LT 1) AND (hide_gui_index EQ -1),
+			show_gui();
+			if(device.desktop, menu_init(););
+		);
+		if( hide_gui_index != -1,
+			hide_gui();
+			set(layer[fm_container].visible, false);
+		);
+	
+		set(display.safearea,off);
+		set(display.autofullscreen,true);
+		set(firstScene,get(xml.scene));
+		if( shown_scene LT 1,
+			delayedcall(tutorialCall,0.5,tutorial(););
+		);
+
+		
+
+		callwhen( krpanoIsReady EQ true, 
+			ga_init();
+			setup_ga_action();
+			);
+
+		"
+	 />	
+
+	<events name="touchEvent" keep="true" onmousedown="
+		tween(layer[tutorialIcon].alpha,0,0.5,linear);
+		tween(layer[TutorialText].alpha,0,0.5,linear);
+		if((device.desktop) AND (device.touch), 
+			desktop_close_main_menu();
+			desktop_close_options_menu();
+			desktop_close_lang_menu();
+		);
+	 " />	
+
+	<events name="view_change_event" keep="true" onresize=
+		"
+			if( hide_all_index EQ -1, 
+				if((device.mobile) OR (device.tablet), checkMobileOptionsResponsive(););
+			);
+		"
+	/>	
+	<events name="global_lang_change" keep="true"
+		language_changed="
+			getmessage(desktop_logoText,{{ p.logoText.messageid }}); 
+			set(layer[Desktop-logoText].html,get(desktop_logoText));
+
+			getmessage(logoHeaderText,{{ p.mobileHeaderLogoText.messageid }}); 
+			set(layer[mobileMenuHeaderLogoText].html,get(logoHeaderText));
+
+			getmessage(mobile_logoText,{{ p.logoText.messageid }}); 
+			set(layer[mobile_logo_text].html,get(mobile_logoText));	
+		"
+	/>
+
+	<action name="logoUrlLink" protect="true" >
+		 	
+		set(layer[mobile_logo_text].onclick, 
+			openurl(get(logoUrlVar),_blank);
+			ga_click('Logo','Mobile', 'click');
+		);
+		set(layer[mobileMenuHeaderLogoText].onclick, 
+			openurl(get(logoUrlVar),_blank);
+			ga_click('Logo','Mobile', 'click');
+			);
+		set(layer[Desktop-logo].onclick, 
+			showlog();
+			openurl(get(logoUrlVar),_blank);
+			ga_click('Logo','Desktop', 'click');
+
+			);
+		set(layer[Desktop-logoText].onclick, 
+			openurl(get(logoUrlVar),_blank);
+			ga_click('Logo','Desktop', 'click');
+			);
+		set(layer[mobile_top_logo].onclick, 
+			openurl(get(logoUrlVar),_blank);
+			ga_click('Logo','Mobile', 'click');
+			showlog();
+			);
+		set(layer[mobileMenuHeaderLogo].onclick, 
+			openurl(get(logoUrlVar),_blank);
+			ga_click('Logo','Mobile', 'click');
+			);
+	</action>
+
+	<include url="%FIRSTXML%/graphics/360-gui/xml/desktop.xml" devices="desktop" />
+	<include url="%FIRSTXML%/graphics/360-gui/xml/mobile.xml" devices="mobile.or.tablet" />
+
+	<layer name="TutorialIcon"   keep="true" type="text" width="55" height="55" x="-10" y="100" vcenter="true" 
+		enabled="false" edge="bottom" align="bottom" bgalpha="0.0" 
+		textshadow="5 5 30 0x000000 1" 
+		zorder="10"	alpha="0" rotate="-10" visible="true" 
+			/>	
+	<layer name="TutorialText"   keep="true" type="text" html="Drag to look around" width="90" x="0" y="80" 
+		enabled="false" vcenter="true" edge="center" align="bottom" 
+		textshadow="5 5 30 0x000000 1" 
+		bgalpha="0" zorder="10" alpha="0" visible="true" 
+	/>
+	
+	<action name="tutorial" protect="true" >
+
+		set(tutorialIconCss,null);
+		set(tutorialIcon,null);
+		txtadd(tutorialIconCss,'color:#ffffff;text-align:center;vertical-align: middle; text-shadow: 2px 2px 8px #000000;');
+		if(device.mobile,
+		txtadd(tutorialIcon,'[i class="material-icons" style=" font-size:50px;vertical-align: middle; text-align:center;"]touch_app[/i]');
+		,
+		txtadd(tutorialIcon,'[i class="material-icons" style=" font-size:50px;vertical-align: middle; text-align:center;"]mouse[/i]');
+		
+		);
+		set(layer[TutorialIcon].html,get(tutorialIcon));
+		set(layer[TutorialIcon].css,get(tutorialIconCss));
+
+		set(tutorialTextCss,null);
+		txtadd(tutorialTextCss,'font-size:12px;color:#ffffff;text-align:center;vertical-align: middle;text-shadow: 1px 1px 1px #000000;');
+		set(layer[TutorialText].css,get(tutorialTextCss));
+
+		tween(layer[TutorialShadow].alpha,0.3,0.3,linear);
+		tween(layer[tutorialIcon].alpha,1,0.3,linear,
+					tween(layer[TutorialText].alpha,1,0.5,linear);
+					tween(layer[tutorialIcon].x,10,0.5,easeInOutQuad);
+					tween(layer[tutorialIcon].rotate,10,0.5,easeInOutQuad,
+						tween(layer[tutorialIcon].x,0,0.5,easeInOutQuad);
+						tween(layer[tutorialIcon].rotate,0,0.5,easeInOutQuad,
+
+							delayedcall(tutorialCall2,2,
+								tween(layer[tutorialIcon].alpha,0,0.5,linear);
+								tween(layer[TutorialText].alpha,0,0.5,linear);
+								tween(layer[TutorialShadow].alpha,0,0.5,linear);
+							);
+						);
+					);
+			);
+	
+	</action>
+
+	<action name="optionActions1" protect="true" >
+		switch(fullscreen);
+ 	</action>
+	<action name="optionActions2" protect="true" >
+   	 switch(tour_autotourenabled);
+		if(tour_autotourenabled EQ true,
+		startautorotation();
+		,
+		stopautorotation();
+		);
+	</action>
+	<action name="optionActions3" protect="true" >
+		switch(plugin[gyroscope].enabled);
+		trace('ŽIRO');
+	</action>
+	<action name="optionActions4">
+		 js(accessWebVr(get(xml.scene),get(tour_language)));
+	</action>
+	<action name="subMebuCustomActions1">
+		{%with p.subMebuCustomActions1.actions as actions%}
+		    {% include 'calltemplate.tmpl' %}
+		{%endwith%}
+	</action>
+
+	<action name="optionActionsAll" protect="true" >
+		if(%1 EQ 1, optionActions1(););
+		if(%1 EQ 2, optionActions2(););
+		if(%1 EQ 3, optionActions3(););
+		if(%1 EQ 4, optionActions4(););
+	</action>
+
+
+  <action name="cookie" type="Javascript" autorun="preinit" protect="true" >
+		if(document.cookie === "Posjet1=true"){
+	<!-- 		krpano.call("trace('VEC SI BIO');"); -->
+			}
+			else {
+			document.cookie = "Posjet1=true ; expires=Thu, 20 Dec 2018 12:00:00 UTC";
+	<!-- 		krpano.call("trace('PRVI PUT');"); -->
+			}			 
+ </action>
+
+
+	<include url="%FIRSTXML%/graphics/360-gui/xml/spot_range.xml" />
+
+	<include url="%FIRSTXML%/graphics/360-gui/xml/back.xml"  />
+	<include url="%FIRSTXML%/graphics/360-gui/xml/fm.xml" />
+	<include url="%FIRSTXML%/graphics/360-gui/xml/poi.xml" />
+<!-- 	<include url="%FIRSTXML%/graphics/360-gui/xml/lens_flare.xml" /> -->
+
+
+
+</krpano>			

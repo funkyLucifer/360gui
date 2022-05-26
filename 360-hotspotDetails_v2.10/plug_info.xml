@@ -1,0 +1,32 @@
+<plugin id="hotspotDetails" category="tr:00 - 360" name="Display hotspot details" description="Displays a hotspot details box which sticks to a hotspot" version="1.0" isGraphical="true" multipleInstance="false">
+  <parameters>
+	
+	
+  </parameters>
+
+	<resources>
+		<file url="xml/hotspot_details.xml" />
+
+	</resources>
+
+
+  <templates>
+    <template url="hotspotDetailsTemplate.tmpl" />
+  </templates>
+  <actions>
+	  <action id="HDOpen" name="Open Hotspot details" description="Display the information box"  callTemplate="hotspotDetailsOpen.tmpl"   	> 
+		  <string id="headerText"   name="tr:Header Text"   default="This is Header text" description="tr:Header text" customize="true" />
+		  <string id="paragraphText"   name="tr:Paragraph Text"   default="This is Paragraph text" description="tr:Header text" customize="true" />
+		  <string id="buttonText"   name="tr:Button Text"   default="Button" description="tr:Header text" customize="true" />
+		  <string id="buttonLink"   name="tr:Pano ID or URL to open"   default="" description="tr:Header text" customize="true" />
+		  <string id="buttonDirectionsText"   name="tr:Directions button text"   default="directions" description="tr:buttonDirectionsText" customize="true" />
+		  <string id="buttonDirections"   name="tr:Google map link. Leave 'none' do hide button"   default="none" description="tr:buttonDirections" customize="true" />
+	  </action>
+   <action id="HDClose" name="Close Hotspot details" description="Close Hotspot details box"  callTemplate="hotspotDetailsClose.tmpl"   	> 
+   
+  </action> 
+  
+</actions>
+
+</plugin>
+

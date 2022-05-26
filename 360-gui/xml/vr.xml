@@ -1,0 +1,250 @@
+<krpano>
+<events webvr_onavailable="trace('VR AVAILABLE');"
+        webvr_onunavailable="trace('VR NOT AVAILABLE');"
+        webvr_onunknowndevice="trace('UNKNOWN DEVICE');"
+        webvr_onentervr="webvr_onentervr();vr_entered();"
+        webvr_onexitvr=""
+        />
+
+	<action name="vr_entered" >
+		set(events.onviewchanged, null);	
+
+	</action>
+
+
+
+<plugin name="WebVR" devices="html5" keep="true"
+        url="webvr.js"
+        onloaded="copy(webvr, plugin[webvr]);"
+        zoom="1.0"
+        friction="0.0"
+        worldscale="1"
+        mousespeed="0.00125"
+        oversampling="1"
+        multireslock="true"
+        headtracking="true"
+        fullscreen_mirroring="false"
+        mobilevr_support="true"
+        mobilevr_ipd="63.5"
+        mobilevr_screensize="auto"
+        mobilevr_lens_overlap="1.0"
+        mobilevr_lens_fov="96"
+        mobilevr_lens_dist="0.6"
+        mobilevr_lens_dist2="1|0|0|0"
+        mobilevr_lens_ca="0.0"
+        mobilevr_lens_vign="100"
+        mobilevr_orientationlock="true"
+        mobilevr_wakelock="true"
+        mobilevr_sensor_mode="3"
+        mobilevr_autocalibration="false"
+        mobilevr_touch_support="false"
+        mobilevr_fake_support="true"
+        mobilevr_database_url="..."
+	        vr_cursor="hotspot[vr_cursor]"
+	        vr_cursor_enabled="true"
+	        vr_cursor_onover="if(handcursor, tween(hotspot[vr_cursor].scale,0.4,0.1); vr_auto_click(get(vr_timeout)); );"
+	        vr_cursor_onout="tween(hotspot[vr_cursor].scale,0.3,0.1);"
+        onavailable=""
+        onunavailable=""
+        onunknowndevice=""
+        onentervr=""
+        onexitvr=""
+
+        />
+
+	<!-- the VR cursor hotspot -->
+	<hotspot name="vr_cursor" keep="true"
+	         url="webvr_cursor_80x80_17f.png"
+	         visible="true"
+	         enabled="false"
+	         distorted="true"
+	         crop="0|0|80|80"
+	         scale="0.3"
+	         depth="1000"
+	         />
+
+
+	<!-- vr_auto_click() - call this action in the onover event of a
+	     hotspot to trigger automatically a click after some time.  -->
+	<action name="vr_auto_click" scope="local" args="vr_aclk_timeout">
+		if(webvr.isenabled,
+			if(vr_aclk_timeout == null, set(vr_aclk_timeout, 1000));
+			copy(vr_aclk_t1, timertick);
+			set(vr_aclk_waiting, true);
+			copy(webvr.vr_aclk_hotspot, caller.name);
+			set(hotspot[vr_cursor].crop,'0|0|80|80');
+
+			asyncloop(vr_aclk_waiting AND webvr.vr_aclk_hotspot == caller.name,
+				sub(dt, timertick, vr_aclk_t1);
+
+				if(!caller.hovering,
+					set(vr_aclk_waiting, false);
+					set(hotspot[vr_cursor].crop,'0|0|80|80');
+				  ,
+					div(f, dt, vr_aclk_timeout);
+					mul(f, 16);
+					roundval(f);
+					Math.min(f, 16);
+					mul(f, 80);
+
+					txtadd(hotspot[vr_cursor].crop,get(f),'|0|80|80');
+
+					<!-- wait another 100ms delay after finishing the animation before doing the click -->
+					sub(dt, 100);
+					if(dt GT vr_aclk_timeout,
+						set(vr_aclk_waiting,false);
+						set(hotspot[vr_cursor].crop,'0|0|80|80');
+						<!-- call onclick -->
+						callwith(caller, onclick() );
+					);
+				);
+			);
+		);
+	</action>
+
+
+
+
+
+<hotspot name="button_image"  type="image" keep="true" url="hs.png" 
+		width="48" height="48" 
+		zorder="100" align="topleft" 
+		ox="0" oy="0"
+		capture="true"
+		visible="true"
+		alpha="1"
+		enabled="true"
+		onclick="enter_vr_mode"
+		html="ENTER VR"
+		onloaded="showlog();"
+		atv="0"
+		mipmapping="true"
+
+
+	/>
+	<action name="enter_vr_mode" >
+		showlog();
+		WebVR.enterVR();	
+		loadscene(get(xml.scene));
+		show_all_tooltips();
+		set(events.onviewchanged, null);	
+		set(events.onviewchange, null);	
+
+		clearinterval(view_update_interval);
+
+	</action>
+
+	<action name="show_all_tooltips"  >
+		trace('ALL TOOLTIPS....');
+		
+
+		set(vr_tooltip_css,null);
+		txtadd(vr_tooltip_css,'font-family:',get(tooltip_font),',Arial; font-size:',get(tooltip_font_size),'px; color:#',get(tooltip_font_color),';text-align:center;vertical-align: middle;padding-left:5px;padding-right:5px;text-shadow: 2px 2px 3px #000000;');
+
+
+		for(set(v,0), v LT hotspot.count, inc(v),
+
+		  	subtxt(vr_hs_act_var,get(hotspot[%v].name),0, 4);
+		  	if(vr_hs_act_var EQ  'spot', 
+
+		  		txtadd(vr_tt_name, 'vr_tt_',get(v));
+				
+		  		set(hotspot[%vr_tt_name].css, get(vr_tooltip_css));
+		  		hotspot[%vr_tt_name].loadstyle(vr_tooltip_style);
+		  		getmessage(vr_tultip, get(hotspot[%v].tooltip)); 
+		  		set(hotspot[%vr_tt_name].html, get(vr_tultip));
+				set(hotspot[%vr_tt_name].ath,  get(hotspot[%v].ath));
+				set(hotspot[%vr_tt_name].atv,  get(hotspot[%v].atv)); 
+
+				set(hotspot[%v].vr_tt,  get(vr_tt_name));
+				set(hotspot[%v].depth, 1500);
+			<!-- 	trace(get(hotspot[%vr_tt_name].ath)); -->
+		  		
+		  	); <!-- END IF SPOT -->
+		); <!-- END FOR -->
+	</action>
+
+	<style name="vr_tooltip_style"  type="text" keep="false" enabled="false" distorted="false" visible="true" zorder="95" zorder2="1"
+		width="auto"  height="auto" ox="0" oy="10"
+		align="bottomleft" edge="topleft" vcenter="true"
+		bgcolor="0x000000"  bgroundedge="2" bgalpha="0.3"
+		html="tooltip"
+		maskchildren="false" scalechildren="false"
+		mipmapping="true"
+		alpha="1"
+		onautosized="
+			set(ox, calc(-width/2));
+		"
+
+	/>	
+
+
+
+
+
+	<action name="webvr_onentervr">
+		if(layer[webvr_enterbutton], tween(layer[webvr_enterbutton].alpha,0,0); );
+
+		webvr_hide_all_non_vr_layers();
+
+		<!-- when the screen size is unknown an no custom size is set, open the setup screen on entering the VR mode -->
+		if(webvr.ismobilevr == true AND !webvr.isfake AND webvr.ask_user_for_screensize == true AND webvr.mobilevr_screensize == 'auto',
+			set(webvr.ask_user_for_screensize, false);
+			vr_setup();
+		);
+		if(webvr.isfake,
+			webvr_show_fakemode_info(true);
+		);
+	</action>
+
+
+	<action name="webvr_onexitvr">
+		stopdelayedcall(vr_button_fadeout);
+
+		if(layer[webvr_enterbutton], tween(layer[webvr_enterbutton].alpha,1); );
+		tween(layer[webvr_exitbutton].alpha,0);
+		tween(layer[webvr_setupbutton].alpha,0);
+		
+		webvr_show_fakemode_info(false);
+
+		webvr_restore_layers();
+	</action>
+
+
+	<action name="webvr_hide_all_non_vr_layers" scope="local">
+		for(set(i,0), i LT layer.count, inc(i),
+			copy(lr, layer[get(i)]);
+			if(lr.vr !== true,
+				copy(lr.vr_backup_visible, lr.visible);
+				set(lr.visible, false);
+			);
+		);
+	</action>
+
+	<action name="webvr_restore_layers" scope="local">
+		for(set(i,0), i LT layer.count, inc(i),
+			copy(lr, layer[get(i)]);
+			if(lr.vr_backup_visible,
+				copy(lr.visible, lr.vr_backup_visible);
+				delete(lr.vr_backup_visible);
+			);
+		);
+	</action>
+	
+	<action name="webvr_show_fakemode_info" scope="local" args="show">
+		if(show == true,
+			addlayer(webvr_fakemode_info);
+			set(layer[webvr_fakemode_info],
+				type='text',
+				keep=true,
+				align='bottom',
+				y=80,
+				bg=false,
+				css='color:#FFFFFF;text-align:center;',
+				html='[i][u]Simulated WebVR Mode![/u][/i][br]For real WebVR with headset tracking, either use a [a href="http://webvr.info" target="_blank" style="color:#FFFFFF;"]WebVR-API-capable[/a] desktop browser or a mobile device and a VR headset.'
+			);
+		  ,
+			removelayer(webvr_fakemode_info);
+		);
+	</action>
+	</krpano>

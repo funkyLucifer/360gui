@@ -1,0 +1,189 @@
+
+<krpano>
+	<action name="spot_range_init" autorun="preinit"  protect="true" >
+		set(hs_scale, get:general.hostpot_scale_over);
+		set(tooltip_font, get:general.hotspot_tooltip_font);
+		set(tooltip_font_size, get:general.hotspot_tooltip_font_size);
+		set(tooltip_font_color, get:general.hotspot_tooltip_font_color);
+		set(tooltip_font_bg_alpha,get:general.hotspot_tooltip_bg_alpha);
+
+		if (device.desktop, 
+		  	set(act_range,20);
+		,
+		  	set(act_range,8);
+		);
+
+		set(hs_tooltip_css,null);
+		if(general.hotspot_tooltip_font_color_shadow EQ 'yes',
+			txtadd(hs_tooltip_css,'font-family:',get(tooltip_font),',Arial; font-size:',get(tooltip_font_size),'px; color:#',get(tooltip_font_color),';text-align:center;vertical-align: middle;padding-left:5px;padding-right:5px;text-shadow: 2px 2px 3px #000000;');
+		,
+			txtadd(hs_tooltip_css,'font-family:',get(tooltip_font),',Arial; font-size:',get(tooltip_font_size),'px; color:#',get(tooltip_font_color),';text-align:center;vertical-align: middle;padding-left:5px;padding-right:5px;');
+		);
+	
+	</action>
+
+	<events name="spot_range_events" keep="true"   
+	 	onnewscene="spot_range_start();"
+
+	 	onxmlcomplete="
+			delayedcall(1,
+			 	set(events.onviewchange,check_act_hotspots );	
+		 	);
+	 	"
+	 	onremovepano="	
+	 		set(events.onviewchange,null); 
+	 	"
+	/>
+
+	<style name="hs_tooltip_style"  type="container" keep="false" enabled="false" distorted="false" visible="false" 
+		zorder="50" 
+		width="10"  height="10" ox="-5" oy="10"
+		align="bottomleft" edge="topleft" vcenter="true"
+		bgcolor="0x000000"  bgroundedge="get:general.hotspot_tooltip_round_edge" bgalpha="0"
+		html="tooltip"
+		maskchildren="false" scalechildren="false"
+		oversampling="3"
+
+	/>	
+	<style name="hs_tooltip_layer_style"  type="text" keep="false" enabled="false" distorted="false" visible="true" 
+		zorder="50" 
+		width="auto"  height="auto" ox="" oy="10"
+		align="center" edge="center" vcenter="true"
+		bgroundedge="get:general.hotspot_tooltip_round_edge"
+		html="tooltip"
+		onloaded="
+		set(bgalpha, get(tooltip_font_bg_alpha));
+		set(bgcolor, calc:'0x'+general.hotspot_tooltip_bg_color);
+		"
+
+	/>	
+
+
+	<action name="spot_range_start"  protect="true" >
+		
+
+		set(hotspot[hs_tooltip].css, get(hs_tooltip_css));
+
+		for(set(k,0), k LT hotspot.count, inc(k),
+		  	subtxt(hs_act_var,get(hotspot[get(k)].name),0, 9);
+
+
+		 	indexoftxt(hs_style_fov_index, get(hotspot[get(k)].style),'fov_');
+		 	if( hs_style_fov_index != -1,
+			subtxt(hs_act_fov,get(hotspot[get(k)].style),calc(hs_style_fov_index+4), 2);
+			
+			set(hotspot[get(k)].act_fov, get(hs_act_fov));
+			trace(get(hotspot[get(k)].act_fov));
+			);
+		  	
+		  	if(hs_act_var EQ  'spotpoint', 
+		  	
+		  		
+		  		txtadd(tt_name, 'tt_',get(k));
+		  		txtadd(tt_text, 'tt_text_',get(k));
+		  		set(hotspot[%tt_name].css, get(hs_tooltip_css));
+		  		set(layer[%tt_text].css, get(hs_tooltip_css));
+
+		  		hotspot[%tt_name].loadstyle(hs_tooltip_style);
+		  		layer[%tt_text].loadstyle(hs_tooltip_layer_style);
+
+		  		getmessage(hs_tultip, get(hotspot[%k].tooltip)); 
+		  		set(layer[%tt_text].html, get(hs_tultip));
+				set(hotspot[%tt_name].ath,  get(hotspot[%k].ath));
+				set(hotspot[%tt_name].atv,  get(hotspot[%k].atv)); 
+
+				set(hotspot[%k].tt,  get(tt_name));
+
+				txtadd(layer[%tt_text].parent, 'hotspot[', get(tt_name), ']'); 
+		  		
+		  		set(hotspot[%k].sr,true);
+		  		set(hotspot[get(k)].capture, false);
+		  		set(hotspot[%k].onhover, null);
+
+
+				if(hotspot[get(k)].edge EQ 'center', 
+					<!-- trace(get(hotspot[get(k)].name));showlog(); -->
+		  			set(hotspot[%tt_name].oy, calc(10+hotspot[get(k)].height/2));
+		  			);
+
+
+		  		set(hotspot[%k].onover, 
+		  			
+		  			if( hd_ispen != true,
+			  			if( scale EQ 1 , 
+			  			tween(scale, get(hs_scale), 0.1, linear );
+			  			set(hotspot[get(tt)].visible, true);
+			  			);
+			  		 ); 
+		  		);
+		 
+		  		set(hotspot[%k].onout, 
+
+		  			if( hotspot[get(tt)].visible EQ true,
+		  				
+			  			if(name != active_hs,
+			  				tween(scale,  1.0, 0.1, linear );
+			  				set(hotspot[get(tt)].visible, false);  
+			  				);
+		  			);
+		  		);
+		  	); <!-- END IF SPOT -->
+		); <!-- END FOR -->
+	</action>
+
+	<action name="check_act_hotspots" protect="true" >
+
+
+		set(zadnji,calc(hotspot.count-1));
+	    for(set(k,0), k LT hotspot.count, inc(k),
+	    	subtxt(hs_act_var,get(hotspot[get(k)].name),0, 4);
+	    	if(hs_act_var EQ  'spot', 
+		    	if (view.fov GT hotspot[%k].act_fov, 
+		    		set(hotspot[%k].visible, false);
+		    	<!-- 	set(hotspot[get(hotspot[%k].tt)].alpha,0); -->
+		    		,
+		    		set(hotspot[%k].visible, true);
+		    		<!-- set(hotspot[get(hotspot[%k].tt)].alpha,1); -->
+		    		);
+
+
+			if(hotspot[%k].sr EQ true, 
+		        getlooktodistance(hotspot[%k].dist, hotspot[%k].ath,view.vlookat);
+			);
+		);	
+
+	    );
+
+		hotspot.sortby(dist, descending|numeric);
+		if( (hotspot[%zadnji].dist LT act_range) AND (hotspot[%zadnji].name != active_hs) AND (hotspot[%zadnji].visible EQ true ) ,
+			set(hotspot[get(hotspot[get(active_hs)].tt)].visible,false);
+			activate_hotspot(%zadnji);
+			,
+
+			if( hotspot[%zadnji].dist GT act_range,
+				tween(hotspot[%active_hs].scale,  1.0, 0.1, linear);
+				set(hotspot[get(hotspot[get(active_hs)].tt)].visible,false);
+				set(active_hs, null);	
+			);
+		);
+	</action>
+
+	<action name="activate_hotspot" protect="true" >
+           
+		if (hotspot[%active_hs].hd_ispen EQ true, 
+         
+        
+			set(hotspot[%zadnji].scale, get(hs_scale));
+            set(hotspot[get(hotspot[%active_hs].tt)].alpha,0);
+        
+		,
+			tween(hotspot[%active_hs].scale,  1.0, 0.1, linear);
+			set(hotspot[get(hotspot[%active_hs].tt)].visible,false);
+      
+		);
+		tween(hotspot[%1].scale, get(hs_scale),0.1, linear);
+		set(active_hs, get(hotspot[%1].name));
+		set(hotspot[get(hotspot[%active_hs].tt)].visible,true);
+	</action>
+
+</krpano>
